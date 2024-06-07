@@ -45,4 +45,13 @@ public class UserController {
         return ResponseEntity.ok(new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn")));
     }
 
+    @CrossOrigin
+    @PostMapping("/backend/register")
+    public ResponseEntity<UserTokenReponse> register(@RequestBody User user) {
+        String uid = firebaseAuthService.getUidUser(user.getEmail());
+        String customToken = firebaseAuthService.generateCustomToken(uid);
+        Map tokens = firebaseAuthService.idTokenForLogin(customToken);
+        return ResponseEntity.ok(new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn")));
+    }
+
 }
