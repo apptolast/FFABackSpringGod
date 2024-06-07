@@ -75,7 +75,7 @@ public class FirebaseAuthService  {
         headers.setContentType(MediaType.APPLICATION_JSON);
         Map<String, String> payload = new HashMap<>();
         payload.put("token", customTokenDecoded);
-        payload.put("returnSecureToken", "true");
+        payload.put("returnSecureToken", String.valueOf(true));
 
         HttpEntity<Map<String, String>> request = new HttpEntity<>(payload, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
