@@ -3,11 +3,13 @@ package com.ffa.back.controllers;
 import com.ffa.back.models.User;
 import com.ffa.back.models.UserTokenReponse;
 import com.ffa.back.repositories.UserRepository;
+import com.ffa.back.services.FirebaseAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -16,6 +18,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FirebaseAuthService firebaseAuthService;
 
     @CrossOrigin
     @GetMapping
@@ -34,9 +39,10 @@ public class UserController {
     @CrossOrigin
     @PostMapping("/backend/login")
     public ResponseEntity<UserTokenReponse> login(@RequestBody User user) {
-        User existingUser = userRepository.findByEmail(user.getEmail());
-
-        return null;
+        String uid = firebaseAuthService.getUidUser(user.getEmail());
+        String customToken = firebaseAuthService.generateCustomToken(uid);
+        Map tokens = firebaseAuthService.idTokenForLogin(customToken);
+        return ResponseEntity.ok(new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn")));
     }
 
 }
