@@ -60,8 +60,8 @@ public class UserController {
             if (language == null) {
                 savedLanguage = languageRepository.save(user.getLanguage());
                 savedLanguage.setLanguage(savedLanguage.getLanguage());
+                user.setLanguage(savedLanguage);
             }
-            user.setLanguage(savedLanguage);
             User savedUser = userRepository.save(user);
             Map<String, String> response = new HashMap<>();
             firebaseAuthService.createFirebaseUser(user.getEmail());
