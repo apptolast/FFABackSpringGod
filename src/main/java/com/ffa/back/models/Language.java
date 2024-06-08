@@ -1,5 +1,6 @@
 package com.ffa.back.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Language {
     private String language;
 
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<User> users;
 
     protected Language() {}
