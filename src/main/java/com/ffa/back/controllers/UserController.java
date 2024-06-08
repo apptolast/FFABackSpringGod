@@ -4,6 +4,7 @@ import com.ffa.back.models.User;
 import com.ffa.back.models.UserTokenReponse;
 import com.ffa.back.repositories.UserRepository;
 import com.ffa.back.services.FirebaseAuthService;
+import com.ffa.back.services.GenericService;
 import com.ffa.back.services.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class UserController {
     private FirebaseAuthService firebaseAuthService;
 
     @Autowired
-    private GenericServiceImpl genericService;
+    private GenericService<User, Long> genericService;
 
     @CrossOrigin
     @GetMapping
