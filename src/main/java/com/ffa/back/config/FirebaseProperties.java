@@ -9,6 +9,15 @@ public class FirebaseProperties {
 
     private String url;
     private String apiKey;
+    private String pass;
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
 
     public String getUrl() {
         return url;

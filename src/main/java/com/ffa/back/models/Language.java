@@ -23,6 +23,10 @@ public class Language {
         this.language = language;
     }
 
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     public Long getId() {
         return id;
     }

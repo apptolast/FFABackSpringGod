@@ -1,11 +1,11 @@
 package com.ffa.back.controllers;
 
+import com.ffa.back.models.Language;
 import com.ffa.back.models.User;
 import com.ffa.back.models.UserTokenReponse;
+import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
 import com.ffa.back.services.FirebaseAuthService;
-import com.ffa.back.services.GenericService;
-import com.ffa.back.services.GenericServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,20 +20,19 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private FirebaseAuthService firebaseAuthService;
 
     @Autowired
-    private GenericService<User, Long> genericService;
+    private UserRepository userRepository;
+
+    @Autowired
+    private LanguageRepository languageRepository;
 
     @CrossOrigin
     @GetMapping
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
 
     @CrossOrigin
     @GetMapping("/{id}")
@@ -54,10 +53,18 @@ public class UserController {
     @CrossOrigin
     @PostMapping("/backend/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        Optional<User> userOptional = genericService.findByEmail(user.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
         if (userOptional.isEmpty()) {
-            User savedUser = (User) genericService.save(user);
+            Language language = languageRepository.findByLanguage(user.getLanguage().getLanguage());
+            Language savedLanguage = new Language("");
+            if (language == null) {
+                savedLanguage = languageRepository.save(user.getLanguage());
+                savedLanguage.setLanguage(savedLanguage.getLanguage());
+            }
+            user.setLanguage(savedLanguage);
+            User savedUser = userRepository.save(user);
             Map<String, String> response = new HashMap<>();
+            firebaseAuthService.createFirebaseUser(user.getEmail());
             String uid = firebaseAuthService.getUidUser(savedUser.getEmail());
             String customToken = firebaseAuthService.generateCustomToken(uid);
             Map tokens = firebaseAuthService.idTokenForLogin(customToken);
@@ -67,11 +74,11 @@ public class UserController {
             response.put("refreshToken", userTokenReponse.getRefreshToken());
             response.put("expiresIn", userTokenReponse.getExpiresIn());
             return ResponseEntity.ok().body(response);
-        }  else {
+        } else {
             Map<String, String> response = new HashMap<>();
-            response.put("message", "User registered successfully");
+            response.put("message", "User already exists, please login.");
             return ResponseEntity.badRequest().body(response);
         }
     }
-
 }
+

@@ -20,12 +20,12 @@ public class FirebaseAuthService  {
     @Autowired
     private FirebaseProperties firebaseProperties;
 
-    public UserRecord createFirebaseUser(String email, String password) {
+    public UserRecord createFirebaseUser(String email) {
         try {
             UserRecord.CreateRequest request = new UserRecord.CreateRequest()
                     .setEmail(email)
                     .setEmailVerified(true)
-                    .setPassword(password);
+                    .setPassword(firebaseProperties.getPass());
             return FirebaseAuth.getInstance().createUser(request);
         } catch (FirebaseAuthException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error : " + e.getMessage());
