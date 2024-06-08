@@ -14,7 +14,7 @@ public class Language {
     @Column(nullable = false)
     private String language;
 
-    @OneToMany(mappedBy = "language")
+    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users;
 
     protected Language() {}

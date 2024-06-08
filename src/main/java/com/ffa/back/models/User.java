@@ -1,5 +1,6 @@
 package com.ffa.back.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class User {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_language", referencedColumnName = "id")
+    @JsonBackReference
     private Language language;
 
     @Column(unique = true, nullable = false)
