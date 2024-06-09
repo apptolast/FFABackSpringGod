@@ -36,27 +36,47 @@ public class AuthService {
     public ResponseEntity<?> register(User user) {
         Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
         if (userOptional.isEmpty()) {
-            Language language = languageRepository.findByLanguage(user.getLanguage().getLanguage());
-            if (language == null) {
-                language = languageRepository.save(user.getLanguage());
-            }
-            user.setLanguage(language);
-            User savedUser = userRepository.save(user);
-            Map<String, String> response = new HashMap<>();
-            firebaseAuthService.createFirebaseUser(user.getEmail());
-            String uid = firebaseAuthService.getUidUser(savedUser.getEmail());
-            String customToken = firebaseAuthService.generateCustomToken(uid);
-            Map tokens = firebaseAuthService.idTokenForLogin(customToken);
-            UserTokenReponse userTokenReponse = new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn"));
-            response.put("message", "User registered successfully");
-            response.put("idToken", userTokenReponse.getIdToken());
-            response.put("refreshToken", userTokenReponse.getRefreshToken());
-            response.put("expiresIn", userTokenReponse.getExpiresIn());
+            User savedUser = saveNewUser(user);
+            Map<String, String> response = generateResponse(savedUser);
             return ResponseEntity.ok().body(response);
         } else {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "User already exists, please login.");
-            return ResponseEntity.badRequest().body(response);
+            return buildUserExistsResponse();
         }
+    }
+
+
+    private User saveNewUser(User user) {
+        Language language = findOrCreateLanguage(user.getLanguage().getLanguage());
+        user.setLanguage(language);
+        User savedUser = userRepository.save(user);
+        firebaseAuthService.createFirebaseUser(user.getEmail());
+        return savedUser;
+    }
+
+    private Language findOrCreateLanguage(String languageName) {
+        Language language = languageRepository.findByLanguage(languageName);
+        if (language == null) {
+            language = languageRepository.save(new Language(languageName));
+        }
+        return language;
+    }
+
+    private Map<String, String> generateResponse(User savedUser) {
+        String uid = firebaseAuthService.getUidUser(savedUser.getEmail());
+        String customToken = firebaseAuthService.generateCustomToken(uid);
+        Map tokens = firebaseAuthService.idTokenForLogin(customToken);
+        UserTokenReponse userTokenReponse = new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn"));
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+        response.put("idToken", userTokenReponse.getIdToken());
+        response.put("refreshToken", userTokenReponse.getRefreshToken());
+        response.put("expiresIn", userTokenReponse.getExpiresIn());
+        return response;
+    }
+
+    private ResponseEntity<?> buildUserExistsResponse() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User already exists, please login.");
+        return ResponseEntity.badRequest().body(response);
     }
 }
