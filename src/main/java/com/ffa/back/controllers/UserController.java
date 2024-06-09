@@ -40,45 +40,5 @@ public class UserController {
         Optional<User> user = userRepository.findById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-    @CrossOrigin
-    @PostMapping("/backend/login")
-    public ResponseEntity<UserTokenReponse> login(@RequestBody User user) {
-        String uid = firebaseAuthService.getUidUser(user.getEmail());
-        String customToken = firebaseAuthService.generateCustomToken(uid);
-        Map tokens = firebaseAuthService.idTokenForLogin(customToken);
-        return ResponseEntity.ok(new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn")));
-    }
-
-    @CrossOrigin
-    @PostMapping("/backend/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
-        if (userOptional.isEmpty()) {
-            Language language = languageRepository.findByLanguage(user.getLanguage().getLanguage());
-            Language savedLanguage = new Language("");
-            if (language == null) {
-                savedLanguage = languageRepository.save(user.getLanguage());
-                savedLanguage.setLanguage(savedLanguage.getLanguage());
-                user.setLanguage(savedLanguage);
-            }
-            User savedUser = userRepository.save(user);
-            Map<String, String> response = new HashMap<>();
-            firebaseAuthService.createFirebaseUser(user.getEmail());
-            String uid = firebaseAuthService.getUidUser(savedUser.getEmail());
-            String customToken = firebaseAuthService.generateCustomToken(uid);
-            Map tokens = firebaseAuthService.idTokenForLogin(customToken);
-            UserTokenReponse userTokenReponse = new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn"));
-            response.put("message", "User registered successfully");
-            response.put("idToken", userTokenReponse.getIdToken());
-            response.put("refreshToken", userTokenReponse.getRefreshToken());
-            response.put("expiresIn", userTokenReponse.getExpiresIn());
-            return ResponseEntity.ok().body(response);
-        } else {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "User already exists, please login.");
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
 }
 
