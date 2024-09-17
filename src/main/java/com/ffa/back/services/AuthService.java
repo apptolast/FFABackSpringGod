@@ -38,6 +38,7 @@ public class AuthService {
         Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
         if (userOptional.isEmpty()) {
             User userfornew = new User();
+            userfornew.setEmail(user.getEmail());
             User savedUser = saveNewUser(userfornew);
             Map<String, String> response = generateResponse(savedUser);
             return ResponseEntity.ok().body(response);
@@ -48,11 +49,21 @@ public class AuthService {
 
 
     private User saveNewUser(User user) {
-        Language language = findOrCreateLanguage(user.getLanguage().getLanguage());
-        user.setLanguage(language);
-        User savedUser = userRepository.save(user);
-        firebaseAuthService.createFirebaseUser(user.getEmail());
-        return savedUser;
+        if (user.getLanguage() != null) {
+            Language language = findOrCreateLanguage(user.getLanguage().getLanguage());
+            user.setLanguage(language);
+            user.setProvider("email");
+            User savedUser = userRepository.save(user);
+            firebaseAuthService.createFirebaseUser(user.getEmail());
+            return savedUser;
+        } else {
+            Language newLanguage = findOrCreateLanguage("en");
+            user.setLanguage(newLanguage);
+            user.setProvider("email");
+            User savedUser = userRepository.save(user);
+            firebaseAuthService.createFirebaseUser(user.getEmail());
+            return savedUser;
+        }
     }
 
     private Language findOrCreateLanguage(String languageName) {
