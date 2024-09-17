@@ -1,4 +1,4 @@
-package com.ffa.back.models;
+package com.ffa.back.dto;
 
 public class UserRequestRegister {
 

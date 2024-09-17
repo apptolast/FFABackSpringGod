@@ -39,7 +39,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<MovieUserGroup> movieUserGroups;
 
-    protected User() {}
+    public User() {}
 
     public User(String role, String firebase_uuid, String provider, String email) {
         this.role = role;

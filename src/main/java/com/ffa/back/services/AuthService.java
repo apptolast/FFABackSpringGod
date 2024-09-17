@@ -1,9 +1,10 @@
 package com.ffa.back.services;
 
 
+import com.ffa.back.dto.UserRequestRegister;
 import com.ffa.back.models.Language;
 import com.ffa.back.models.User;
-import com.ffa.back.models.UserTokenReponse;
+import com.ffa.back.dto.UserTokenReponse;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,18 @@ public class AuthService {
     @Autowired
     private LanguageRepository languageRepository;
 
-    public ResponseEntity<UserTokenReponse> login(User user) {
+    public ResponseEntity<UserTokenReponse> login(UserRequestRegister user) {
         String uid = firebaseAuthService.getUidUser(user.getEmail());
         String customToken = firebaseAuthService.generateCustomToken(uid);
         Map tokens = firebaseAuthService.idTokenForLogin(customToken);
         return ResponseEntity.ok(new UserTokenReponse((String) tokens.get("idToken"), (String) tokens.get("refreshToken"), (String) tokens.get("expiresIn")));
     }
 
-    public ResponseEntity<?> register(User user) {
+    public ResponseEntity<?> register(UserRequestRegister user) {
         Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
         if (userOptional.isEmpty()) {
-            User savedUser = saveNewUser(user);
+            User userfornew = new User();
+            User savedUser = saveNewUser(userfornew);
             Map<String, String> response = generateResponse(savedUser);
             return ResponseEntity.ok().body(response);
         } else {
