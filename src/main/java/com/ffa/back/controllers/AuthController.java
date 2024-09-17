@@ -1,8 +1,6 @@
 package com.ffa.back.controllers;
 
 import com.ffa.back.dto.UserRequestRegister;
-import com.ffa.back.models.User;
-import com.ffa.back.dto.UserTokenReponse;
 import com.ffa.back.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +15,13 @@ public class AuthController {
 
     @CrossOrigin
     @PostMapping("/login")
-    public ResponseEntity<UserTokenReponse> login(@RequestBody UserRequestRegister user) {
-        return authService.login(user);
+    public ResponseEntity<?> login(@RequestBody UserRequestRegister userRequest) {
+        return authService.login(userRequest);
     }
 
     @CrossOrigin
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRequestRegister user) {
-        return authService.register(user);
+    public ResponseEntity<?> register(@RequestBody UserRequestRegister userRequest) {
+        return authService.register(userRequest);
     }
 }
