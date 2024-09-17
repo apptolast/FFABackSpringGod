@@ -15,20 +15,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class FirebaseAuthService  {
+public class FirebaseAuthService {
 
     @Autowired
     private FirebaseProperties firebaseProperties;
 
-    public UserRecord createFirebaseUser(String email) {
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public UserRecord createFirebaseUser(String email, String password) {
         try {
             UserRecord.CreateRequest request = new UserRecord.CreateRequest()
                     .setEmail(email)
                     .setEmailVerified(true)
-                    .setPassword(firebaseProperties.getPass());
+                    .setPassword(password);
             return FirebaseAuth.getInstance().createUser(request);
         } catch (FirebaseAuthException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error : " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error: " + e.getMessage());
         }
     }
 
@@ -37,16 +40,15 @@ public class FirebaseAuthService  {
             UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
             return userRecord.getUid();
         } catch (FirebaseAuthException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error : " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error: " + e.getMessage());
         }
     }
-
 
     public String generateCustomToken(String uid) {
         try {
             return FirebaseAuth.getInstance().createCustomToken(uid);
         } catch (FirebaseAuthException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error : " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error: " + e.getMessage());
         }
     }
 
@@ -55,7 +57,7 @@ public class FirebaseAuthService  {
             String cleanedToken = token.replace("Bearer ", "");
             return FirebaseAuth.getInstance().verifyIdToken(cleanedToken);
         } catch (FirebaseAuthException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error when verifying token : " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error when verifying token: " + e.getMessage());
         }
     }
 
@@ -64,28 +66,32 @@ public class FirebaseAuthService  {
             UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
             FirebaseAuth.getInstance().deleteUser(userRecord.getUid());
         } catch (FirebaseAuthException e) {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "An error ocurred with the service : " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "An error occurred with the service: " + e.getMessage());
         }
     }
 
     public Map idTokenForLogin(String customTokenDecoded) {
         String url = firebaseProperties.getUrl() + "?key=" + firebaseProperties.getApiKey();
-        RestTemplate restTemplate = new RestTemplate();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, String> payload = new HashMap<>();
+
+        Map<String, Object> payload = new HashMap<>();
         payload.put("token", customTokenDecoded);
-        payload.put("returnSecureToken", String.valueOf(true));
+        payload.put("returnSecureToken", true);
 
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(payload, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return response.getBody();
-        } else {
-            throw  new ResponseStatusException(response.getStatusCode(), "Failed to get ID token ");
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                throw new ResponseStatusException(response.getStatusCode(), "Failed to get ID token");
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error during token retrieval: " + e.getMessage());
         }
     }
-
-
 }
