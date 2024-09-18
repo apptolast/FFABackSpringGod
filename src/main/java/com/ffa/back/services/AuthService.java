@@ -1,10 +1,10 @@
 package com.ffa.back.services;
 
 
-import com.ffa.back.dto.UserRequestRegister;
+import com.ffa.back.dto.UserRequestRegisterDTO;
 import com.ffa.back.models.Language;
 import com.ffa.back.models.User;
-import com.ffa.back.dto.UserTokenReponse;
+import com.ffa.back.dto.UserTokenResponseDTO;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
 import com.google.firebase.auth.UserRecord;
@@ -30,7 +30,7 @@ public class AuthService {
     @Autowired
     private LanguageRepository languageRepository;
 
-    public ResponseEntity<?> register(UserRequestRegister userRequest) {
+    public ResponseEntity<?> register(UserRequestRegisterDTO userRequest) {
         Optional<User> userOptional = userRepository.findByEmail(userRequest.getEmail());
         if (userOptional.isPresent()) {
             return buildUserExistsResponse();
@@ -57,7 +57,7 @@ public class AuthService {
             userRepository.save(newUser);
 
             // Generar respuesta
-            UserTokenReponse userTokenResponse = new UserTokenReponse(
+            UserTokenResponseDTO userTokenResponse = new UserTokenResponseDTO(
                     (String) tokens.get("idToken"),
                     (String) tokens.get("refreshToken"),
                     (String) tokens.get("expiresIn")
@@ -76,7 +76,7 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<?> login(UserRequestRegister userRequest) {
+    public ResponseEntity<?> login(UserRequestRegisterDTO userRequest) {
         try {
             // Autenticar usuario en Firebase
             String uid = firebaseAuthService.getUidUser(userRequest.getEmail());
@@ -91,7 +91,7 @@ public class AuthService {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to retrieve tokens");
             }
 
-            UserTokenReponse userTokenResponse = new UserTokenReponse(idToken, refreshToken, expiresIn);
+            UserTokenResponseDTO userTokenResponse = new UserTokenResponseDTO(idToken, refreshToken, expiresIn);
 
             return ResponseEntity.ok(userTokenResponse);
 

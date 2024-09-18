@@ -1,14 +1,14 @@
 package com.ffa.back.dto;
 
-public class UserTokenReponse {
+public class UserTokenResponseDTO {
 
     private String idToken;
     private String refreshToken;
     private String expiresIn;
 
-    protected UserTokenReponse() {}
+    protected UserTokenResponseDTO() {}
 
-    public UserTokenReponse(String idToken, String refreshToken, String expiresIn) {
+    public UserTokenResponseDTO(String idToken, String refreshToken, String expiresIn) {
         this.idToken = idToken;
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;

@@ -1,5 +1,6 @@
 package com.ffa.back.controllers;
 
+import com.ffa.back.dto.UserResponseDTO;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
@@ -10,31 +11,43 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("familyfilmapp/api/users")
 public class UserController {
 
     @Autowired
-    private FirebaseAuthService firebaseAuthService;
-
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private LanguageRepository languageRepository;
-
-    @CrossOrigin
     @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserResponseDTO> userDTOs = users.stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getProvider(),
+                        user.getLanguage().getLanguage()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userDTOs);
     }
 
-    @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            UserResponseDTO userDTO = new UserResponseDTO(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getProvider(),
+                    user.getLanguage().getLanguage());
+            return ResponseEntity.ok(userDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
+
 

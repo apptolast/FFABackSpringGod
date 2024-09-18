@@ -1,6 +1,6 @@
 package com.ffa.back.dto;
 
-public class UserRequestRegister {
+public class UserRequestRegisterDTO {
 
     private String email;
 
@@ -8,9 +8,9 @@ public class UserRequestRegister {
 
     private String language;
 
-    public UserRequestRegister() {}
+    public UserRequestRegisterDTO() {}
 
-    public UserRequestRegister(String email, String password, String language) {
+    public UserRequestRegisterDTO(String email, String password, String language) {
         this.email = email;
         this.password = password;
         this.language = language;
