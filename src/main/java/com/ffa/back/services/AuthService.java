@@ -7,6 +7,7 @@ import com.ffa.back.models.User;
 import com.ffa.back.dto.UserTokenReponse;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
+import com.google.firebase.auth.UserRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,14 @@ public class AuthService {
 
         try {
             // Crear usuario en Firebase
-            Map<String, Object> firebaseResponse = (Map<String, Object>) firebaseAuthService.createFirebaseUser(userRequest.getEmail(), userRequest.getPassword());
+            UserRecord firebaseResponse = firebaseAuthService.createFirebaseUser(userRequest.getEmail(), userRequest.getPassword());
+            // Obtenemos el Uid del Usuario
+            String uidUser = firebaseAuthService.getUidUser(userRequest.getEmail());
+            // Generamos el custom token
+            String customToken = firebaseAuthService.generateCustomToken(uidUser);
+            // Obtenemos el token del usuario
+            Map tokens = firebaseAuthService.idTokenForLogin(customToken);
+
 
             // Crear y guardar usuario en la base de datos
             User newUser = new User();
@@ -50,9 +58,9 @@ public class AuthService {
 
             // Generar respuesta
             UserTokenReponse userTokenResponse = new UserTokenReponse(
-                    (String) firebaseResponse.get("idToken"),
-                    (String) firebaseResponse.get("refreshToken"),
-                    (String) firebaseResponse.get("expiresIn")
+                    (String) tokens.get("idToken"),
+                    (String) tokens.get("refreshToken"),
+                    (String) tokens.get("expiresIn")
             );
 
             Map<String, Object> response = new HashMap<>();
