@@ -9,6 +9,9 @@ public class UserResponseDTO {
 
     // Constructor, getters y setters
 
+    public UserResponseDTO() {
+    }
+
 
     public UserResponseDTO(Long id, String email, String provider, String language) {
         this.id = id;
