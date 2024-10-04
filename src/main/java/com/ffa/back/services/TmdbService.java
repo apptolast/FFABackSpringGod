@@ -58,6 +58,7 @@ public class TmdbService {
         return url.toString();
     }
 
+
     /**
      * Obtener películas populares de manera reactiva.
      */
@@ -100,9 +101,10 @@ public class TmdbService {
     @Cacheable(value = "search", key = "#query + '_' + #page")
     public Mono<TmdbResponseDTO> searchMoviesAndSeries(String query, int page) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
-        String url = buildUrl("multi", page) + "&query=" + encodedQuery;
+        String url = buildUrl("/multi", page) + "&query=" + encodedQuery;
         return fetchTmdbResponse(webClientSearch, url);
     }
+
 
     /**
      * Obtener detalles de una película o serie específica por ID de manera reactiva.

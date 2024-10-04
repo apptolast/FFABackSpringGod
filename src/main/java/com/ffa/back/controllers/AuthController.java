@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("familyfilmapp/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired

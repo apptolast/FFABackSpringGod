@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("familyfilmapp/api/users")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
