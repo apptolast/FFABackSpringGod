@@ -4,6 +4,8 @@ package com.ffa.back.services;
 
 import com.ffa.back.config.TmdbProperties;
 import com.ffa.back.dto.TmdbResponseDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 @Service
 public class TmdbService {
 
+    private static final Logger log = LoggerFactory.getLogger(TmdbService.class);
+
     @Autowired
     private TmdbProperties tmdbProperties;
 
@@ -33,6 +37,10 @@ public class TmdbService {
     @Qualifier("webClientSeries")
     private WebClient webClientSeries;
 
+    @Autowired
+    @Qualifier("webClientSearch")
+    private WebClient webClientSearch;
+
     /**
      * Construye la URL completa para la solicitud a TMDb.
      *
@@ -40,11 +48,14 @@ public class TmdbService {
      * @param page     el número de página para la paginación
      * @return la URL formateada
      */
-    private String buildUrl(String endpoint, int page) {
-        return String.format("?api_key=%s&language=%s&page=%d",
-                tmdbProperties.getApiKey(),
-                tmdbProperties.getLanguage(),
-                page > 0 ? page : tmdbProperties.getDefaultPage());
+    private String buildUrl(String endpoint, Integer page) {
+        StringBuilder url = new StringBuilder();
+        url.append(endpoint).append("?api_key=").append(tmdbProperties.getApiKey())
+                .append("&language=").append(tmdbProperties.getLanguage());
+        if (page != null && page > 0) {
+            url.append("&page=").append(page);
+        }
+        return url.toString();
     }
 
     /**
@@ -89,14 +100,8 @@ public class TmdbService {
     @Cacheable(value = "search", key = "#query + '_' + #page")
     public Mono<TmdbResponseDTO> searchMoviesAndSeries(String query, int page) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
-        String url = String.format("/multi?api_key=%s&language=%s&query=%s&page=%d",
-                tmdbProperties.getApiKey(),
-                tmdbProperties.getLanguage(),
-                encodedQuery,
-                page > 0 ? page : tmdbProperties.getDefaultPage());
-        // Decide qué WebClient usar basado en el tipo de búsqueda (movies, series, ambos)
-        // Aquí asumo que usas webClientMovies para las búsquedas generales
-        return fetchTmdbResponse(webClientMovies, url);
+        String url = buildUrl("multi", page) + "&query=" + encodedQuery;
+        return fetchTmdbResponse(webClientSearch, url);
     }
 
     /**
@@ -104,15 +109,11 @@ public class TmdbService {
      */
     @Cacheable(value = "details", key = "#mediaType + '_' + #id")
     public Mono<TmdbResponseDTO> getDetails(String mediaType, int id) {
-        String endpoint = mediaType.equalsIgnoreCase("movie") ? "movie" : "tv";
-        String url = String.format("/%s/%d?api_key=%s&language=%s",
-                endpoint,
-                id,
-                tmdbProperties.getApiKey(),
-                tmdbProperties.getLanguage());
+        String url = buildUrl(String.valueOf(id), null);
         WebClient selectedWebClient = mediaType.equalsIgnoreCase("movie") ? webClientMovies : webClientSeries;
         return fetchTmdbResponse(selectedWebClient, url);
     }
+
 
     /**
      * Método privado para realizar la llamada a TMDb y manejar la respuesta de manera reactiva.
@@ -125,13 +126,16 @@ public class TmdbService {
         return webClient.get()
                 .uri(url)
                 .retrieve()
-                .onStatus(HttpStatusCode::isError, clientResponse ->
-                        clientResponse.bodyToMono(String.class)
-                                .flatMap(errorBody ->
-                                        Mono.error(new ResponseStatusException(clientResponse.statusCode(), "TMDb API error: " + errorBody))
-                                )
-                )
+                .onStatus(HttpStatusCode::isError, clientResponse -> {
+                    // Log del error
+                    return clientResponse.bodyToMono(String.class)
+                            .flatMap(errorBody -> {
+                                log.error("Error response from TMDb: {}", errorBody);
+                                return Mono.error(new ResponseStatusException(clientResponse.statusCode(), "TMDb API error: " + errorBody));
+                            });
+                })
                 .bodyToMono(TmdbResponseDTO.class)
+                .doOnError(e -> log.error("Exception while calling TMDb API: {}", e.getMessage()))
                 .onErrorResume(WebClientResponseException.class, e ->
                         Mono.error(new ResponseStatusException(e.getStatusCode(), "TMDb API error: " + e.getResponseBodyAsString()))
                 )
@@ -139,6 +143,7 @@ public class TmdbService {
                         Mono.error(new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Error communicating with TMDb API: " + e.getMessage()))
                 );
     }
+
 
     /**
      * Implementación de Paginación Abstraccionada: Combina múltiples páginas para entregar más items por página de manera reactiva.

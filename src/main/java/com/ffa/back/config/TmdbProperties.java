@@ -11,6 +11,7 @@ public class TmdbProperties {
     private String apiKey;
     private String apiUrlMovies;
     private String apiUrlSeries;
+    private String apiUrlSearch;
     private String language;
     private int defaultPage;
 
@@ -54,5 +55,13 @@ public class TmdbProperties {
 
     public void setDefaultPage(int defaultPage) {
         this.defaultPage = defaultPage;
+    }
+
+    public String getApiUrlSearch() {
+        return apiUrlSearch;
+    }
+
+    public void setApiUrlSearch(String apiUrlSearch) {
+        this.apiUrlSearch = apiUrlSearch;
     }
 }

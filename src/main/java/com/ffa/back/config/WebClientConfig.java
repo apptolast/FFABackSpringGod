@@ -23,4 +23,12 @@ public class WebClientConfig {
                 .defaultHeader("Accept", "application/json")
                 .build();
     }
+
+    @Bean
+    public WebClient webClientSearch(WebClient.Builder builder, TmdbProperties tmdbProperties) {
+        return builder
+                .baseUrl(tmdbProperties.getApiUrlSearch())
+                .defaultHeader("Accept", "application/json")
+                .build();
+    }
 }
