@@ -2,6 +2,11 @@
 
 package com.ffa.back.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ffa.back.config.TmdbProperties;
 import com.ffa.back.dto.TmdbResponseDTO;
 import org.slf4j.Logger;
@@ -63,7 +68,7 @@ public class TmdbService {
      * Obtener películas populares de manera reactiva.
      */
     @Cacheable(value = "movies_popular", key = "#page")
-    public Mono<TmdbResponseDTO> getPopularMovies(int page) {
+    public Mono<String> getPopularMovies(int page) {
         String url = buildUrl("popular", page);
         return fetchTmdbResponse(webClientMovies, url);
     }
@@ -72,7 +77,7 @@ public class TmdbService {
      * Obtener películas en cartelera de manera reactiva.
      */
     @Cacheable(value = "movies_now_playing", key = "#page")
-    public Mono<TmdbResponseDTO> getNowPlayingMovies(int page) {
+    public Mono<String> getNowPlayingMovies(int page) {
         String url = buildUrl("now_playing", page);
         return fetchTmdbResponse(webClientMovies, url);
     }
@@ -81,7 +86,7 @@ public class TmdbService {
      * Obtener series populares de manera reactiva.
      */
     @Cacheable(value = "series_popular", key = "#page")
-    public Mono<TmdbResponseDTO> getPopularSeries(int page) {
+    public Mono<String> getPopularSeries(int page) {
         String url = buildUrl("popular", page);
         return fetchTmdbResponse(webClientSeries, url);
     }
@@ -90,7 +95,7 @@ public class TmdbService {
      * Obtener series en emisión de manera reactiva.
      */
     @Cacheable(value = "series_on_the_air", key = "#page")
-    public Mono<TmdbResponseDTO> getOnTheAirSeries(int page) {
+    public Mono<String> getOnTheAirSeries(int page) {
         String url = buildUrl("on_the_air", page);
         return fetchTmdbResponse(webClientSeries, url);
     }
@@ -99,7 +104,7 @@ public class TmdbService {
      * Buscar películas y series por nombre de manera reactiva.
      */
     @Cacheable(value = "search", key = "#query + '_' + #page")
-    public Mono<TmdbResponseDTO> searchMoviesAndSeries(String query, int page) {
+    public Mono<String> searchMoviesAndSeries(String query, int page) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
         String url = buildUrl("/multi", page) + "&query=" + encodedQuery;
         return fetchTmdbResponse(webClientSearch, url);
@@ -110,7 +115,7 @@ public class TmdbService {
      * Obtener detalles de una película o serie específica por ID de manera reactiva.
      */
     @Cacheable(value = "details", key = "#mediaType + '_' + #id")
-    public Mono<TmdbResponseDTO> getDetails(String mediaType, int id) {
+    public Mono<String> getDetails(String mediaType, int id) {
         String url = buildUrl(String.valueOf(id), null);
         WebClient selectedWebClient = mediaType.equalsIgnoreCase("movie") ? webClientMovies : webClientSeries;
         return fetchTmdbResponse(selectedWebClient, url);
@@ -124,7 +129,7 @@ public class TmdbService {
      * @param url       la URL específica para la solicitud
      * @return un Mono que contiene la respuesta de TMDb
      */
-    private Mono<TmdbResponseDTO> fetchTmdbResponse(WebClient webClient, String url) {
+    private Mono<String> fetchTmdbResponse(WebClient webClient, String url) {
         return webClient.get()
                 .uri(url)
                 .retrieve()
@@ -136,7 +141,7 @@ public class TmdbService {
                                 return Mono.error(new ResponseStatusException(clientResponse.statusCode(), "TMDb API error: " + errorBody));
                             });
                 })
-                .bodyToMono(TmdbResponseDTO.class)
+                .bodyToMono(String.class)
                 .doOnError(e -> log.error("Exception while calling TMDb API: {}", e.getMessage()))
                 .onErrorResume(WebClientResponseException.class, e ->
                         Mono.error(new ResponseStatusException(e.getStatusCode(), "TMDb API error: " + e.getResponseBodyAsString()))
@@ -152,33 +157,51 @@ public class TmdbService {
      * Por ejemplo, combinar 2 páginas de TMDb para entregar 40 items por página.
      */
     @Cacheable(value = "movies_combined_popular", key = "#page")
-    public Mono<TmdbResponseDTO> getCombinedPopularMovies(int page) {
+    public Mono<String> getCombinedPopularMovies(int page) {
         int tmdbPage1 = (page - 1) * 2 + 1;
         int tmdbPage2 = tmdbPage1 + 1;
 
-        Mono<TmdbResponseDTO> response1 = getPopularMovies(tmdbPage1);
-        Mono<TmdbResponseDTO> response2 = getPopularMovies(tmdbPage2);
+        Mono<String> response1 = getPopularMovies(tmdbPage1);
+        Mono<String> response2 = getPopularMovies(tmdbPage2);
 
         return Mono.zip(response1, response2)
-                .map(tuple -> {
-                    TmdbResponseDTO responseA = tuple.getT1();
-                    TmdbResponseDTO responseB = tuple.getT2();
+                .flatMap(tuple -> {
+                    String responseA = tuple.getT1();
+                    String responseB = tuple.getT2();
 
-                    TmdbResponseDTO combinedResponse = new TmdbResponseDTO();
-                    combinedResponse.setPage(page);
-                    combinedResponse.setResults(new ArrayList<>());
+                    ObjectMapper mapper = new ObjectMapper();
 
-                    if (responseA != null && responseA.getResults() != null) {
-                        combinedResponse.getResults().addAll(responseA.getResults());
+                    try {
+                        JsonNode rootNode1 = mapper.readTree(responseA);
+                        JsonNode rootNode2 = mapper.readTree(responseB);
+
+                        ObjectNode combinedNode = mapper.createObjectNode();
+                        combinedNode.put("page", page);
+
+                        ArrayNode resultsArray = mapper.createArrayNode();
+                        if (rootNode1.has("results") && rootNode1.get("results").isArray()) {
+                            resultsArray.addAll((ArrayNode) rootNode1.get("results"));
+                        }
+                        if (rootNode2.has("results") && rootNode2.get("results").isArray()) {
+                            resultsArray.addAll((ArrayNode) rootNode2.get("results"));
+                        }
+                        combinedNode.set("results", resultsArray);
+
+                        // Opcional: Combina total_results y total_pages
+                        int totalResults1 = rootNode1.path("total_results").asInt(0);
+                        int totalResults2 = rootNode2.path("total_results").asInt(0);
+                        combinedNode.put("total_results", totalResults1 + totalResults2);
+
+                        int totalPages1 = rootNode1.path("total_pages").asInt(0);
+                        int totalPages2 = rootNode2.path("total_pages").asInt(0);
+                        combinedNode.put("total_pages", totalPages1 + totalPages2);
+
+                        String combinedJson = mapper.writeValueAsString(combinedNode);
+                        return Mono.just(combinedJson);
+
+                    } catch (JsonProcessingException e) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON: " + e.getMessage()));
                     }
-                    if (responseB != null && responseB.getResults() != null) {
-                        combinedResponse.getResults().addAll(responseB.getResults());
-                    }
-
-                    combinedResponse.setTotalResults(responseA.getTotalResults() + responseB.getTotalResults());
-                    combinedResponse.setTotalPages(responseA.getTotalPages() + responseB.getTotalPages());
-
-                    return combinedResponse;
                 })
                 .onErrorResume(e ->
                         Mono.error(new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Error combining TMDb responses: " + e.getMessage()))

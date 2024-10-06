@@ -23,7 +23,7 @@ public class TmdbController {
      * GET /familyfilmapp/api/movies/popular?page=1
      */
     @GetMapping("/movies/popular")
-    public Mono<ResponseEntity<TmdbResponseDTO>> getPopularMovies(
+    public Mono<ResponseEntity<String>> getPopularMovies(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
         return tmdbService.getPopularMovies(page)
                 .map(ResponseEntity::ok);
@@ -34,7 +34,7 @@ public class TmdbController {
      * GET /familyfilmapp/api/movies/now-playing?page=1
      */
     @GetMapping("/movies/now-playing")
-    public Mono<ResponseEntity<TmdbResponseDTO>> getNowPlayingMovies(
+    public Mono<ResponseEntity<String>> getNowPlayingMovies(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
         return tmdbService.getNowPlayingMovies(page)
                 .map(ResponseEntity::ok);
@@ -45,7 +45,7 @@ public class TmdbController {
      * GET /familyfilmapp/api/series/popular?page=1
      */
     @GetMapping("/series/popular")
-    public Mono<ResponseEntity<TmdbResponseDTO>> getPopularSeries(
+    public Mono<ResponseEntity<String>> getPopularSeries(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
         return tmdbService.getPopularSeries(page)
                 .map(ResponseEntity::ok);
@@ -56,7 +56,7 @@ public class TmdbController {
      * GET /familyfilmapp/api/series/on-the-air?page=1
      */
     @GetMapping("/series/on-the-air")
-    public Mono<ResponseEntity<TmdbResponseDTO>> getOnTheAirSeries(
+    public Mono<ResponseEntity<String>> getOnTheAirSeries(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
         return tmdbService.getOnTheAirSeries(page)
                 .map(ResponseEntity::ok);
@@ -67,7 +67,7 @@ public class TmdbController {
      * GET /familyfilmapp/api/search?query=nombre&page=1
      */
     @GetMapping("/search")
-    public Mono<ResponseEntity<TmdbResponseDTO>> searchMoviesAndSeries(
+    public Mono<ResponseEntity<String>> searchMoviesAndSeries(
             @RequestParam("query") @NotBlank String query,
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
         return tmdbService.searchMoviesAndSeries(query, page)
@@ -79,7 +79,7 @@ public class TmdbController {
      * GET /familyfilmapp/api/details?mediaType=movie&id=123
      */
     @GetMapping("/details")
-    public Mono<ResponseEntity<TmdbResponseDTO>> getDetails(
+    public Mono<ResponseEntity<String>> getDetails(
             @RequestParam("mediaType") @NotBlank String mediaType,
             @RequestParam("id") @Min(1) int id) {
         return tmdbService.getDetails(mediaType, id)
@@ -91,7 +91,7 @@ public class TmdbController {
      * GET /familyfilmapp/api/movies/popular-combined?page=1
      */
     @GetMapping("/movies/popular-combined")
-    public Mono<ResponseEntity<TmdbResponseDTO>> getCombinedPopularMovies(
+    public Mono<ResponseEntity<String>> getCombinedPopularMovies(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
         return tmdbService.getCombinedPopularMovies(page)
                 .map(ResponseEntity::ok);
