@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 @Service
 public class TmdbService {
@@ -43,6 +45,21 @@ public class TmdbService {
     @Autowired
     @Qualifier("webClientSearch")
     private WebClient webClientSearch;
+
+    @Autowired
+    private ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate;
+
+    private static final String CACHE_PREFIX_POPULAR_MOVIES = "movies_popular:";
+    private static final String CACHE_PREFIX_NOW_PLAYING_MOVIES = "movies_now_playing:";
+    private static final String CACHE_PREFIX_POPULAR_SERIES = "series_popular:";
+    private static final String CACHE_PREFIX_ON_THE_AIR_SERIES = "series_on_the_air:";
+    private static final String CACHE_PREFIX_SEARCH = "search:";
+    private static final String CACHE_PREFIX_DETAILS = "details:";
+    private static final String CACHE_PREFIX_COMBINED_POPULAR_MOVIES = "movies_combined_popular:";
+    private static final String CACHE_PREFIX_COMBINED_ON_THE_AIR_SERIES = "series_combined_on_the_air:";
+    private static final String CACHE_PREFIX_COMBINED_SEARCH = "search_combined:";
+    private static final String CACHE_PREFIX_COMBINED_DETAILS = "details_combined:";
+    private static final String CACHE_PREFIX_COMBINED = "combined:";
 
     /**
      * Construye la URL completa para la solicitud a TMDb.
@@ -68,7 +85,15 @@ public class TmdbService {
     @Cacheable(value = "movies_popular", key = "#page")
     public Mono<JsonNode> getPopularMovies(int page) {
         String url = buildUrl("popular", page);
-        return fetchTmdbResponse(webClientMovies, url);
+        String cacheKey = CACHE_PREFIX_POPULAR_MOVIES + page;
+        return reactiveRedisTemplate.opsForValue().get(cacheKey)
+                .switchIfEmpty(
+                        fetchTmdbResponse(webClientMovies, url)
+                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
+                                        .set(cacheKey, response, Duration.ofHours(1))
+                                        .thenReturn(response)
+                                )
+                );
     }
 
     /**
@@ -77,7 +102,15 @@ public class TmdbService {
     @Cacheable(value = "movies_now_playing", key = "#page")
     public Mono<JsonNode> getNowPlayingMovies(int page) {
         String url = buildUrl("now_playing", page);
-        return fetchTmdbResponse(webClientMovies, url);
+        String cacheKey = CACHE_PREFIX_NOW_PLAYING_MOVIES + page;
+        return reactiveRedisTemplate.opsForValue().get(cacheKey)
+                .switchIfEmpty(
+                        fetchTmdbResponse(webClientMovies, url)
+                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
+                                        .set(cacheKey, response, Duration.ofHours(1))
+                                        .thenReturn(response)
+                                )
+                );
     }
 
     /**
@@ -86,7 +119,15 @@ public class TmdbService {
     @Cacheable(value = "series_popular", key = "#page")
     public Mono<JsonNode> getPopularSeries(int page) {
         String url = buildUrl("popular", page);
-        return fetchTmdbResponse(webClientSeries, url);
+        String cacheKey = CACHE_PREFIX_POPULAR_SERIES + page;
+        return reactiveRedisTemplate.opsForValue().get(cacheKey)
+                .switchIfEmpty(
+                        fetchTmdbResponse(webClientMovies, url)
+                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
+                                        .set(cacheKey, response, Duration.ofHours(1))
+                                        .thenReturn(response)
+                                )
+                );
     }
 
     /**
@@ -95,7 +136,15 @@ public class TmdbService {
     @Cacheable(value = "series_on_the_air", key = "#page")
     public Mono<JsonNode> getOnTheAirSeries(int page) {
         String url = buildUrl("on_the_air", page);
-        return fetchTmdbResponse(webClientSeries, url);
+        String cacheKey = CACHE_PREFIX_ON_THE_AIR_SERIES + page;
+        return reactiveRedisTemplate.opsForValue().get(cacheKey)
+                .switchIfEmpty(
+                        fetchTmdbResponse(webClientMovies, url)
+                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
+                                        .set(cacheKey, response, Duration.ofHours(1))
+                                        .thenReturn(response)
+                                )
+                );
     }
 
     /**
