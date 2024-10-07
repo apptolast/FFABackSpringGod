@@ -1,0 +1,450 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "backdrop_path": "/fVL0nCyOhdBaeX4KdfNaeqM9hlm.jpg",
+      "id": 1482,
+      "name": "Spider-Man",
+      "original_name": "Spider-Man",
+      "overview": "The bite of a radioactive spider transforms a teen into a superhero.",
+      "poster_path": "/y85QOYMhcZsEfHbrntBv5SZXH1w.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        10762,
+        16,
+        10759
+      ],
+      "popularity": 40.284,
+      "first_air_date": "1967-09-09",
+      "vote_average": 7.691,
+      "vote_count": 191,
+      "origin_country": [
+        "US"
+      ]
+    },
+    {
+      "backdrop_path": "/fFWdqlnBVNMLDneYUeQLFuPBq4Z.jpg",
+      "id": 888,
+      "name": "Spider-Man",
+      "original_name": "Spider-Man",
+      "overview": "Bitten by a neogenetic spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.",
+      "poster_path": "/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        16,
+        10759
+      ],
+      "popularity": 70.425,
+      "first_air_date": "1994-11-19",
+      "vote_average": 8.27,
+      "vote_count": 1005,
+      "origin_country": [
+        "US"
+      ]
+    },
+    {
+      "backdrop_path": "/2PDTWfuBWQKVC7aPAqJK5UCpz08.jpg",
+      "id": 557,
+      "title": "Spider-Man",
+      "original_title": "Spider-Man",
+      "overview": "After being bitten by a genetically altered spider at Oscorp, nerdy but endearing high school student Peter Parker is endowed with amazing powers to become the superhero known as Spider-Man.",
+      "poster_path": "/gh4cZbhZxyTbgxQPxD0dOudNPTn.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        878
+      ],
+      "popularity": 96.698,
+      "release_date": "2002-05-01",
+      "video": false,
+      "vote_average": 7.301,
+      "vote_count": 18884
+    },
+    {
+      "backdrop_path": "/qDum1yhNftUMaIB3pPiZ7PLsIto.jpg",
+      "id": 72705,
+      "name": "Marvel's Spider-Man",
+      "original_name": "Marvel's Spider-Man",
+      "overview": "An insecure but courageous and intelligent teen named Peter Parker, a new student of Midtown High, is bitten by a radioactive spider and given powers. He becomes a hero named Spider-Man after the death of his uncle and he must adapt to this new way of life.",
+      "poster_path": "/dKdcyyHUR5WTMnrbPdYN5y9xPVp.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        16,
+        10765,
+        35,
+        10751
+      ],
+      "popularity": 90.287,
+      "first_air_date": "2017-08-19",
+      "vote_average": 7.524,
+      "vote_count": 352,
+      "origin_country": [
+        "US"
+      ]
+    },
+    {
+      "backdrop_path": "/kVd3a9YeLGkoeR50jGEXM6EqseS.jpg",
+      "id": 569094,
+      "title": "Spider-Man: Across the Spider-Verse",
+      "original_title": "Spider-Man: Across the Spider-Verse",
+      "overview": "After reuniting with Gwen Stacy, Brooklyn’s full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters the Spider Society, a team of Spider-People charged with protecting the Multiverse’s very existence. But when the heroes clash on how to handle a new threat, Miles finds himself pitted against the other Spiders and must set out on his own to save those he loves most.",
+      "poster_path": "/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        16,
+        28,
+        12,
+        878
+      ],
+      "popularity": 201.696,
+      "release_date": "2023-05-31",
+      "video": false,
+      "vote_average": 8.358,
+      "vote_count": 6822
+    },
+    {
+      "backdrop_path": "/w1oD1MzHjnBJc5snKupIQaSBLIh.jpg",
+      "id": 559,
+      "title": "Spider-Man 3",
+      "original_title": "Spider-Man 3",
+      "overview": "The seemingly invincible Spider-Man goes up against an all-new crop of villains—including the shape-shifting Sandman. While Spider-Man’s superpowers are altered by an alien organism, his alter ego, Peter Parker, deals with nemesis Eddie Brock and also gets caught up in a love triangle.",
+      "poster_path": "/qFmwhVUoUSXjkKRmca5yGDEXBIj.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        12,
+        878
+      ],
+      "popularity": 79.517,
+      "release_date": "2007-05-01",
+      "video": false,
+      "vote_average": 6.43,
+      "vote_count": 13959
+    },
+    {
+      "backdrop_path": "/zD5v1E4joAzFvmAEytt7fM3ivyT.jpg",
+      "id": 634649,
+      "title": "Spider-Man: No Way Home",
+      "original_title": "Spider-Man: No Way Home",
+      "overview": "Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man.",
+      "poster_path": "/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        12,
+        878
+      ],
+      "popularity": 215.126,
+      "release_date": "2021-12-15",
+      "video": false,
+      "vote_average": 7.96,
+      "vote_count": 19925
+    },
+    {
+      "backdrop_path": "/fn4n6uOYcB6Uh89nbNPoU2w80RV.jpg",
+      "id": 315635,
+      "title": "Spider-Man: Homecoming",
+      "original_title": "Spider-Man: Homecoming",
+      "overview": "Following the events of Captain America: Civil War, Peter Parker, with the help of his mentor Tony Stark, tries to balance his life as an ordinary high school student in Queens, New York City, with fighting crime as his superhero alter ego Spider-Man as a new threat, the Vulture, emerges.",
+      "poster_path": "/c24sv2weTHPsmDa7jEMN0m2P3RT.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        12,
+        878,
+        18
+      ],
+      "popularity": 104.307,
+      "release_date": "2017-07-05",
+      "video": false,
+      "vote_average": 7.336,
+      "vote_count": 21586
+    },
+    {
+      "backdrop_path": "/sk9B08wqHXyjbEMGYjm41qjzWrW.jpg",
+      "id": 102382,
+      "title": "The Amazing Spider-Man 2",
+      "original_title": "The Amazing Spider-Man 2",
+      "overview": "For Peter Parker, life is busy. Between taking out the bad guys as Spider-Man and spending time with the person he loves, Gwen Stacy, high school graduation cannot come quickly enough. Peter has not forgotten about the promise he made to Gwen’s father to protect her by staying away, but that is a promise he cannot keep. Things will change for Peter when a new villain, Electro, emerges, an old friend, Harry Osborn, returns, and Peter uncovers new clues about his past.",
+      "poster_path": "/kV61FAIsRWZP6JhgWFOKug9RbBx.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        12,
+        878
+      ],
+      "popularity": 86.075,
+      "release_date": "2014-04-16",
+      "video": false,
+      "vote_average": 6.51,
+      "vote_count": 13094
+    },
+    {
+      "backdrop_path": "/qGQf2OHIkoh89K8XeKQzhxczf96.jpg",
+      "id": 324857,
+      "title": "Spider-Man: Into the Spider-Verse",
+      "original_title": "Spider-Man: Into the Spider-Verse",
+      "overview": "Struggling to find his place in the world while juggling school and family, Brooklyn teenager Miles Morales is unexpectedly bitten by a radioactive spider and develops unfathomable powers just like the one and only Spider-Man. While wrestling with the implications of his new abilities, Miles discovers a super collider created by the madman Wilson \"Kingpin\" Fisk, causing others from across the Spider-Verse to be inadvertently transported to his dimension.",
+      "poster_path": "/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        16,
+        28,
+        12,
+        878
+      ],
+      "popularity": 131.473,
+      "release_date": "2018-12-06",
+      "video": false,
+      "vote_average": 8.4,
+      "vote_count": 15469
+    },
+    {
+      "backdrop_path": "/zlpZzccypkAYFZIyYLQcchl90ZC.jpg",
+      "id": 225914,
+      "title": "Spider-Man",
+      "original_title": "Spider-Man",
+      "overview": "When an extortionist threatens to force a multi-suicide unless a huge ransom is paid, only Peter Parker can stop him with his new powers as Spider-Man.",
+      "poster_path": "/jNxRHZ2cxVkNRtxgHuCtv7GY4JP.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        878,
+        28,
+        80,
+        10770
+      ],
+      "popularity": 19.5,
+      "release_date": "1977-09-14",
+      "video": false,
+      "vote_average": 6.154,
+      "vote_count": 179
+    },
+    {
+      "backdrop_path": "/v5aFCLawM9oCygfGUzjJxRX4c6C.jpg",
+      "id": 1930,
+      "title": "The Amazing Spider-Man",
+      "original_title": "The Amazing Spider-Man",
+      "overview": "Peter Parker is an outcast high schooler abandoned by his parents as a boy, leaving him to be raised by his Uncle Ben and Aunt May. Like most teenagers, Peter is trying to figure out who he is and how he got to be the person he is today. As Peter discovers a mysterious briefcase that belonged to his father, he begins a quest to understand his parents' disappearance – leading him directly to Oscorp and the lab of Dr. Curt Connors, his father's former partner. As Spider-Man is set on a collision course with Connors' alter ego, The Lizard, Peter will make life-altering choices to use his powers and shape his destiny to become a hero.",
+      "poster_path": "/BgcvtsVWLQfjHD6Dr3YYgeSLYk.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        12,
+        878
+      ],
+      "popularity": 147.817,
+      "release_date": "2012-06-23",
+      "video": false,
+      "vote_average": 6.706,
+      "vote_count": 17198
+    },
+    {
+      "backdrop_path": "/34jW8LvjRplM8Pv06cBFDpLlenR.jpg",
+      "id": 429617,
+      "title": "Spider-Man: Far From Home",
+      "original_title": "Spider-Man: Far From Home",
+      "overview": "Peter Parker and his friends go on a summer trip to Europe. However, they will hardly be able to rest - Peter will have to agree to help Nick Fury uncover the mystery of creatures that cause natural disasters and destruction throughout the continent.",
+      "poster_path": "/4q2NNj4S5dG2RLF9CpXsej7yXl.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        12,
+        878
+      ],
+      "popularity": 116.147,
+      "release_date": "2019-06-28",
+      "video": false,
+      "vote_average": 7.426,
+      "vote_count": 15504
+    },
+    {
+      "backdrop_path": "/gQENev4ojlGQd05ic9SiXlaXSzM.jpg",
+      "id": 3973,
+      "name": "Spider-Man",
+      "original_name": "Spider-Man",
+      "overview": "Spider-Man is an American animated TV series based on the popular Marvel Comics character of the same name.",
+      "poster_path": "/5xZac4wWUlXQmEBqIIKJ9rqXnUh.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        16,
+        10762
+      ],
+      "popularity": 16.289,
+      "first_air_date": "1981-09-12",
+      "vote_average": 7.121,
+      "vote_count": 63,
+      "origin_country": [
+        "US"
+      ]
+    },
+    {
+      "backdrop_path": "/hF2Dnx9g6pm87UJ6RJ58PrpdMWQ.jpg",
+      "id": 1269,
+      "name": "Spider-Man and His Amazing Friends",
+      "original_name": "Spider-Man and His Amazing Friends",
+      "overview": "Spider-Man and His Amazing Friends is an American animated television series produced by Marvel Productions starring established Marvel Comics characters Spider-Man and Iceman and an original character, Firestar. As a trio called the Spider-Friends, they fought against various villains.",
+      "poster_path": "/4b8HFH1arZ4b05RHwxPc2JfueYv.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        10759,
+        16,
+        10751,
+        10765
+      ],
+      "popularity": 36.59,
+      "first_air_date": "1981-09-12",
+      "vote_average": 7.445,
+      "vote_count": 236,
+      "origin_country": [
+        "US"
+      ]
+    },
+    {
+      "backdrop_path": "/gXeCzYmCRBlpbbhhKrYM1ZpIDAA.jpg",
+      "id": 34391,
+      "name": "Marvel's Ultimate Spider-Man",
+      "original_name": "Marvel's Ultimate Spider-Man",
+      "overview": "While being trained by S.H.I.E.L.D., Spider-Man battles evil with a new team of teen colleagues.",
+      "poster_path": "/91hqeylCZsMLfcBuuflaVJ5w2nm.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        10762,
+        10759,
+        16,
+        35,
+        10751
+      ],
+      "popularity": 53.286,
+      "first_air_date": "2012-04-01",
+      "vote_average": 7.681,
+      "vote_count": 988,
+      "origin_country": [
+        "US"
+      ]
+    },
+    {
+      "backdrop_path": "/fypGcrQCyb9vQ7L8AM6PHCjQSBC.jpg",
+      "id": 3854,
+      "name": "The Spectacular Spider-Man",
+      "original_name": "The Spectacular Spider-Man",
+      "overview": "Having spent the summer engaging common criminals with his new-found powers, not so typical 16-year-old Peter Parker must conceal his secret identity and battle super-villains in the real world as he enters his junior year of high school.",
+      "poster_path": "/dCNxOhXT7c4lqYuRpdM3m8s9XDp.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        10759,
+        16,
+        10762,
+        10751
+      ],
+      "popularity": 45.753,
+      "first_air_date": "2008-03-08",
+      "vote_average": 8.574,
+      "vote_count": 782,
+      "origin_country": [
+        "US"
+      ]
+    },
+    {
+      "backdrop_path": "/46Br5afTklXva5gRI6wXcAApaGP.jpg",
+      "id": 911916,
+      "title": "Spider-Man: Beyond the Spider-Verse",
+      "original_title": "Spider-Man: Beyond the Spider-Verse",
+      "overview": "Taking place right after the events of Spider-Man: Across the Spider-Verse, Gwen Stacy leads the newly reformed Spider-Gang in a race against the Spider-Society, led by Miguel O'Hara, to find Miles Morales, who is trapped in the home dimension of the spider that bit him, along with an alternate version of himself as the Prowler, while the Spot begins his deadly attack in his dimension with far-reaching multiversal consequences.",
+      "poster_path": "/5cAuJOfd5tuuFBz2yQmBCtVBaj0.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        16,
+        28,
+        12,
+        878
+      ],
+      "popularity": 23.145,
+      "release_date": "",
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    },
+    {
+      "backdrop_path": null,
+      "id": 445033,
+      "title": "Spider-Man",
+      "original_title": "Spider-Man",
+      "overview": "Spider-man must rescue the beautiful daughter of the evil Dr. Lightning.",
+      "poster_path": "/iYBfBk1i9zjN9Vybbj8UgTYzkyv.jpg",
+      "media_type": "movie",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        28,
+        878
+      ],
+      "popularity": 3.616,
+      "release_date": "1969-01-01",
+      "video": false,
+      "vote_average": 6.786,
+      "vote_count": 28
+    },
+    {
+      "backdrop_path": "/nVHovBi2yqZAYW17273ytA8SE7c.jpg",
+      "id": 1664,
+      "name": "Spider-Man: The New Animated Series",
+      "original_name": "Spider-Man: The New Animated Series",
+      "overview": "Bitten by an irradiated spider, teenager Peter Parker gains arachnid-like powers that make him both a hero to those in need and a vigilante wanted by the police.",
+      "poster_path": "/v3UfqXCAxAcI7oUO4zwtk1T9G3n.jpg",
+      "media_type": "tv",
+      "adult": false,
+      "original_language": "en",
+      "genre_ids": [
+        16,
+        10759,
+        10765
+      ],
+      "popularity": 33.179,
+      "first_air_date": "2003-07-11",
+      "vote_average": 7.119,
+      "vote_count": 349,
+      "origin_country": [
+        "CA",
+        "US"
+      ]
+    }
+  ],
+  "total_pages": 5,
+  "total_results": 95
+}

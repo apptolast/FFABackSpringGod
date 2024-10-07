@@ -1,0 +1,318 @@
+{
+  "adult": false,
+  "backdrop_path": "/nCXV9ARvIE2Yc9tLg6pBwpPpPld.jpg",
+  "created_by": [
+    {
+      "id": 1215602,
+      "credit_id": "62333ca7109cd00045df2331",
+      "name": "John de Mol",
+      "original_name": "John de Mol",
+      "gender": 2,
+      "profile_path": "/w6I4OZDHnSQsmpMvoRvfz1BvVpr.jpg"
+    }
+  ],
+  "episode_run_time": [
+    30
+  ],
+  "first_air_date": "2005-08-21",
+  "genres": [
+    {
+      "id": 10764,
+      "name": "Reality"
+    }
+  ],
+  "homepage": "https://ent.abs-cbn.com/pbbs10",
+  "id": 8892,
+  "in_production": true,
+  "languages": [
+    "en",
+    "tl"
+  ],
+  "last_air_date": "2024-08-16",
+  "last_episode_to_air": {
+    "id": 5643712,
+    "name": "Episode 79",
+    "overview": "",
+    "vote_average": 0,
+    "vote_count": 0,
+    "air_date": "2024-10-06",
+    "episode_number": 79,
+    "episode_type": "standard",
+    "production_code": "",
+    "runtime": 30,
+    "season_number": 17,
+    "show_id": 8892,
+    "still_path": null
+  },
+  "name": "Pinoy Big Brother",
+  "next_episode_to_air": {
+    "id": 5643713,
+    "name": "Episode 80",
+    "overview": "",
+    "vote_average": 0,
+    "vote_count": 0,
+    "air_date": "2024-10-07",
+    "episode_number": 80,
+    "episode_type": "standard",
+    "production_code": "",
+    "runtime": 30,
+    "season_number": 17,
+    "show_id": 8892,
+    "still_path": null
+  },
+  "networks": [
+    {
+      "id": 20,
+      "logo_path": "/kdcvqvutGKUsIkeSVGl8pQMkc3k.png",
+      "name": "ABS-CBN",
+      "origin_country": "PH"
+    },
+    {
+      "id": 42,
+      "logo_path": "/gVinXXdpdbLHuXTUUfx4R9PyuPB.png",
+      "name": "TV5",
+      "origin_country": "PH"
+    },
+    {
+      "id": 3920,
+      "logo_path": "/eK7hBqDuNwvHqBoWtVgCdNIehsU.png",
+      "name": "Kapamilya Channel",
+      "origin_country": "PH"
+    },
+    {
+      "id": 6982,
+      "logo_path": null,
+      "name": "A2Z",
+      "origin_country": "PH"
+    }
+  ],
+  "number_of_episodes": 159,
+  "number_of_seasons": 17,
+  "origin_country": [
+    "PH"
+  ],
+  "original_language": "tl",
+  "original_name": "Pinoy Big Brother",
+  "overview": "The Philippine adaptation of the reality game show \"Big Brother\" features Filipino housemates live together, share their stories and build meaningful relationships as they do tasks and challenges supervised by Big Brother. Every week a nomination is done, and the public decides who gets evicted and eventually become the Big Winner of the program.",
+  "popularity": 2463.695,
+  "poster_path": "/zUva0cs2SOjoxFPpwINbpevzoax.jpg",
+  "production_companies": [
+    {
+      "id": 162722,
+      "logo_path": null,
+      "name": "ABS-CBN Studios",
+      "origin_country": "PH"
+    },
+    {
+      "id": 115215,
+      "logo_path": "/4FoNChngLnjhs2B7gvrlTiO8Dyr.png",
+      "name": "Banijay Asia",
+      "origin_country": "IN"
+    }
+  ],
+  "production_countries": [
+    {
+      "iso_3166_1": "PH",
+      "name": "Philippines"
+    }
+  ],
+  "seasons": [
+    {
+      "air_date": null,
+      "episode_count": 0,
+      "id": 314935,
+      "name": "Specials",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 0,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2005-08-21",
+      "episode_count": 1,
+      "id": 101246,
+      "name": "Season 1",
+      "overview": "It was the first show produced under a Philippine franchise of the reality series Big Brother.",
+      "poster_path": null,
+      "season_number": 1,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2006-02-05",
+      "episode_count": 1,
+      "id": 283670,
+      "name": "Celebrity Edition 1",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 2,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2006-04-23",
+      "episode_count": 1,
+      "id": 283671,
+      "name": "Teen Edition 1",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 3,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2007-02-25",
+      "episode_count": 1,
+      "id": 283672,
+      "name": "Season 2",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 4,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2007-10-14",
+      "episode_count": 1,
+      "id": 283673,
+      "name": "Celebrity Edition 2",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 5,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2008-03-23",
+      "episode_count": 1,
+      "id": 283674,
+      "name": "Teen Edition Plus",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 6,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2009-10-04",
+      "episode_count": 1,
+      "id": 283675,
+      "name": "Double Up",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 7,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2010-04-10",
+      "episode_count": 1,
+      "id": 283676,
+      "name": "Teen Clash 2010",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 8,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2011-10-29",
+      "episode_count": 1,
+      "id": 283677,
+      "name": "Unlimited",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 9,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2012-04-08",
+      "episode_count": 1,
+      "id": 283678,
+      "name": "Teen Edition 4",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 10,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2014-04-27",
+      "episode_count": 1,
+      "id": 283679,
+      "name": "All In",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 11,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2015-06-20",
+      "episode_count": 1,
+      "id": 283680,
+      "name": "737",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 12,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2016-07-11",
+      "episode_count": 1,
+      "id": 283681,
+      "name": "Lucky 7",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 13,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2018-11-10",
+      "episode_count": 1,
+      "id": 283682,
+      "name": "Otso",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 14,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2020-12-06",
+      "episode_count": 8,
+      "id": 283683,
+      "name": "Connect",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 15,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2021-10-16",
+      "episode_count": 107,
+      "id": 283684,
+      "name": "Kumunity 10",
+      "overview": "Pinoy Big Brother returns for its 10th season in partnership with Kumu. Three communities are slated to enter the PBB House this season—the celebrities, regular adults, and teens.",
+      "poster_path": null,
+      "season_number": 16,
+      "vote_average": 0
+    },
+    {
+      "air_date": "2024-07-20",
+      "episode_count": 100,
+      "id": 401970,
+      "name": "Gen 11",
+      "overview": "Welcoming a diverse group of Gen Z housemates, Pinoy Big Brother’s leGENdary yellow house reopens with a whirlwind of tasks and challenges to crown the next Big Winner of Pinoy Big Brother Gen 11. Brace yourselves for a Gen Z revolution!",
+      "poster_path": "/wR8Ds8hPgwWRpS3AkCzDZA5uPrC.jpg",
+      "season_number": 17,
+      "vote_average": 0
+    }
+  ],
+  "spoken_languages": [
+    {
+      "english_name": "English",
+      "iso_639_1": "en",
+      "name": "English"
+    },
+    {
+      "english_name": "Tagalog",
+      "iso_639_1": "tl",
+      "name": ""
+    }
+  ],
+  "status": "Returning Series",
+  "tagline": "Real Life Soap Opera",
+  "type": "Reality",
+  "vote_average": 5,
+  "vote_count": 7
+}
