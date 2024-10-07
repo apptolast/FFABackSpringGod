@@ -2,6 +2,13 @@ package com.ffa.back.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ffa.back.dto.*;
+import com.ffa.back.dto.DetailMovieById;
+import com.ffa.back.dto.DetailSerieById;
+import com.ffa.back.dto.MoviesNowPlaying;
+import com.ffa.back.dto.MoviesPopular;
+import com.ffa.back.dto.OnTheAirSeries;
+import com.ffa.back.dto.PopularSeries;
+import com.ffa.back.dto.SearchMoviesAndFilmsByName;
 import com.ffa.back.services.TmdbService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
