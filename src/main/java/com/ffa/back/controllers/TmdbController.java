@@ -1,8 +1,12 @@
 package com.ffa.back.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ffa.back.dto.TmdbResponseDTO;
+import com.ffa.back.dto.PopularSeries;
 import com.ffa.back.services.TmdbService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +49,11 @@ public class TmdbController {
      * Obtener series populares.
      * GET /familyfilmapp/api/series/popular?page=1
      */
+    @Operation(summary = "Obtener series populares", responses = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PopularSeries.class)))
+    })
     @GetMapping("/series/popular")
     public Mono<ResponseEntity<JsonNode>> getPopularSeries(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
