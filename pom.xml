@@ -94,11 +94,13 @@
                 <version>1.1.1</version>
                 <executions>
                     <execution>
+                        <id>generate-pojos</id>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/resources/schema</sourceDirectory>
+                            <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
                             <targetPackage>com.ffa.back.dto</targetPackage>
                             <sourceType>json</sourceType>
                         </configuration>

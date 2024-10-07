@@ -1,0 +1,422 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "backdrop_path": "/nCXV9ARvIE2Yc9tLg6pBwpPpPld.jpg",
+      "genre_ids": [
+        10764
+      ],
+      "id": 8892,
+      "origin_country": [
+        "PH"
+      ],
+      "original_language": "tl",
+      "original_name": "Pinoy Big Brother",
+      "overview": "The Philippine adaptation of the reality game show \"Big Brother\" features Filipino housemates live together, share their stories and build meaningful relationships as they do tasks and challenges supervised by Big Brother. Every week a nomination is done, and the public decides who gets evicted and eventually become the Big Winner of the program.",
+      "popularity": 2463.695,
+      "poster_path": "/zUva0cs2SOjoxFPpwINbpevzoax.jpg",
+      "first_air_date": "2005-08-21",
+      "name": "Pinoy Big Brother",
+      "vote_average": 5,
+      "vote_count": 7
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/jWXrQstj7p3Wl5MfYWY6IHqRpDb.jpg",
+      "genre_ids": [
+        10763
+      ],
+      "id": 94722,
+      "origin_country": [
+        "DE"
+      ],
+      "original_language": "de",
+      "original_name": "Tagesschau",
+      "overview": "German daily news program, the oldest still existing program on German television.",
+      "popularity": 2326.139,
+      "poster_path": "/7dFZJ2ZJJdcmkp05B9NWlqTJ5tq.jpg",
+      "first_air_date": "1952-12-26",
+      "name": "Tagesschau",
+      "vote_average": 6.8,
+      "vote_count": 203
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/NNC08YmJFFlLi1prBkK8quk3dp.jpg",
+      "genre_ids": [
+        10759,
+        10765,
+        18
+      ],
+      "id": 84773,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "The Lord of the Rings: The Rings of Power",
+      "overview": "Beginning in a time of relative peace, we follow an ensemble cast of characters as they confront the re-emergence of evil to Middle-earth. From the darkest depths of the Misty Mountains, to the majestic forests of Lindon, to the breathtaking island kingdom of Númenor, to the furthest reaches of the map, these kingdoms and characters will carve out legacies that live on long after they are gone.",
+      "popularity": 2189.039,
+      "poster_path": "/mYLOqiStMxDK3fYZFirgrMt8z5d.jpg",
+      "first_air_date": "2022-09-01",
+      "name": "The Lord of the Rings: The Rings of Power",
+      "vote_average": 7.346,
+      "vote_count": 2901
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/rotcih1fY3UOYejNbiTmz36og12.jpg",
+      "genre_ids": [
+        18,
+        10751
+      ],
+      "id": 242722,
+      "origin_country": [
+        "IN"
+      ],
+      "original_language": "hi",
+      "original_name": "श्रीमद् रामायण",
+      "overview": "Shrimad Ramayan is an ambitious television series that brings to life the timeless epic, the Ramayan, with a deep commitment to authenticity, cultural reverence and a contemporary sensibility.",
+      "popularity": 1188.964,
+      "poster_path": "/aCDK83ykQYnQGFOTfiLjnoqXv1b.jpg",
+      "first_air_date": "2024-01-22",
+      "name": "Shrimad Ramayan",
+      "vote_average": 9,
+      "vote_count": 2
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/ookJ1LS8Uc0ji7cSDuJfV7Qh6Lb.jpg",
+      "genre_ids": [
+        10764
+      ],
+      "id": 18770,
+      "origin_country": [
+        "ES"
+      ],
+      "original_language": "es",
+      "original_name": "Gran hermano",
+      "overview": "Gran Hermano is a reality television series broadcast in Spain on Telecinco and La Siete produced by Endemol. It is part of the Big Brother franchise first developed in the Netherlands. As of February 2012, 19 editions of the show have aired.",
+      "popularity": 1801.23,
+      "poster_path": "/gQ0Emh2LT047Fip2HWye3NkrkQB.jpg",
+      "first_air_date": "2000-04-23",
+      "name": "Gran hermano",
+      "vote_average": 4.3,
+      "vote_count": 2
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/ctADCu9xka8c6tc8PONl26lZzJ8.jpg",
+      "genre_ids": [
+        18,
+        9648
+      ],
+      "id": 248818,
+      "origin_country": [
+        "CN"
+      ],
+      "original_language": "zh",
+      "original_name": "暗夜与黎明",
+      "overview": "In 1943 Shanghai, an explosion leads to a showdown between Communist undercover agent Lu Zhengyang and former police officer Lin Shaobai. Six years later, Lu Zhengyang, now a key member of the Shanghai Public Security Bureau, recruits Lin Shaobai, the \"Shanghai Expert,\" to tackle major cases and thwart the plots of veteran spy Zheng Lanting. As they work together, Lu Zhengyang and Lin Shaobai build trust and become close comrades.",
+      "popularity": 959.17,
+      "poster_path": "/9ErUSwcHMdYWwwJPG6Vol5j1wx5.jpg",
+      "first_air_date": "2024-09-18",
+      "name": "Dark Night and Dawn",
+      "vote_average": 8.5,
+      "vote_count": 2
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/6sI85zW1DWcOVVdMfAxlRS8YEpY.jpg",
+      "genre_ids": [],
+      "id": 260196,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "es",
+      "original_name": "La isla: Desafío extremo",
+      "overview": "A tour across Turkey where 24 contestants face survival challenges.",
+      "popularity": 1760.466,
+      "poster_path": "/1mOLASAf5AkdYcRwe8L3uVa6yvb.jpg",
+      "first_air_date": "2024-07-30",
+      "name": "La isla: Desafío extremo",
+      "vote_average": 0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/q3UGWifvIpdey1T2efX4dSmbZpU.jpg",
+      "genre_ids": [
+        9648,
+        18,
+        10765
+      ],
+      "id": 124364,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "FROM",
+      "overview": "Unravel the mystery of a nightmarish town in middle America that traps all those who enter. As the unwilling residents fight to keep a sense of normalcy and search for a way out, they must also survive the threats of the surrounding forest – including the terrifying creatures that come out when the sun goes down.",
+      "popularity": 1529.634,
+      "poster_path": "/pnrv8tfOcWxu4CrB8N7xK0jYJsR.jpg",
+      "first_air_date": "2022-02-20",
+      "name": "FROM",
+      "vote_average": 8.145,
+      "vote_count": 1209
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/bPnzBs4Ka1tZFCsZF3cPkzNjiLC.jpg",
+      "genre_ids": [
+        35,
+        10767
+      ],
+      "id": 122653,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "Gutfeld!",
+      "overview": "Greg Gutfeld examines the news of the day through a satiric lens fused with pop culture.",
+      "popularity": 1844.755,
+      "poster_path": "/9zLuN3MfvTcABYYNJq5PkIG81S5.jpg",
+      "first_air_date": "2021-04-05",
+      "name": "Gutfeld!",
+      "vote_average": 6.143,
+      "vote_count": 7
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/5ElVEImEPQmLVj1hkRM26rpsDKe.jpg",
+      "genre_ids": [
+        10766
+      ],
+      "id": 242101,
+      "origin_country": [
+        "PT"
+      ],
+      "original_language": "pt",
+      "original_name": "Cacau",
+      "overview": "Cacau is an engaging saga of family secrets, clandestine loves and sacrifices, all sweetened by the irresistible taste of chocolate and the magic of cocoa plantations.",
+      "popularity": 1709.141,
+      "poster_path": "/nNCFBKZ68fmr008moWSzLdu2mUP.jpg",
+      "first_air_date": "2024-01-15",
+      "name": "Cacau",
+      "vote_average": 5.333,
+      "vote_count": 18
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/q2gOWmtelceZGmKdLc08t8M443b.jpg",
+      "genre_ids": [
+        10766
+      ],
+      "id": 242099,
+      "origin_country": [
+        "PT"
+      ],
+      "original_language": "pt",
+      "original_name": "Senhora do Mar",
+      "overview": "On her birthday, Joana's joy turns to despair when her abusive husband discovers her pregnancy and attempts to harm her. Fleeing the city, she finds refuge on a boat with criminals, but realizing the danger, she sees land beyond so leaps into the water and swims to Terceira Island, leaving her life behind. Exhausted on the shore, she encounters Chico, a lost child, during a religious ceremony. Joana arrives with the child, inadvertently becoming mistaken for a saint 'Our Lady of the Sea', revered by the island's faithful.",
+      "popularity": 1691.964,
+      "poster_path": "/wy4tkwuoWMGEa5Wi8dCvLVuxBzt.jpg",
+      "first_air_date": "2024-02-05",
+      "name": "Lady of the sea",
+      "vote_average": 6.65,
+      "vote_count": 10
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/mk8bnzDtrtpmOl7MUnqiEevYifL.jpg",
+      "genre_ids": [
+        18,
+        10759
+      ],
+      "id": 263221,
+      "origin_country": [
+        "CN"
+      ],
+      "original_language": "zh",
+      "original_name": "镇魂街之热血再燃",
+      "overview": "It's a story about Cao Yanbing, the descendant of Cao Cao, strong as the God of War, Xia Ling, who has a mysterious guardian spirit following her, and Beiluo Shimen, the former Spirit-Subduing General, going to the Forest of Emptiness to find the ancient Luhua Building with different agendas. It is a dangerous journey, but they support each other, overcome difficulties together, and finally become mature. However, they also find some shocking secrets...",
+      "popularity": 1595.092,
+      "poster_path": "/ozzpdPCkD0cVuJj3NBaztKQDm3y.jpg",
+      "first_air_date": "2024-09-23",
+      "name": "Hero Is Back",
+      "vote_average": 6.667,
+      "vote_count": 3
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/rj3jBAZwPiOgkwAy1205MAgLahj.jpg",
+      "genre_ids": [
+        10766
+      ],
+      "id": 81329,
+      "origin_country": [
+        "FR"
+      ],
+      "original_language": "fr",
+      "original_name": "Un si grand soleil",
+      "overview": "Claire is surprised when she gets arrested for the murder of her childhood friend after she returns to Montpellier.",
+      "popularity": 1664.324,
+      "poster_path": "/t6jVlbPMtZOJoAOfeoR4yQmnjXM.jpg",
+      "first_air_date": "2018-08-27",
+      "name": "Chronicles of the Sun",
+      "vote_average": 7.19,
+      "vote_count": 87
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/tYLXJW1sZQU09VWY1BhSVPKGIwc.jpg",
+      "genre_ids": [
+        10765,
+        9648,
+        35
+      ],
+      "id": 138501,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "Agatha All Along",
+      "overview": "Agatha Harkness gathers a coven of witches and sets off down, down, down The Witches' Road.",
+      "popularity": 1087.579,
+      "poster_path": "/1tfCj5h0FEQ5xg8hzVjQgcuGlgN.jpg",
+      "first_air_date": "2024-09-18",
+      "name": "Agatha All Along",
+      "vote_average": 7.548,
+      "vote_count": 199
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/sx3N4xsZDv0zAGfImtruZLYirhs.jpg",
+      "genre_ids": [
+        10759,
+        18,
+        10768,
+        10751
+      ],
+      "id": 242931,
+      "origin_country": [
+        "PH"
+      ],
+      "original_language": "tl",
+      "original_name": "Pulang Araw",
+      "overview": "Red Sun is a family drama that tells stories of courage, sacrifice, and hardships that every Filipino family has. These stories were inspired by the tales of the unsung heroes who defied the odds of World War II and the Japanese occupation of the Philippines.",
+      "popularity": 1637.633,
+      "poster_path": "/2zbaRzgieKiHYkTGztQUzrAYbgb.jpg",
+      "first_air_date": "2024-07-29",
+      "name": "Pulang Araw",
+      "vote_average": 7.389,
+      "vote_count": 9
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/3Jolb6Ky31IhEwyS8QhRykKo79J.jpg",
+      "genre_ids": [
+        10766,
+        18
+      ],
+      "id": 243117,
+      "origin_country": [
+        "FR"
+      ],
+      "original_language": "fr",
+      "original_name": "Plus belle la vie, encore plus belle",
+      "overview": "",
+      "popularity": 1624.104,
+      "poster_path": "/5js5JCtxfiYF2MdNn0zGyCwyg8L.jpg",
+      "first_air_date": "2024-01-08",
+      "name": "Plus belle la vie, encore plus belle",
+      "vote_average": 5,
+      "vote_count": 9
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/mlX6SG7lJ0BiLui5x5Nu4agetBA.jpg",
+      "genre_ids": [
+        10766,
+        18
+      ],
+      "id": 82708,
+      "origin_country": [
+        "NL"
+      ],
+      "original_language": "nl",
+      "original_name": "Brugklas",
+      "overview": "The First Years is a Dutch series for young people in which real-life situations are recreated. The series sheds light on subjects that pupils in the first year of secondary school may be confronted with.",
+      "popularity": 1551.455,
+      "poster_path": "/klPqN1oITjVub0Yss0Kqnx8NfY3.jpg",
+      "first_air_date": "2014-05-26",
+      "name": "The First Years",
+      "vote_average": 4.857,
+      "vote_count": 7
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/l7LRGYJY3NzIGBlpvHpMsNXHbm5.jpg",
+      "genre_ids": [
+        10751,
+        35
+      ],
+      "id": 218145,
+      "origin_country": [
+        "SK"
+      ],
+      "original_language": "sk",
+      "original_name": "Mama na prenájom",
+      "overview": "Abandoned by his wife, Martin is lying to his daughter not to be upset. But as Hanka grows, these lies become unbearable. Martin meets Nada unexpectedly, asked her to be a rent-a-mother and all lives are completely changed.",
+      "popularity": 1547.336,
+      "poster_path": "/fH7PP2Rkdlo414IHvZABBHhtoqd.jpg",
+      "first_air_date": "2023-01-09",
+      "name": "Mom for rent",
+      "vote_average": 5,
+      "vote_count": 25
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/vgeDRVpSUa4Hvovg4C6dgm4dfUW.jpg",
+      "genre_ids": [
+        10766,
+        18
+      ],
+      "id": 112470,
+      "origin_country": [
+        "FR"
+      ],
+      "original_language": "fr",
+      "original_name": "Ici tout commence",
+      "overview": "This television drama series is centered around the prestigious culinary school of renowned chef Auguste Armand. The show follows the lives of students and staff as they navigate the challenges and pressures of the culinary world—delving into their personal and professional lives, revealing secrets, rivalries, and complex relationships.",
+      "popularity": 1508.395,
+      "poster_path": "/yuTHx38jpogXovMhqNatvozigMJ.jpg",
+      "first_air_date": "2020-11-02",
+      "name": "Ici tout commence",
+      "vote_average": 7.1,
+      "vote_count": 49
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/odjthEZErwNdCrD2Y5pd8DbxxLP.jpg",
+      "genre_ids": [
+        18
+      ],
+      "id": 259771,
+      "origin_country": [
+        "CN"
+      ],
+      "original_language": "zh",
+      "original_name": "舍不得星星",
+      "overview": "Tang Yang and Jiang Shi Yan were high school classmates and are close friends for ten years. After finishing school, they both passionately pursued careers in bank credit review and new media communication. Tang Yang helped the families of military martyrs start businesses in her small loan job. Jiang Shi Yan, inspired by their perseverance, made a documentary about their stories, which gained widespread attention. Throughout this journey, the trust and understanding they developed since their teenage years endured various challenges and blossomed into a sincere and beautiful love. They went from being classmates and friends to becoming partners, building a family, and facing life together.",
+      "popularity": 1068.519,
+      "poster_path": "/12vlMIuDs35CqerGVDVRv2DIH1S.jpg",
+      "first_air_date": "2024-09-23",
+      "name": "You Are My Lover Friend",
+      "vote_average": 9.333,
+      "vote_count": 3
+    }
+  ],
+  "total_pages": 9131,
+  "total_results": 182605
+}
