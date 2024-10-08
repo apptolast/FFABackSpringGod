@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -25,16 +26,15 @@ public class RateLimitingWebFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        String ip = exchange.getRequest().getRemoteAddress().getAddress().getHostAddress();
+        String ip = Objects.requireNonNull(exchange.getRequest().getRemoteAddress()).getAddress().getHostAddress();
         Bucket bucket = buckets.computeIfAbsent(ip, k -> createNewBucket());
 
-        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
-        if (probe.isConsumed()) {
-            exchange.getResponse().getHeaders().add("X-Rate-Limit-Remaining", String.valueOf(probe.getRemainingTokens()));
+        if (bucket.tryConsume(1)) {
+            exchange.getResponse().getHeaders().add("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()));
             return chain.filter(exchange);
         } else {
             exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
-            exchange.getResponse().getHeaders().add("X-Rate-Limit-Retry-After-Millis", String.valueOf(probe.getNanosToWaitForRefill() / 1_000_000));
+            exchange.getResponse().getHeaders().add("X-Rate-Limit-Retry-After-Seconds", String.valueOf(60));
             return exchange.getResponse().setComplete();
         }
     }
