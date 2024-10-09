@@ -1,42 +1,53 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  back-ffa-spring:
-    depends_on:
-      - roach
+  app:
     build:
       context: .
-    container_name: optimized back-ffa-spring
-    hostname: optimized back-ffa-spring
-    networks:
-      - mynet
+      dockerfile: Dockerfile
+    container_name: back-app-ffa
+    hostname: back-app-ffa
     ports:
-      - 80:8080
-    environment:
-      - PGUSER=${PGUSER:-totoro}
-      - PGPASSWORD=${PGPASSWORD:?database password not set}
-      - PGHOST=${PGHOST:-db}
-      - PGPORT=${PGPORT:-26257}
-      - PGDATABASE=${PGDATABASE:-mydb}
-    deploy:
-      restart_policy:
-        condition: on-failure
-  roach:
-    image: cockroachdb/cockroach:latest-v20.1
-    container_name: roach
-    hostname: db
+      - "8080:19000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
     networks:
-      - mynet
-    ports:
-      - 26257:26257
-      - 8080:8080
+      - backend
     volumes:
-      - roach:/cockroach/cockroach-data
-    command: start-single-node --insecure
+      - app_logs:/app/logs
 
-volumes:
-  roach:
+  db:
+    image: postgres:13-alpine
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=${DB_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-JoseCamiloCela678}
+      - POSTGRES_DB=ffa
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    ports:
+      - "5432:9500"
+
+  redis:
+    image: redis:6-alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
 
 networks:
-  mynet:
+  backend:
     driver: bridge
+
+volumes:
+  db_data:
+  redis_data:
+  app_logs:
