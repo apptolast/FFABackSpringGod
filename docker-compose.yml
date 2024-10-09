@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: back-app-ffa
-    hostname: back-app-ffa
+    container_name: b-app-ffa
+    hostname: b-app-ffa
     ports:
       - "8080:19000"
     env_file:
