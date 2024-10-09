@@ -1,13 +1,13 @@
 version: "3.8"
 
 services:
-  docker-gs-ping-roach:
+  back-ffa-spring:
     depends_on:
       - roach
     build:
       context: .
-    container_name: rest-server
-    hostname: rest-server
+    container_name: optimized back-ffa-spring
+    hostname: optimized back-ffa-spring
     networks:
       - mynet
     ports:
