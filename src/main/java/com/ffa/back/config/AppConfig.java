@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
@@ -41,4 +43,15 @@ public class AppConfig {
                 .build();
         return new ReactiveRedisTemplate<>(connectionFactory, context);
     }
+
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http
+                .authorizeExchange(exchanges -> exchanges
+                        .anyExchange().permitAll()
+                )
+                .csrf(ServerHttpSecurity.CsrfSpec::disable);
+        return http.build();
+    }
+
 }
