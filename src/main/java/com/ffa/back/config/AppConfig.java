@@ -1,11 +1,14 @@
 package com.ffa.back.config;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
@@ -22,7 +25,20 @@ public class AppConfig {
     }
 
     @Bean
-    public ReactiveRedisTemplate<String, String> reactiveRedisTemplate(LettuceConnectionFactory connectionFactory) {
-        return new ReactiveRedisTemplate<>(connectionFactory, RedisSerializationContext.string());
+    public ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate(LettuceConnectionFactory connectionFactory) {
+        // Crea un serializador para JsonNode
+        Jackson2JsonRedisSerializer<JsonNode> jsonSerializer = new Jackson2JsonRedisSerializer<>(JsonNode.class);
+
+        // Crea un serializador para las claves String
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+
+        // Construye el contexto de serialización
+        RedisSerializationContext.RedisSerializationContextBuilder<String, JsonNode> builder =
+                RedisSerializationContext.newSerializationContext(keySerializer);
+
+        RedisSerializationContext<String, JsonNode> context = builder
+                .value(jsonSerializer)
+                .build();
+        return new ReactiveRedisTemplate<>(connectionFactory, context);
     }
 }
