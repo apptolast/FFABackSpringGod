@@ -1,8 +1,12 @@
-FROM openjdk:21-jdk
+# Etapa 1: Construcción de la aplicación
+FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw clean package -DskipTests
+# Copiar archivos necesarios
+COPY pom.xml .
+COPY src ./src
+# Construir la aplicación
+RUN mvn clean package -DskipTests
+FROM openjdk:21-jdk
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 COPY src/main/resources/application.properties application.properties
