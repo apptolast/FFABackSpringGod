@@ -29,7 +29,7 @@ services:
     networks:
       - backend
     ports:
-      - "9500:5432"
+      - "10080:5432"
 
   redis:
     image: redis:latest
