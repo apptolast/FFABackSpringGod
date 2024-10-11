@@ -1,10 +1,7 @@
-# Etapa 1: Construcción de la aplicación
 FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
-# Copiar archivos necesarios
 COPY pom.xml .
 COPY src ./src
-# Construir la aplicación
 RUN mvn clean package -DskipTests
 FROM openjdk:21-jdk
 ARG JAR_FILE=target/*.jar
