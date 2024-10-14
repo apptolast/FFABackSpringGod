@@ -30,5 +30,5 @@ public class CachePreloaderService {
         }
     }
 
-    // Implementa métodos similares para otros endpoints si es necesario.
+    // Puedes añadir más métodos si es necesario
 }
