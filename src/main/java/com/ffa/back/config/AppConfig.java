@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -28,21 +29,27 @@ public class AppConfig {
 
     @Bean
     public ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate(LettuceConnectionFactory connectionFactory) {
-        // Crea un serializador para JsonNode
+        // Serializadores personalizados
         Jackson2JsonRedisSerializer<JsonNode> jsonSerializer = new Jackson2JsonRedisSerializer<>(JsonNode.class);
-
-        // Crea un serializador para las claves String
         StringRedisSerializer keySerializer = new StringRedisSerializer();
 
-        // Construye el contexto de serialización
-        RedisSerializationContext.RedisSerializationContextBuilder<String, JsonNode> builder =
-                RedisSerializationContext.newSerializationContext(keySerializer);
-
-        RedisSerializationContext<String, JsonNode> context = builder
+        // Construir el contexto de serialización
+        RedisSerializationContext<String, JsonNode> context = RedisSerializationContext
+                .<String, JsonNode>newSerializationContext(keySerializer)
                 .value(jsonSerializer)
+                .hashKey(keySerializer)
+                .hashValue(jsonSerializer)
                 .build();
+
         return new ReactiveRedisTemplate<>(connectionFactory, context);
     }
+
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(LettuceConnectionFactory connectionFactory) {
+        return new StringRedisTemplate(connectionFactory);
+    }
+
+
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
