@@ -34,3 +34,4 @@ build/
 /familyfilmapp-4f3cb-e2dfd19702cd.json
 src/main/resources/application.properties
 /.env
+/pom.xml.versionsBackup
