@@ -24,6 +24,7 @@ public class CachePreloaderService {
         for (int page = 1; page <= 5; page++) {
             tmdbService.getPopularMovies(page).subscribe();
         }
+        log.info("Popular movies preloaded");
     }
 
     /**
@@ -35,6 +36,7 @@ public class CachePreloaderService {
         for (int page = 1; page <= 5; page++) {
             tmdbService.getPopularSeries(page).subscribe();
         }
+        log.info("Popular series preloaded");
     }
 
     // Puedes añadir más métodos si es necesario
