@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -42,8 +42,6 @@ public class TmdbService {
     @Qualifier("webClientSearch")
     private WebClient webClientSearch;
 
-    @Autowired
-    private ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate;
 
     private static final String CACHE_PREFIX_POPULAR_MOVIES = "movies_popular:";
     private static final String CACHE_PREFIX_NOW_PLAYING_MOVIES = "movies_now_playing:";
@@ -72,99 +70,56 @@ public class TmdbService {
     /**
      * Obtener películas populares de manera reactiva.
      */
+    @Cacheable(value = "popularMovies", key = "#page", unless = "#result == null")
     public Mono<JsonNode> getPopularMovies(int page) {
         String url = buildUrl("popular", page);
-        String cacheKey = CACHE_PREFIX_POPULAR_MOVIES + page;
-        return reactiveRedisTemplate.opsForValue().get(cacheKey)
-                .switchIfEmpty(
-                        fetchTmdbResponse(webClientMovies, url)
-                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
-                                        .set(cacheKey, response, Duration.ofHours(1))
-                                        .thenReturn(response)
-                                )
-                );
+        return fetchTmdbResponse(webClientMovies, url);
     }
 
     /**
      * Obtener películas en cartelera de manera reactiva.
      */
+    @Cacheable(value = "nowPlayingMovies", key = "#page", unless = "#result == null")
     public Mono<JsonNode> getNowPlayingMovies(int page) {
         String url = buildUrl("now_playing", page);
-        String cacheKey = CACHE_PREFIX_NOW_PLAYING_MOVIES + page;
-        return reactiveRedisTemplate.opsForValue().get(cacheKey)
-                .switchIfEmpty(
-                        fetchTmdbResponse(webClientMovies, url)
-                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
-                                        .set(cacheKey, response, Duration.ofHours(1))
-                                        .thenReturn(response)
-                                )
-                );
+        return fetchTmdbResponse(webClientMovies, url);
     }
 
     /**
      * Obtener series populares de manera reactiva.
      */
+    @Cacheable(value = "popularSeries", key = "#page", unless = "#result == null")
     public Mono<JsonNode> getPopularSeries(int page) {
         String url = buildUrl("popular", page);
-        String cacheKey = CACHE_PREFIX_POPULAR_SERIES + page;
-        return reactiveRedisTemplate.opsForValue().get(cacheKey)
-                .switchIfEmpty(
-                        fetchTmdbResponse(webClientSeries, url)
-                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
-                                        .set(cacheKey, response, Duration.ofHours(1))
-                                        .thenReturn(response)
-                                )
-                );
+        return fetchTmdbResponse(webClientSeries, url);
     }
 
     /**
      * Obtener series en emisión de manera reactiva.
      */
+    @Cacheable(value = "onTheAirSeries", key = "#page", unless = "#result == null")
     public Mono<JsonNode> getOnTheAirSeries(int page) {
         String url = buildUrl("on_the_air", page);
-        String cacheKey = CACHE_PREFIX_ON_THE_AIR_SERIES + page;
-        return reactiveRedisTemplate.opsForValue().get(cacheKey)
-                .switchIfEmpty(
-                        fetchTmdbResponse(webClientSeries, url)
-                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
-                                        .set(cacheKey, response, Duration.ofHours(1))
-                                        .thenReturn(response)
-                                )
-                );
+        return fetchTmdbResponse(webClientSeries, url);
     }
-
     /**
      * Buscar películas y series por nombre de manera reactiva.
      */
+    @Cacheable(value = "searchResults", key = "#query + '_' + #page", unless = "#result == null")
     public Mono<JsonNode> searchMoviesAndSeries(String query, int page) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
         String url = buildUrl("multi", page) + "&query=" + encodedQuery;
-        String cacheKey = CACHE_PREFIX_SEARCH + query + "_" + page;
-        return reactiveRedisTemplate.opsForValue().get(cacheKey)
-                .switchIfEmpty(
-                        fetchTmdbResponse(webClientSearch, url)
-                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
-                                        .set(cacheKey, response, Duration.ofHours(1))
-                                        .thenReturn(response)
-                                )
-                );
+        return fetchTmdbResponse(webClientSearch, url);
     }
 
     /**
      * Obtener detalles de una película o serie específica por ID de manera reactiva.
      */
+    @Cacheable(value = "details", key = "#mediaType + '_' + #id", unless = "#result == null")
     public Mono<JsonNode> getDetails(String mediaType, int id) {
         String url = buildUrl(String.valueOf(id), null);
         WebClient selectedWebClient = mediaType.equalsIgnoreCase("movie") ? webClientMovies : webClientSeries;
-        String cacheKey = CACHE_PREFIX_DETAILS + mediaType + "_" + id;
-        return reactiveRedisTemplate.opsForValue().get(cacheKey)
-                .switchIfEmpty(
-                        fetchTmdbResponse(selectedWebClient, url)
-                                .flatMap(response -> reactiveRedisTemplate.opsForValue()
-                                        .set(cacheKey, response, Duration.ofHours(1))
-                                        .thenReturn(response)
-                                )
-                );
+        return fetchTmdbResponse(selectedWebClient, url);
     }
 
     /**
