@@ -9,7 +9,6 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -36,13 +35,14 @@ public class AppConfig {
     public ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate(LettuceConnectionFactory connectionFactory) {
         // Serializadores personalizados
         Jackson2JsonRedisSerializer<JsonNode> jsonSerializer = new Jackson2JsonRedisSerializer<>(JsonNode.class);
-        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        StringRedisSerializer stringSerializer = new StringRedisSerializer();
 
         // Construir el contexto de serialización
         RedisSerializationContext<String, JsonNode> context = RedisSerializationContext
-                .<String, JsonNode>newSerializationContext(keySerializer)
+                .<String, JsonNode>newSerializationContext(stringSerializer)
+                .key(stringSerializer)
                 .value(jsonSerializer)
-                .hashKey(keySerializer)
+                .hashKey(stringSerializer)
                 .hashValue(jsonSerializer)
                 .build();
 
@@ -74,9 +74,6 @@ public class AppConfig {
                 .enableStatistics()
                 .build();
     }
-
-
-
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
