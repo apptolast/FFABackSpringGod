@@ -10,6 +10,7 @@ public class FirebaseProperties {
     private String url;
     private String apiKey;
     private String pass;
+    private String apiFilename;
 
     public String getPass() {
         return pass;
@@ -33,5 +34,13 @@ public class FirebaseProperties {
 
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+
+    public String getApiFilename() {
+        return apiFilename;
+    }
+
+    public void setApiFilename(String apiFilename) {
+        this.apiFilename = apiFilename;
     }
 }
