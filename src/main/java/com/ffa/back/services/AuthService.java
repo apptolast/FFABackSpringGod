@@ -8,6 +8,8 @@ import com.ffa.back.dto.UserTokenResponseDTO;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
 import com.google.firebase.auth.UserRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,8 @@ public class AuthService {
 
     @Autowired
     private LanguageRepository languageRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     public ResponseEntity<?> register(UserRequestRegisterDTO userRequest) {
         Optional<User> userOptional = userRepository.findByEmail(userRequest.getEmail());
@@ -106,8 +110,11 @@ public class AuthService {
             languageName = "en"; // Idioma predeterminado
         }
         Language language = languageRepository.findByLanguage(languageName);
+        log.info("Language found: {}", language);
         if (language == null) {
+            log.info("Aqui lo tiene que guardar en la base de datos");
             language = languageRepository.save(new Language(languageName));
+            log.info("Aqui ha dejado de funcionar");
         }
         return language;
     }
