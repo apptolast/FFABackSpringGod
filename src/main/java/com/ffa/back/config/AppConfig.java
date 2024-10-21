@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 public class AppConfig {
 
