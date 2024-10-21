@@ -18,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 public class AppConfig {
 
@@ -74,15 +76,4 @@ public class AppConfig {
                 .enableStatistics()
                 .build();
     }
-
-    @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
-                .authorizeExchange(exchanges -> exchanges
-                        .anyExchange().permitAll()
-                )
-                .csrf(ServerHttpSecurity.CsrfSpec::disable);
-        return http.build();
-    }
-
 }
