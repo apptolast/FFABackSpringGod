@@ -15,6 +15,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
                                                          FirebaseAuthenticationWebFilter firebaseAuthFilter) {
         http
+                .csrf().disable()
                 .addFilterAfter(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/familyfilmapp/api/auth/**").authenticated()
