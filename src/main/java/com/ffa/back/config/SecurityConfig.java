@@ -15,10 +15,9 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
                                                          FirebaseAuthenticationWebFilter firebaseAuthFilter) {
         http
-                .csrf().disable()
-                .addFilterAt(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterAfter(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/api/auth/**").authenticated()
+                        .pathMatchers("/familyfilmapp/api/auth/**").authenticated()
                         .anyExchange().permitAll()
                 );
 
