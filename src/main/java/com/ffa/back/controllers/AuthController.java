@@ -22,14 +22,37 @@ public class AuthController {
     @CrossOrigin
     @PostMapping("/login")
     public Mono<ResponseEntity<?>> login(@AuthenticationPrincipal Mono<Authentication> authenticationMono) {
-        return null;
-        //return authService.login(userRequest);
+        return authenticationMono.flatMap(authentication -> {
+            // Verificar si la autenticación es válida
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return Mono.just(ResponseEntity.status(401).body("Unauthorized"));
+            }
+
+            // Extraer información del usuario
+            String uid = authentication.getName();
+            String email = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
+
+            // Llamar al servicio de autenticación
+            return authService.login(uid, email);
+        });
     }
 
     @CrossOrigin
     @PostMapping("/register")
-    public ResponseEntity<?> register(@AuthenticationPrincipal Mono<Authentication> authenticationMono) {
-        return null;
-        //return authService.register(new UserRequestRegisterDTO());
+    public Mono<ResponseEntity<?>> register(@AuthenticationPrincipal Mono<Authentication> authenticationMono) {
+        return authenticationMono.flatMap(authentication -> {
+            // Verificar si la autenticación es válida
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return Mono.just(ResponseEntity.status(401).body("Unauthorized"));
+            }
+
+            // Extraer información del usuario
+            String uid = authentication.getName();
+            String email = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
+
+            // Llamar al servicio de registro
+            return authService.register(uid, email);
+        });
+
     }
 }

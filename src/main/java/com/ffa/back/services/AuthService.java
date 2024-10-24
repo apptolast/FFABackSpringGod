@@ -5,18 +5,16 @@ import com.ffa.back.models.Language;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.util.Optional;
 
 @Service
-@Transactional
 public class AuthService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -24,52 +22,54 @@ public class AuthService {
     private LanguageRepository languageRepository;
 
     public Mono<ResponseEntity<String>> register(String uid, String email) {
-        return Mono.fromCallable(() -> {
-            // Verificar si el usuario existe
-            Optional<User> existingUser = userRepository.findByFirebaseUuid(uid);
+        // Verificar si el usuario ya existe
+        return userRepository.findByFirebaseUuid(uid)
+                .flatMap(existingUser -> {
+                    // El usuario ya existe
+                    return Mono.just(buildUserExistsResponse());
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    // El usuario no existe, crear uno nuevo
+                    User newUser = new User();
+                    newUser.setFirebase_uuid(uid);
+                    newUser.setEmail(email);
+                    newUser.setProvider("firebase");
 
-            if (existingUser.isPresent()) {
-                if (existingUser.get().getEmail().equals(email)) {
-                    return ResponseEntity.badRequest()
-                            .body("Usuario ya existe, por favor inicia sesión");
-                } else {
-                    return ResponseEntity.badRequest()
-                            .body("Usuario existe con un email diferente");
-                }
-            }
+                    // Asignar idioma por defecto o implementar lógica para obtener el idioma
+                    Language language = findOrCreateLanguage("en");
+                    newUser.setLanguage(language);
 
-            // Crear nuevo usuario
-            User newUser = new User();
-            newUser.setFirebaseUuid(uid);
-            newUser.setEmail(email);
-            newUser.setProvider("firebase");
-            newUser.setRole("USER");
+                    userRepository.save(newUser);
 
-            // Buscar o crear idioma por defecto
-            Language language = languageRepository.findByLanguage("en")
-                    .orElseGet(() -> {
-                        Language newLanguage = new Language("en");
-                        return languageRepository.save(newLanguage);
-                    });
-
-            newUser.setLanguage(language);
-            userRepository.save(newUser);
-
-            return ResponseEntity.status(201)
-                    .body("Usuario registrado correctamente");
-        }).subscribeOn(Schedulers.boundedElastic());
+                    return Mono.just(ResponseEntity.status(201).body("User registered successfully"));
+                }));
     }
 
     public Mono<ResponseEntity<String>> login(String uid, String email) {
-        return Mono.fromCallable(() -> {
-            Optional<User> user = userRepository.findByFirebaseUuid(uid);
+        // Verificar si el usuario existe
+        return userRepository.findByFirebaseUuid(uid)
+                .flatMap(existingUser -> {
+                    // Usuario encontrado
+                    return Mono.just(ResponseEntity.ok("User logged in successfully"));
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    // Usuario no encontrado
+                    return Mono.just(ResponseEntity.status(404).body("User not found"));
+                }));
+    }
 
-            if (user.isPresent()) {
-                return ResponseEntity.ok("Login exitoso");
-            } else {
-                return ResponseEntity.status(404)
-                        .body("Usuario no encontrado");
-            }
-        }).subscribeOn(Schedulers.boundedElastic());
+    private Language findOrCreateLanguage(String languageName) {
+        if (languageName == null || languageName.isEmpty()) {
+            languageName = "en"; // Idioma predeterminado
+        }
+        Optional<Language> language = languageRepository.findByLanguage(languageName).blockOptional();
+        if (language.isEmpty()) {
+            language = Optional.of(languageRepository.save(new Language(languageName)));
+        }
+        return language.orElse(null);
+    }
+
+    private ResponseEntity<String> buildUserExistsResponse() {
+        return ResponseEntity.badRequest().body("User already exists, please login.");
     }
 }
