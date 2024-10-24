@@ -30,7 +30,7 @@ public class UserController {
     @CrossOrigin
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = (List<User>) userRepository.findAll();
         List<UserResponseDTO> userDTOs = users.stream()
                 .map(user -> new UserResponseDTO(
                         user.getId(),
@@ -71,11 +71,11 @@ public class UserController {
 
             // Actualizar los campos permitidos
             if (userUpdateRequest.getLanguage() != null) {
-                Language language = languageRepository.findByLanguage(userUpdateRequest.getLanguage());
-                if (language == null) {
-                    language = languageRepository.save(new Language(userUpdateRequest.getLanguage()));
+                Optional<Language> language = languageRepository.findByLanguage(userUpdateRequest.getLanguage()).blockOptional();
+                if (language.isEmpty()) {
+                    language = Optional.of(languageRepository.save(new Language(userUpdateRequest.getLanguage())));
                 }
-                user.setLanguage(language);
+                user.setLanguage(language.get());
             }
 
             // Guardar cambios

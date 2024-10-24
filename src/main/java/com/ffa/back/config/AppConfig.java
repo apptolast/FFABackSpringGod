@@ -12,8 +12,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
@@ -74,15 +72,4 @@ public class AppConfig {
                 .enableStatistics()
                 .build();
     }
-
-    @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
-                .authorizeExchange(exchanges -> exchanges
-                        .anyExchange().permitAll()
-                )
-                .csrf(ServerHttpSecurity.CsrfSpec::disable);
-        return http.build();
-    }
-
 }
