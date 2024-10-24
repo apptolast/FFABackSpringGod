@@ -7,7 +7,9 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 @Repository
-public interface LanguageRepository extends ReactiveCrudRepository<Language, Long> {
-    Mono<Language> findByLanguage(String language);
+public interface LanguageRepository extends JpaRepository<Language, Long> {
+    Optional<Language> findByLanguage(String language);
 }

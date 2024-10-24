@@ -12,13 +12,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class AppConfig {
