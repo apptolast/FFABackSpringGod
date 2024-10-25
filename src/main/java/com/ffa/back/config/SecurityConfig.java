@@ -10,7 +10,6 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 @EnableReactiveMethodSecurity
 public class SecurityConfig {
-
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
                                                          FirebaseAuthenticationWebFilter firebaseAuthFilter) {

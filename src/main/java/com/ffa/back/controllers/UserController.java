@@ -71,7 +71,7 @@ public class UserController {
 
             // Actualizar los campos permitidos
             if (userUpdateRequest.getLanguage() != null) {
-                Optional<Language> language = languageRepository.findByLanguage(userUpdateRequest.getLanguage()).blockOptional();
+                Optional<Language> language = languageRepository.findByLanguage(userUpdateRequest.getLanguage());
                 if (language.isEmpty()) {
                     language = Optional.of(languageRepository.save(new Language(userUpdateRequest.getLanguage())));
                 }
