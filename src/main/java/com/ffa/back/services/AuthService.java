@@ -40,7 +40,7 @@ public class AuthService {
 
             // Crear nuevo usuario
             User newUser = new User();
-            newUser.setFirebase_uuid(uid);
+            newUser.setFirebaseUuid(uid);
             newUser.setEmail(email);
             newUser.setProvider("firebase");
             newUser.setRole("USER");
