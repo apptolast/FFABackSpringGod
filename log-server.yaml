@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: log-server
+  labels:
+    app: log-server
+spec:
+  containers:
+    - name: log-server-container
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: app-logs
+          mountPath: /usr/share/nginx/html/logs
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+  volumes:
+    - name: app-logs
+      persistentVolumeClaim:
+        claimName: app-logs-pvc
+    - name: nginx-config-volume
+      configMap:
+        name: nginx-config
+        items:
+          - key: nginx.conf
+            path: nginx.conf
