@@ -36,3 +36,10 @@ src/main/resources/application.properties
 /.env
 /pom.xml.versionsBackup
 /familyfilmapp-4f3cb-cea8abe4e18b.json
+/09-secrets.yaml
+/app-configmap.yaml
+/firebase-secret.yaml
+/postgres-deployment.yaml
+/postgres-secret.yaml
+/nginx-configmap.yaml
+/app-deployment.yaml
