@@ -26,7 +26,7 @@ public class AppConfig {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration("redis", 6379));
+        return new LettuceConnectionFactory(new RedisStandaloneConfiguration("redis-service", 6379));
     }
 
     @Bean
