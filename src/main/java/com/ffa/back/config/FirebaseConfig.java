@@ -17,18 +17,17 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initializeFirebase() {
-        try {
-            FileInputStream serviceAccount =
-                    new FileInputStream(firebaseProperties.getApiFilename());
+        try (FileInputStream serviceAccount = new FileInputStream(firebaseProperties.getApiFilename())) {
 
-            FirebaseOptions options = new FirebaseOptions.Builder()
+            FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
             FirebaseApp.initializeApp(options);
             System.out.println("Firebase has been initialized successfully");
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println("Error initializing Firebase: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

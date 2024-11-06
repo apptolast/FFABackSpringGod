@@ -24,8 +24,8 @@ public class User {
     @Column(nullable = false)
     private String provider;
 
-    @Column(nullable = true)
-    private String firebase_uuid;
+    @Column(name = "firebase_uuid", nullable = true)
+    private String firebaseUuid;
 
     @OneToMany(mappedBy = "owner")
     private List<Group> groups;
@@ -41,9 +41,9 @@ public class User {
 
     public User() {}
 
-    public User(String role, String firebase_uuid, String provider, String email) {
+    public User(String role, String firebaseUuid, String provider, String email) {
         this.role = role;
-        this.firebase_uuid = firebase_uuid;
+        this.firebaseUuid = firebaseUuid;
         this.provider = provider;
         this.email = email;
     }
@@ -89,8 +89,12 @@ public class User {
         return provider;
     }
 
-    public String getFirebase_uuid() {
-        return firebase_uuid;
+    public String getFirebaseUuid() {
+        return firebaseUuid;
+    }
+
+    public void setFirebaseUuid(String firebaseUuid) {
+        this.firebaseUuid = firebaseUuid;
     }
 
     public String getRole() {
@@ -109,9 +113,6 @@ public class User {
         this.provider = provider;
     }
 
-    public void setFirebase_uuid(String firebase_uuid) {
-        this.firebase_uuid = firebase_uuid;
-    }
 
     public void setRole(String role) {
         this.role = role;

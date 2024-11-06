@@ -4,7 +4,9 @@ import com.ffa.back.models.Language;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface LanguageRepository extends JpaRepository<Language, Long> {
-    Language findByLanguage(String language);
+    Optional<Language> findByLanguage(String language);
 }
