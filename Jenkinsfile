@@ -118,9 +118,4 @@ spec:
         }
     }
 
-    post {
-        always {
-            // No se requiere limpieza adicional
-        }
-    }
 }
