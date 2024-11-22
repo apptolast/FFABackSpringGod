@@ -10,14 +10,18 @@ pipeline {
         stage('Preparar fuentes') {
             steps {
                 script {
-                    sh 'mvn generate-sources'
+                    withMaven(maven: 'Maven 3.9.9') {
+                        sh 'mvn generate-sources'
+                    }
                 }
             }
         }
         stage('Construir JAR') {
             steps {
                 script {
-                    sh 'mvn clean package -DskipTests'
+                    withMaven(maven: 'Maven 3.9.9') {
+                        sh 'mvn clean package -DskipTests'
+                    }
                 }
             }
         }
