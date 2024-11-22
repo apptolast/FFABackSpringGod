@@ -13,6 +13,7 @@ pipeline {
         stage('Preparar fuentes') {
             steps {
                 script {
+                    sh 'java -version'
                     withMaven(maven: 'Maven 3.9.9') {
                         sh 'mvn generate-sources'
                     }
