@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        jdk 'OpenJDK-21-ARM64'
+    }
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Configura estas credenciales en Jenkins
         KUBECONFIG_CREDENTIALS = credentials('kubeconfig-secret') // Configura este archivo para acceso a tu cluster
