@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         jdk 'OpenJDK-21-ARM64'
-        dockerTool 'Docker'
+
     }
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Configura estas credenciales en Jenkins
