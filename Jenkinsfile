@@ -57,15 +57,15 @@ pipeline {
                 }
             }
         }
-        stage('Desplegar en Kubernetes') {
-            steps {
-                script {
-                    sh """
-                    kubectl apply -f app-deployment.yaml --kubeconfig=${KUBECONFIG_CREDENTIALS}
-                    """
-                }
-            }
-        }
+         stage('Desplegar en Kubernetes') {
+                   steps {
+                       script {
+                           withKubeConfig([credentialsId: KUBECONFIG_CREDENTIALS]) {
+                               sh 'kubectl apply -f app-deployment.yaml'
+                           }
+                       }
+                   }
+               }
     }
     post {
         success {
