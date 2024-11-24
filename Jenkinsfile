@@ -2,11 +2,10 @@ pipeline {
     agent any
     tools {
         jdk 'OpenJDK-21-ARM64'
-
     }
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Configura estas credenciales en Jenkins
-        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-secret') // Configura este archivo para acceso a tu cluster
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-secret') // Archivo kubeconfig
         DOCKER_IMAGE = "ocholoko888/ffadevback"
         DOCKER_TAG = "latest"
     }
@@ -18,6 +17,19 @@ pipeline {
                     withMaven(maven: 'Maven 3.9.9') {
                         sh 'mvn generate-sources'
                     }
+                }
+            }
+        }
+        stage('Gestionar Configuración') {
+            steps {
+                configFileProvider(
+                    [
+                        configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
+                        configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
+                        configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml')
+                    ]
+                ) {
+                    echo 'Archivos de configuración descargados correctamente'
                 }
             }
         }
