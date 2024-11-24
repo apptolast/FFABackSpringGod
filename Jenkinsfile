@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
-        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-secret') // Archivo kubeconfig
+        KUBECONFIG_CREDENTIALS = 'kubeconfig-secret' // Archivo kubeconfig
         DOCKER_IMAGE = "ocholoko888/ffadevback"
         DOCKER_TAG = "latest"
     }
