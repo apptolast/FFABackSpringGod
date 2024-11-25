@@ -88,7 +88,7 @@ spec:
       tty: true
 """
                     defaultContainer 'kubectl'
-                    mountWorkspace true
+                    workspaceVolume emptyDirWorkspaceVolume()
                 }
             }
             steps {
@@ -119,7 +119,7 @@ spec:
       tty: true
 """
                     defaultContainer 'kubectl'
-                    mountWorkspace true
+                    workspaceVolume emptyDirWorkspaceVolume()
                 }
             }
             steps {
