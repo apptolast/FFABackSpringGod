@@ -76,12 +76,13 @@ pipeline {
         stage('Desplegar en Kubernetes') {
             steps {
                 withKubeConfig([
-                        credentialsId: 'kubeconfig',
-                        serverUrl    : 'https://23.88.43.3:6443',
-                        contextName  : 'default', // Ajusta según sea necesario
-                        clusterName  : 'k8s-cluster'
+                        credentialsId: 'kubeconfig', // ID de credenciales en Jenkins
+                        serverUrl    : 'https://23.88.43.3:6443', // API URL del cluster
+                        contextName  : 'kubernetes-admin@kubernetes', // Contexto actual según kubectl
+                        clusterName  : 'k8s-cluster' // Nombre opcional pero descriptivo
                 ]) {
                     script {
+                        // Aplica el archivo de despliegue en el cluster
                         sh 'kubectl apply -f app-deployment.yaml'
                     }
                 }
