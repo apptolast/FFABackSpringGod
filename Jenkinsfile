@@ -1,6 +1,5 @@
 pipeline {
     agent any
-    // No definimos 'tools' a nivel global
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
         DOCKER_IMAGE = "ocholoko888/ffadevback"
@@ -78,7 +77,7 @@ pipeline {
         stage('Probar conexión Kubernetes') {
             agent {
                 kubernetes {
-                    yaml '''
+                    yaml """
 apiVersion: v1
 kind: Pod
 spec:
@@ -87,20 +86,23 @@ spec:
       image: bitnami/kubectl:latest
       command: ['cat']
       tty: true
-'''
+"""
                 }
             }
-            // No necesitamos 'tools' aquí
             steps {
                 container('kubectl') {
-                    sh 'kubectl get nodes'
+                    configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+                        withEnv(["KUBECONFIG=${KUBECONFIG_FILE}"]) {
+                            sh 'kubectl get nodes'
+                        }
+                    }
                 }
             }
         }
         stage('Desplegar en Kubernetes') {
             agent {
                 kubernetes {
-                    yaml '''
+                    yaml """
 apiVersion: v1
 kind: Pod
 spec:
@@ -109,13 +111,16 @@ spec:
       image: bitnami/kubectl:latest
       command: ['cat']
       tty: true
-'''
+"""
                 }
             }
-            // No necesitamos 'tools' aquí
             steps {
                 container('kubectl') {
-                    sh 'kubectl apply -f app-deployment.yaml'
+                    configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+                        withEnv(["KUBECONFIG=${KUBECONFIG_FILE}"]) {
+                            sh 'kubectl apply -f app-deployment.yaml'
+                        }
+                    }
                 }
             }
         }
