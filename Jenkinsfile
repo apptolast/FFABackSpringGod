@@ -1,6 +1,5 @@
 pipeline {
     agent any
-    // Eliminamos la definición global de herramientas
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
         DOCKER_IMAGE = "ocholoko888/ffadevback"
@@ -83,11 +82,10 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: kubectl
-    image: bitnami/kubectl:latest
-    command:
-    - cat
-    tty: true
+    - name: kubectl
+      image: bitnami/kubectl:latest
+      command: ['cat']
+      tty: true
 '''
                 }
             }
@@ -103,4 +101,30 @@ spec:
                 kubernetes {
                     yaml '''
 apiVersion: v1
-kind:
+kind: Pod
+spec:
+  containers:
+    - name: kubectl
+      image: bitnami/kubectl:latest
+      command: ['cat']
+      tty: true
+'''
+                }
+            }
+            tools {} // Anulamos las herramientas definidas globalmente
+            steps {
+                container('kubectl') {
+                    sh 'kubectl apply -f app-deployment.yaml'
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'CI/CD completado exitosamente'
+        }
+        failure {
+            echo 'El pipeline falló'
+        }
+    }
+}
