@@ -5,7 +5,6 @@ pipeline {
     }
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
-        KUBECONFIG_CREDENTIALS = 'kubeconfig-secret' // Archivo kubeconfig
         DOCKER_IMAGE = "ocholoko888/ffadevback"
         DOCKER_TAG = "latest"
     }
@@ -23,11 +22,12 @@ pipeline {
         stage('Gestionar Configuración') {
             steps {
                 configFileProvider(
-                    [
-                        configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
-                        configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
-                        configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml')
-                    ]
+                        [
+                                configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
+                                configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
+                                configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml'),
+                                configFile(fileId: 'kubeconfig', targetLocation: 'admin.conf') // Aquí cargamos el kubeconfig
+                        ]
                 ) {
                     echo 'Archivos de configuración descargados correctamente'
                 }
@@ -57,15 +57,15 @@ pipeline {
                 }
             }
         }
-         stage('Desplegar en Kubernetes') {
-                   steps {
-                       script {
-                           withKubeConfig([credentialsId: KUBECONFIG_CREDENTIALS]) {
-                               sh 'kubectl apply -f app-deployment.yaml'
-                           }
-                       }
-                   }
-               }
+        stage('Desplegar en Kubernetes') {
+            steps {
+                script {
+                    withEnv(["KUBECONFIG=${WORKSPACE}/admin.conf"]) {
+                        sh 'kubectl apply -f app-deployment.yaml'
+                    }
+                }
+            }
+        }
     }
     post {
         success {
