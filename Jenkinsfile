@@ -92,6 +92,17 @@ pipeline {
                 - -c
                 - while true; do sleep 30; done
                 tty: true
+                env:
+                - name: JAVA_OPTS
+                  value: "-Djavax.net.ssl.trustStore=/etc/ssl/certs/cacerts -Djavax.net.ssl.trustStorePassword=changeit"
+                volumeMounts:
+                - name: cacerts-volume
+                  mountPath: /etc/ssl/certs
+              volumes:
+              - name: cacerts-volume
+                hostPath:
+                  path: /usr/lib/jvm/java-21-openjdk-arm64/lib/security/cacerts
+                  type: File
             """
                 }
             }
