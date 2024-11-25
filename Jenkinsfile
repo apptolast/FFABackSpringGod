@@ -73,10 +73,40 @@ pipeline {
                 }
             }
         }
-        stage('Aplicar archivos de Kubernetes') {
+        stage('Verificar Conectividad Kubernetes') {
+            agent {
+                kubernetes {
+                    cloud 'KubernetesCluster' // Nombre del cloud configurado en Jenkins
+                    label 'k8s-agent'
+                    defaultContainer 'kubectl'
+                    yaml """
+                    apiVersion: v1
+                    kind: Pod
+                    metadata:
+                      labels:
+                        jenkins: slave
+                    spec:
+                      containers:
+                      - name: kubectl
+                        image: bitnami/kubectl:latest
+                        command:
+                        - cat
+                        tty: true
+                    """
+                }
+            }
             steps {
-                script {
-                    withKubeConfig([credentialsId: 'kubeconfig', serverUrl: 'https://23.88.43.3:6443']) {
+                container('kubectl') {
+                    script {
+                        sh 'kubectl get nodes'
+                    }
+                }
+            }
+        }
+        stage('Desplegar en Kubernetes') {
+            steps {
+                withKubeConfig([credentialsId: 'kubeconfig', serverUrl: 'https://23.88.43.3:6443']) {
+                    script {
                         sh 'kubectl apply -f app-deployment.yaml'
                     }
                 }
