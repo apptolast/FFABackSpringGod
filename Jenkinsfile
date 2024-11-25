@@ -6,7 +6,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
         DOCKER_IMAGE = "ocholoko888/ffadevback"
-        DOCKER_TAG = "latest"
+        DOCKER_TAG = "${env.BUILD_ID}" // Etiqueta dinámica con el número de build
     }
     stages {
         stage('Preparar fuentes') {
@@ -65,15 +65,22 @@ pipeline {
                 }
             }
         }
-        stage('Desplegar en Kubernetes') {
-            agent {
-                docker {
-                    image 'bitnami/kubectl:latest'
-                    args '--entrypoint="" -v ${WORKSPACE}/admin.conf:/root/.kube/config'
+        stage('Actualizar despliegue Kubernetes') {
+            steps {
+                script {
+                    // Actualizar la imagen en el YAML
+                    sh "sed -i 's|ocholoko888/ffadevback:.*|ocholoko888/ffadevback:${DOCKER_TAG}|' app-deployment.yaml"
                 }
             }
+        }
+        stage('Desplegar en Kubernetes') {
             steps {
-                withKubeConfig(credentialsId: 'kubeconfig') {
+                withKubeConfig([
+                        credentialsId: 'kubeconfig',
+                        serverUrl    : 'https://23.88.43.3:6443',
+                        contextName  : 'default', // Ajusta según sea necesario
+                        clusterName  : 'k8s-cluster'
+                ]) {
                     script {
                         sh 'kubectl apply -f app-deployment.yaml'
                     }
