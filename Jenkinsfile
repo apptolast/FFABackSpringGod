@@ -26,10 +26,18 @@ pipeline {
                                 configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
                                 configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
                                 configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml'),
-                                configFile(fileId: 'kubeconfig', targetLocation: 'admin.conf') // Aquí cargamos el kubeconfig
+                                configFile(fileId: 'kubeconfig', targetLocation: 'admin.conf')
                         ]
                 ) {
                     echo 'Archivos de configuración descargados correctamente'
+                }
+            }
+        }
+        stage('Depurar') {
+            steps {
+                script {
+                    sh 'pwd' // Muestra el directorio actual
+                    sh 'ls -la' // Lista los archivos presentes
                 }
             }
         }
@@ -58,12 +66,14 @@ pipeline {
             }
         }
         stage('Desplegar en Kubernetes') {
-            steps {
-                script {
-                    withEnv(["KUBECONFIG=${WORKSPACE}/admin.conf"]) {
-                        sh 'kubectl apply -f app-deployment.yaml'
-                    }
+            agent {
+                docker {
+                    image 'bitnami/kubectl:latest'
+                    args "-v ${WORKSPACE}/admin.conf:/root/.kube/config" // Monta el kubeconfig en el contenedor
                 }
+            }
+            steps {
+                sh 'kubectl apply -f app-deployment.yaml'
             }
         }
     }
