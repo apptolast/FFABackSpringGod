@@ -1,5 +1,6 @@
 pipeline {
     agent any
+    // No definimos 'tools' a nivel global
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
         DOCKER_IMAGE = "ocholoko888/ffadevback"
@@ -89,7 +90,7 @@ spec:
 '''
                 }
             }
-            tools {} // Anulamos las herramientas definidas globalmente
+            // No necesitamos 'tools' aquí
             steps {
                 container('kubectl') {
                     sh 'kubectl get nodes'
@@ -111,7 +112,7 @@ spec:
 '''
                 }
             }
-            tools {} // Anulamos las herramientas definidas globalmente
+            // No necesitamos 'tools' aquí
             steps {
                 container('kubectl') {
                     sh 'kubectl apply -f app-deployment.yaml'
