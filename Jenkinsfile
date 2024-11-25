@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
         DOCKER_IMAGE = "ocholoko888/ffadevback"
         DOCKER_TAG = "${env.BUILD_ID}" // Etiqueta dinámica con el número de build
     }
@@ -11,11 +10,9 @@ pipeline {
                 jdk 'OpenJDK-21-ARM64'
             }
             steps {
-                script {
-                    sh 'java -version'
-                    withMaven(maven: 'Maven 3.9.9') {
-                        sh 'mvn generate-sources'
-                    }
+                sh 'java -version'
+                withMaven(maven: 'Maven 3.9.9') {
+                    sh 'mvn generate-sources'
                 }
             }
         }
@@ -33,10 +30,8 @@ pipeline {
         }
         stage('Depurar') {
             steps {
-                script {
-                    sh 'pwd' // Muestra el directorio actual
-                    sh 'ls -la' // Lista los archivos presentes
-                }
+                sh 'pwd' // Muestra el directorio actual
+                sh 'ls -la' // Lista los archivos presentes
             }
         }
         stage('Construir JAR') {
@@ -44,42 +39,34 @@ pipeline {
                 jdk 'OpenJDK-21-ARM64'
             }
             steps {
-                script {
-                    withMaven(maven: 'Maven 3.9.9') {
-                        sh 'mvn clean package -DskipTests'
-                    }
+                withMaven(maven: 'Maven 3.9.9') {
+                    sh 'mvn clean package -DskipTests'
                 }
             }
         }
         stage('Construir imagen Docker') {
             steps {
-                script {
-                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                }
+                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
             }
         }
         stage('Subir imagen a Docker Hub') {
             steps {
-                script {
-                    sh "echo ${DOCKER_HUB_CREDENTIALS_PSW} | docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin"
-                    sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASS')]) {
+                    sh """
+                        echo \$DOCKER_HUB_PASS | docker login -u \$DOCKER_HUB_USER --password-stdin
+                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
                 }
             }
         }
         stage('Actualizar despliegue Kubernetes') {
             steps {
-                script {
-                    // Actualizar la imagen en el YAML
-                    sh "sed -i 's|ocholoko888/ffadevback:.*|ocholoko888/ffadevback:${DOCKER_TAG}|' app-deployment.yaml"
-                }
+                sh "sed -i 's|ocholoko888/ffadevback:.*|ocholoko888/ffadevback:${DOCKER_TAG}|' app-deployment.yaml"
             }
         }
-        // **Nuevo Stage para Stashear los archivos antes de entrar al agente Kubernetes**
         stage('Preparar archivos para despliegue') {
             steps {
-                script {
-                    stash includes: 'kubeconfig,app-deployment.yaml', name: 'deploy-files'
-                }
+                stash includes: 'kubeconfig,app-deployment.yaml', name: 'deploy-files'
             }
         }
         stage('Probar conexión Kubernetes') {
@@ -100,12 +87,12 @@ spec:
                 }
             }
             steps {
-                container('kubectl') {
-                    // Unstash el kubeconfig dentro del contenedor
-                    unstash 'deploy-files'
-                    withEnv(["KUBECONFIG=kubeconfig"]) {
-                        sh 'kubectl get nodes'
-                    }
+                unstash 'deploy-files'
+                sh 'chmod 600 kubeconfig' // Asegura permisos correctos
+                sh 'ls -la' // Verifica que los archivos estén presentes
+                withEnv(["KUBECONFIG=${env.WORKSPACE}/kubeconfig"]) {
+                    sh 'kubectl version --client'
+                    sh 'kubectl get nodes'
                 }
             }
         }
@@ -127,11 +114,11 @@ spec:
                 }
             }
             steps {
-                container('kubectl') {
-                    // Los archivos ya están disponibles desde el stage anterior
-                    withEnv(["KUBECONFIG=kubeconfig"]) {
-                        sh 'kubectl apply -f app-deployment.yaml'
-                    }
+                unstash 'deploy-files'
+                sh 'chmod 600 kubeconfig' // Asegura permisos correctos
+                sh 'ls -la' // Verifica que los archivos estén presentes
+                withEnv(["KUBECONFIG=${env.WORKSPACE}/kubeconfig"]) {
+                    sh 'kubectl apply -f app-deployment.yaml'
                 }
             }
         }
