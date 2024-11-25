@@ -74,6 +74,14 @@ pipeline {
                 }
             }
         }
+        // **Nuevo Stage para Stashear los archivos antes de entrar al agente Kubernetes**
+        stage('Preparar archivos para despliegue') {
+            steps {
+                script {
+                    stash includes: 'kubeconfig,app-deployment.yaml', name: 'deploy-files'
+                }
+            }
+        }
         stage('Probar conexión Kubernetes') {
             agent {
                 kubernetes {
@@ -92,13 +100,9 @@ spec:
                 }
             }
             steps {
-                script {
-                    // Stash el kubeconfig para usarlo dentro del contenedor
-                    stash includes: 'kubeconfig', name: 'kubeconfig'
-                }
                 container('kubectl') {
                     // Unstash el kubeconfig dentro del contenedor
-                    unstash 'kubeconfig'
+                    unstash 'deploy-files'
                     withEnv(["KUBECONFIG=kubeconfig"]) {
                         sh 'kubectl get nodes'
                     }
@@ -123,13 +127,8 @@ spec:
                 }
             }
             steps {
-                script {
-                    // Stash el kubeconfig y el archivo de despliegue actualizado
-                    stash includes: 'kubeconfig,app-deployment.yaml', name: 'deploy-files'
-                }
                 container('kubectl') {
-                    // Unstash los archivos necesarios
-                    unstash 'deploy-files'
+                    // Los archivos ya están disponibles desde el stage anterior
                     withEnv(["KUBECONFIG=kubeconfig"]) {
                         sh 'kubectl apply -f app-deployment.yaml'
                     }
