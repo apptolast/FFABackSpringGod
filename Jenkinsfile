@@ -73,12 +73,10 @@ pipeline {
                 }
             }
         }
-        stage('Desplegar en Kubernetes') {
-            node {
-                stage('Apply Kubernetes files') {
-                    withKubeConfig([credentialsId: 'kubeconfig', serverUrl: 'https://23.88.43.3:6443']) {
-                        sh 'kubectl apply -f app-deployment.yaml'
-                    }
+        node {
+            stage('Apply Kubernetes files') {
+                withKubeConfig([credentialsId: 'kubeconfig', serverUrl: 'https://23.88.43.3:6443']) {
+                    sh 'kubectl apply -f app-deployment.yaml'
                 }
             }
         }
