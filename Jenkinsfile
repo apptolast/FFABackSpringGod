@@ -73,26 +73,26 @@ pipeline {
                 }
             }
         }
-        stage('Verificar Conectividad Kubernetes') {
+        stage('Probar conexión Kubernetes') {
             agent {
                 kubernetes {
-                    cloud 'KubernetesCluster' // Nombre del cloud configurado en Jenkins
+                    cloud 'KubernetesCluster'
                     label 'k8s-agent'
                     defaultContainer 'kubectl'
                     yaml """
-                    apiVersion: v1
-                    kind: Pod
-                    metadata:
-                      labels:
-                        jenkins: slave
-                    spec:
-                      containers:
-                      - name: kubectl
-                        image: bitnami/kubectl:latest
-                        command:
-                        - cat
-                        tty: true
-                    """
+            apiVersion: v1
+            kind: Pod
+            spec:
+              containers:
+              - name: kubectl
+                image: bitnami/kubectl:latest
+                command:
+                - /bin/sh
+                args:
+                - -c
+                - while true; do sleep 30; done
+                tty: true
+            """
                 }
             }
             steps {
