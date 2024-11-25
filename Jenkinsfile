@@ -69,11 +69,15 @@ pipeline {
             agent {
                 docker {
                     image 'bitnami/kubectl:latest'
-                    args "-v ${WORKSPACE}/admin.conf:/root/.kube/config" // Monta el kubeconfig en el contenedor
+                    args '--entrypoint="" -v ${WORKSPACE}/admin.conf:/root/.kube/config'
                 }
             }
             steps {
-                sh 'kubectl apply -f app-deployment.yaml'
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    script {
+                        sh 'kubectl apply -f app-deployment.yaml'
+                    }
+                }
             }
         }
     }
