@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    tools {
-        jdk 'OpenJDK-21-ARM64'
-    }
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials') // Credenciales de Docker Hub
         DOCKER_IMAGE = "ocholoko888/ffadevback"
