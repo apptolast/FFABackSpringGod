@@ -25,7 +25,7 @@ pipeline {
                     configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
                     configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
                     configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml'),
-                    configFile(fileId: 'kubeconfig', targetLocation: 'admin.conf')
+                    configFile(fileId: 'kubeconfig', targetLocation: 'kubeconfig')
                 ]) {
                     echo 'Archivos de configuración descargados correctamente'
                 }
@@ -87,14 +87,20 @@ spec:
       command: ['cat']
       tty: true
 """
+                    defaultContainer 'kubectl'
+                    mountWorkspace true
                 }
             }
             steps {
+                script {
+                    // Stash el kubeconfig para usarlo dentro del contenedor
+                    stash includes: 'kubeconfig', name: 'kubeconfig'
+                }
                 container('kubectl') {
-                    configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
-                        withEnv(["KUBECONFIG=${KUBECONFIG_FILE}"]) {
-                            sh 'kubectl get nodes'
-                        }
+                    // Unstash el kubeconfig dentro del contenedor
+                    unstash 'kubeconfig'
+                    withEnv(["KUBECONFIG=kubeconfig"]) {
+                        sh 'kubectl get nodes'
                     }
                 }
             }
@@ -112,14 +118,20 @@ spec:
       command: ['cat']
       tty: true
 """
+                    defaultContainer 'kubectl'
+                    mountWorkspace true
                 }
             }
             steps {
+                script {
+                    // Stash el kubeconfig y el archivo de despliegue actualizado
+                    stash includes: 'kubeconfig,app-deployment.yaml', name: 'deploy-files'
+                }
                 container('kubectl') {
-                    configFileProvider([configFile(fileId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
-                        withEnv(["KUBECONFIG=${KUBECONFIG_FILE}"]) {
-                            sh 'kubectl apply -f app-deployment.yaml'
-                        }
+                    // Unstash los archivos necesarios
+                    unstash 'deploy-files'
+                    withEnv(["KUBECONFIG=kubeconfig"]) {
+                        sh 'kubectl apply -f app-deployment.yaml'
                     }
                 }
             }
