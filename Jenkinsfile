@@ -19,10 +19,10 @@ pipeline {
         stage('Gestionar Configuración') {
             steps {
                 configFileProvider([
-                    configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
-                    configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
-                    configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml'),
-                    configFile(fileId: 'kubeconfig', targetLocation: 'kubeconfig')
+                        configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
+                        configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
+                        configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml'),
+                        configFile(fileId: 'kubeconfig', targetLocation: 'kubeconfig')
                 ]) {
                     echo 'Archivos de configuración descargados correctamente'
                 }
@@ -78,9 +78,8 @@ kind: Pod
 spec:
   containers:
     - name: kubectl
-      image: bitnami/kubectl:latest
-      command: ['cat']
-      tty: true
+      image: lachlanevenson/k8s-kubectl:latest
+      command: ['sh', '-c', 'sleep infinity']
 """
                     defaultContainer 'kubectl'
                     workspaceVolume emptyDirWorkspaceVolume()
@@ -105,9 +104,8 @@ kind: Pod
 spec:
   containers:
     - name: kubectl
-      image: bitnami/kubectl:latest
-      command: ['cat']
-      tty: true
+      image: lachlanevenson/k8s-kubectl:latest
+      command: ['sh', '-c', 'sleep infinity']
 """
                     defaultContainer 'kubectl'
                     workspaceVolume emptyDirWorkspaceVolume()
