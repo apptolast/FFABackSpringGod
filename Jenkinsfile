@@ -75,7 +75,8 @@ pipeline {
         }
         stage('Actualizar despliegue Kubernetes') {
             steps {
-                sh "sed -i 's|ocholoko888/ffadevback:.*|ocholoko888/ffadevback:${DOCKER_TAG}|' app-deployment.yaml"
+                sh "sed -i 's|IMAGE_PLACEHOLDER|${DOCKER_IMAGE}:${DOCKER_TAG}|g' app-deployment.yaml"
+                sh 'cat app-deployment.yaml' // Opcional: Muestra el contenido actualizado
             }
         }
         stage('Preparar archivos para despliegue') {
