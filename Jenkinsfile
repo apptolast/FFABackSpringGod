@@ -22,9 +22,23 @@ pipeline {
                         configFile(fileId: 'firebase-json', targetLocation: 'familyfilmapp-4f3cb-cea8abe4e18b.json'),
                         configFile(fileId: 'application.properties', targetLocation: 'src/main/resources/application.properties'),
                         configFile(fileId: 'app-deployment-yaml', targetLocation: 'app-deployment.yaml'),
+                        configFile(fileId: 'app-logs-pvc-yaml', targetLocation: 'app-logs-pvc.yaml'),
+                        configFile(fileId: 'app-service-yaml', targetLocation: 'app-service.yaml'),
+                        configFile(fileId: 'app-configmap-yaml', targetLocation: 'app-configmap.yaml'),
+                        configFile(fileId: 'firebase-secret-yaml', targetLocation: 'firebase-secret.yaml'),
+                        configFile(fileId: 'log-server-service-yaml', targetLocation: 'log-server-service.yaml'),
+                        configFile(fileId: 'log-server-yaml', targetLocation: 'log-server.yaml'),
+                        configFile(fileId: 'nginx-configmap-yaml', targetLocation: 'nginx-configmap.yaml'),
+                        configFile(fileId: 'postgres-pvc-yaml', targetLocation: 'postgres-pvc.yaml'),
+                        configFile(fileId: 'postgres-secret-yaml', targetLocation: 'postgres-secret.yaml'),
+                        configFile(fileId: 'postgres-service-yaml', targetLocation: 'postgres-service.yaml'),
+                        configFile(fileId: 'postgres-deployment-yaml', targetLocation: 'postgres-deployment.yaml'),
+                        configFile(fileId: 'redis-deployment-yaml', targetLocation: 'redis-deployment.yaml'),
+                        configFile(fileId: 'redis-pvc-yaml', targetLocation: 'redis-pvc.yaml'),
+                        configFile(fileId: 'redis-service-yaml', targetLocation: 'redis-service.yaml'),
                         configFile(fileId: 'kubeconfig', targetLocation: 'kubeconfig')
                 ]) {
-                    echo 'Archivos de configuración descargados correctamente'
+                    echo 'Archivos de configuración y manifiestos descargados correctamente'
                 }
             }
         }
@@ -66,7 +80,7 @@ pipeline {
         }
         stage('Preparar archivos para despliegue') {
             steps {
-                stash includes: 'kubeconfig,app-deployment.yaml', name: 'deploy-files'
+                stash includes: 'kubeconfig,*.yaml', name: 'deploy-files'
             }
         }
         stage('Probar conexión Kubernetes') {
@@ -116,7 +130,23 @@ spec:
                 sh 'chmod 600 kubeconfig' // Asegura permisos correctos
                 sh 'ls -la' // Verifica que los archivos estén presentes
                 withEnv(["KUBECONFIG=${env.WORKSPACE}/kubeconfig"]) {
-                    sh 'kubectl apply -f app-deployment.yaml'
+                    sh '''
+                kubectl apply -f app-configmap.yaml
+                kubectl apply -f nginx-configmap.yaml
+                kubectl apply -f firebase-secret.yaml
+                kubectl apply -f postgres-secret.yaml
+                kubectl apply -f postgres-pvc.yaml
+                kubectl apply -f redis-pvc.yaml
+                kubectl apply -f app-logs-pvc.yaml
+                kubectl apply -f postgres-deployment.yaml
+                kubectl apply -f postgres-service.yaml
+                kubectl apply -f redis-deployment.yaml
+                kubectl apply -f redis-service.yaml
+                kubectl apply -f log-server.yaml
+                kubectl apply -f log-server-service.yaml
+                kubectl apply -f app-deployment.yaml
+                kubectl apply -f app-service.yaml
+            '''
                 }
             }
         }
