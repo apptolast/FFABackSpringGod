@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
-
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,7 +28,6 @@ public class AuthService {
             // Verificar si el usuario existe
             Optional<User> existingUser = userRepository.findByFirebaseUuid(uid);
             //Para comporbar test
-
             if (existingUser.isPresent()) {
                 if (existingUser.get().getEmail().equals(email)) {
                     return ResponseEntity.badRequest()
@@ -71,7 +69,6 @@ public class AuthService {
                         Language newLanguage = new Language("en");
                         return languageRepository.save(newLanguage);
                     });
-
             newUser.setLanguage(language);
             userRepository.save(newUser);
 
@@ -79,7 +76,7 @@ public class AuthService {
                     .body("Usuario registrado correctamente");
         }).subscribeOn(Schedulers.boundedElastic());
     }
-
+  
     public Mono<ResponseEntity<String>> login(String uid, String email, FirebaseToken decodedToken) {
         return Mono.fromCallable(() -> {
             Optional<User> userOpt = userRepository.findByFirebaseUuid(uid);
@@ -94,6 +91,7 @@ public class AuthService {
                 user.setEmailVerified(decodedToken.isEmailVerified());
 
                 userRepository.save(user);
+              
                 return ResponseEntity.ok("Login exitoso");
             } else {
                 return ResponseEntity.status(404)

@@ -22,6 +22,9 @@ public class User {
 
     @Column(nullable = true)
     private String role;
+  
+    @Column(name = "firebase_uuid", nullable = true)
+    private String firebaseUuid;
 
     // Campos del token JWT
     @Column(nullable = false)
@@ -53,6 +56,9 @@ public class User {
 
     public User(String email, String firebaseUuid, String provider, String role) {
         this.email = email;
+    }
+    public User(String role, String firebaseUuid, String provider, String email) {
+        this.role = role;
         this.firebaseUuid = firebaseUuid;
         this.provider = provider;
         this.role = role;
@@ -129,6 +135,14 @@ public class User {
 
     public void setExp(Long exp) {
         this.exp = exp;
+
+    public String getFirebaseUuid() {
+        return firebaseUuid;
+    }
+
+    public void setFirebaseUuid(String firebaseUuid) {
+        this.firebaseUuid = firebaseUuid;
+
     }
 
     public Boolean getEmailVerified() {

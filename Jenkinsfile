@@ -188,6 +188,9 @@ spec:
                             webhookURL: DISCORD_WEBHOOK_URL
                 }
             }
+            echo 'CI/CD completado exitosamente'
+        }
+        failure {
             echo 'El pipeline falló'
         }
     }
