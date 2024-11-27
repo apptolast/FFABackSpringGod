@@ -5,6 +5,17 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_ID}" // Etiqueta dinámica con el número de build
     }
     stages {
+        stage('Notificar Inicio') {
+            steps {
+                script {
+                    discordSend description: "🚀 Iniciando Pipeline de FFABackSpringGod",
+                            link: env.BUILD_URL,
+                            result: currentBuild.currentResult,
+                            title: JOB_NAME,
+                            webhookURL: credentials('discord-webhook')
+                }
+            }
+        }
         stage('Preparar fuentes') {
             tools {
                 jdk 'OpenJDK-21-ARM64'
@@ -154,9 +165,23 @@ spec:
     }
     post {
         success {
+            script {
+                discordSend description: "✅ Pipeline completado exitosamente!\nImagen: ${DOCKER_IMAGE}:${DOCKER_TAG}",
+                        link: env.BUILD_URL,
+                        result: currentBuild.currentResult,
+                        title: JOB_NAME,
+                        webhookURL: credentials('discord-webhook')
+            }
             echo 'CI/CD completado exitosamente'
         }
         failure {
+            script {
+                discordSend description: "❌ El pipeline falló\nRevisa los logs para más detalles",
+                        link: env.BUILD_URL,
+                        result: currentBuild.currentResult,
+                        title: JOB_NAME,
+                        webhookURL: credentials('discord-webhook')
+            }
             echo 'El pipeline falló'
         }
     }
