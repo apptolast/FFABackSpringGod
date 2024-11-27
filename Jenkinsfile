@@ -8,11 +8,13 @@ pipeline {
         stage('Notificar Inicio') {
             steps {
                 script {
-                    discordSend description: "🚀 Iniciando Pipeline de FFABackSpringGod",
-                            link: env.BUILD_URL,
-                            result: currentBuild.currentResult,
-                            title: JOB_NAME,
-                            webhookURL: credentials('discord-webhook')
+                    withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_WEBHOOK_URL')]) {
+                        discordSend description: "🚀 Iniciando Pipeline de FFABackSpringGod",
+                                link: env.BUILD_URL,
+                                result: currentBuild.currentResult,
+                                title: JOB_NAME,
+                                webhookURL: DISCORD_WEBHOOK_URL
+                    }
                 }
             }
         }
@@ -166,21 +168,25 @@ spec:
     post {
         success {
             script {
-                discordSend description: "✅ Pipeline completado exitosamente!\nImagen: ${DOCKER_IMAGE}:${DOCKER_TAG}",
-                        link: env.BUILD_URL,
-                        result: currentBuild.currentResult,
-                        title: JOB_NAME,
-                        webhookURL: credentials('discord-webhook')
+                withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_WEBHOOK_URL')]) {
+                    discordSend description: "✅ Pipeline completado exitosamente!\nImagen: ${DOCKER_IMAGE}:${DOCKER_TAG}",
+                            link: env.BUILD_URL,
+                            result: currentBuild.currentResult,
+                            title: JOB_NAME,
+                            webhookURL: DISCORD_WEBHOOK_URL
+                }
             }
             echo 'CI/CD completado exitosamente'
         }
         failure {
             script {
-                discordSend description: "❌ El pipeline falló\nRevisa los logs para más detalles",
-                        link: env.BUILD_URL,
-                        result: currentBuild.currentResult,
-                        title: JOB_NAME,
-                        webhookURL: credentials('discord-webhook')
+                withCredentials([string(credentialsId: 'discord-webhook', variable: 'DISCORD_WEBHOOK_URL')]) {
+                    discordSend description: "❌ El pipeline falló\nRevisa los logs para más detalles",
+                            link: env.BUILD_URL,
+                            result: currentBuild.currentResult,
+                            title: JOB_NAME,
+                            webhookURL: DISCORD_WEBHOOK_URL
+                }
             }
             echo 'El pipeline falló'
         }
