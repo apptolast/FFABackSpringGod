@@ -68,7 +68,7 @@ public class CachePreloaderService {
                 )
                 .collectList()
                 .subscribe(
-                        results -> log.info("Precarga de series completada. Total de entradas agregadas: {}", results.size()),
+                        results -> log.info("Precarga de series completada. Total de entradas agregadas se agregaron muy bien: {}", results.size()),
                         error -> log.error("Error al precargar series: {}", error.getMessage())
                 );
     }

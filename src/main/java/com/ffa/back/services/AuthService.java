@@ -28,6 +28,7 @@ public class AuthService {
         return Mono.fromCallable(() -> {
             // Verificar si el usuario existe
             Optional<User> existingUser = userRepository.findByFirebaseUuid(uid);
+            //Para comporbar test
 
             if (existingUser.isPresent()) {
                 if (existingUser.get().getEmail().equals(email)) {
