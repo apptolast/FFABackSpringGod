@@ -24,7 +24,6 @@ public class FirebaseAuthenticationWebFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -32,31 +31,23 @@ public class FirebaseAuthenticationWebFilter implements WebFilter {
             try {
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
 
-                // Crear un Authentication y establecerlo en el contexto de seguridad
                 UserDetails userDetails = User.withUsername(decodedToken.getUid())
-                        .password("") // No necesitamos la contraseña aquí
-                        .roles("USER") // Puedes ajustar los roles según tus necesidades
+                        .password("")
+                        .roles("USER")
                         .build();
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        userDetails, decodedToken, userDetails.getAuthorities());
 
-                // Establecer el contexto de seguridad de forma reactiva
                 return chain.filter(exchange)
                         .contextWrite(ReactiveSecurityContextHolder.withAuthentication(authentication));
 
             } catch (FirebaseAuthException e) {
-                // Token inválido
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
-        } else {
-            // No se proporcionó token, puedes decidir si permitir o no el acceso
-            // Por ejemplo, permitir acceso anónimo:
-            return chain.filter(exchange);
-            // O rechazar la solicitud:
-            // exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            // return exchange.getResponse().setComplete();
         }
+
+        return chain.filter(exchange);
     }
 }
