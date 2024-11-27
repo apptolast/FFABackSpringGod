@@ -19,13 +19,8 @@ public class SecurityConfig {
                 .addFilterAt(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/api/auth/**").authenticated()
-                .csrf().disable()
-                .addFilterAfter(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-                .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/familyfilmapp/api/auth/**").authenticated()
                         .anyExchange().permitAll()
                 );
-
         return http.build();
     }
 }

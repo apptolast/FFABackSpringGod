@@ -190,8 +190,5 @@ spec:
             }
             echo 'CI/CD completado exitosamente'
         }
-        failure {
-            echo 'El pipeline falló'
-        }
     }
 }

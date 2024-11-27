@@ -27,7 +27,7 @@ public class AuthService {
         return Mono.fromCallable(() -> {
             // Verificar si el usuario existe
             Optional<User> existingUser = userRepository.findByFirebaseUuid(uid);
-            //Para comporbar test
+
             if (existingUser.isPresent()) {
                 if (existingUser.get().getEmail().equals(email)) {
                     return ResponseEntity.badRequest()
@@ -69,6 +69,7 @@ public class AuthService {
                         Language newLanguage = new Language("en");
                         return languageRepository.save(newLanguage);
                     });
+
             newUser.setLanguage(language);
             userRepository.save(newUser);
 
@@ -76,7 +77,7 @@ public class AuthService {
                     .body("Usuario registrado correctamente");
         }).subscribeOn(Schedulers.boundedElastic());
     }
-  
+
     public Mono<ResponseEntity<String>> login(String uid, String email, FirebaseToken decodedToken) {
         return Mono.fromCallable(() -> {
             Optional<User> userOpt = userRepository.findByFirebaseUuid(uid);
@@ -91,7 +92,6 @@ public class AuthService {
                 user.setEmailVerified(decodedToken.isEmailVerified());
 
                 userRepository.save(user);
-              
                 return ResponseEntity.ok("Login exitoso");
             } else {
                 return ResponseEntity.status(404)
