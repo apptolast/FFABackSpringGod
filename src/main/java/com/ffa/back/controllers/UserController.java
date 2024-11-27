@@ -58,7 +58,6 @@ public class UserController {
         }
     }
 
-
     @CrossOrigin
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(

@@ -43,3 +43,4 @@ src/main/resources/application.properties
 /postgres-secret.yaml
 /nginx-configmap.yaml
 /app-deployment.yaml
+/admin.conf

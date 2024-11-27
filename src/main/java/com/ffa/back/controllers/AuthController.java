@@ -1,18 +1,15 @@
 package com.ffa.back.controllers;
 
 import com.ffa.back.services.AuthService;
+import com.ffa.back.services.FirebaseAuthService;
 import com.google.firebase.auth.FirebaseToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
 
 @RestController
 @RequestMapping("familyfilmapp/api/auth")
@@ -21,27 +18,60 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/register")
-    public Mono<ResponseEntity<String>> register(@AuthenticationPrincipal Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Mono.just(ResponseEntity.status(401).body("No autorizado"));
-        }
+    @Autowired
+    private FirebaseAuthService firebaseAuthService;
 
-        String uid = authentication.getName();
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+    @CrossOrigin
+    @PostMapping("/login")
+    public Mono<ResponseEntity<?>> login(
+            @RequestHeader("Authorization") String authHeader,
+            @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
+        return authenticationMono.flatMap(authentication -> {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return Mono.just(ResponseEntity.status(401).body("Unauthorized"));
+            }
 
-        return authService.register(uid, email);
+            try {
+                // Obtener y verificar el token
+                String token = authHeader.replace("Bearer ", "");
+                FirebaseToken decodedToken = firebaseAuthService.verifyToken(token);
+
+                // Extraer información del usuario
+                String uid = authentication.getName();
+                String email = decodedToken.getEmail();
+
+                // Llamar al servicio de autenticación
+                return authService.login(uid, email, decodedToken);
+            } catch (Exception e) {
+                return Mono.just(ResponseEntity.status(401).body("Token inválido"));
+            }
+        });
     }
 
-    @PostMapping("/login")
-    public Mono<ResponseEntity<String>> login(@AuthenticationPrincipal Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return Mono.just(ResponseEntity.status(401).body("No autorizado"));
-        }
+    @CrossOrigin
+    @PostMapping("/register")
+    public Mono<ResponseEntity<?>> register(
+            @RequestHeader("Authorization") String authHeader,
+            @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
+        return authenticationMono.flatMap(authentication -> {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return Mono.just(ResponseEntity.status(401).body("Unauthorized"));
+            }
 
-        String uid = authentication.getName();
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+            try {
+                // Obtener y verificar el token
+                String token = authHeader.replace("Bearer ", "");
+                FirebaseToken decodedToken = firebaseAuthService.verifyToken(token);
 
-        return authService.login(uid, email);
+                // Extraer información del usuario
+                String uid = authentication.getName();
+                String email = decodedToken.getEmail();
+
+                // Llamar al servicio de registro
+                return authService.register(uid, email, decodedToken);
+            } catch (Exception e) {
+                return Mono.just(ResponseEntity.status(401).body("Token inválido"));
+            }
+        });
     }
 }

@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface LanguageRepository extends JpaRepository<Language, Long> {
-    Optional<Language> findByLanguage(String language);
+    Optional<Language> findByLanguage(String language);  // Ya no es reactivo
 }

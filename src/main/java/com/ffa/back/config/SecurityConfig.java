@@ -2,6 +2,7 @@ package com.ffa.back.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.*;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -14,13 +15,12 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
                                                          FirebaseAuthenticationWebFilter firebaseAuthFilter) {
         http
-                .csrf().disable()
-                .addFilterAfter(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)  // Nuevo método
+                .addFilterAt(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/familyfilmapp/api/auth/**").authenticated()
+                        .pathMatchers("/api/auth/**").authenticated()
                         .anyExchange().permitAll()
                 );
-
         return http.build();
     }
 }
