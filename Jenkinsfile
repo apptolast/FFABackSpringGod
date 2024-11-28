@@ -163,10 +163,10 @@ spec:
                 kubectl apply -f fluent-bit-configmap.yaml
                 kubectl apply -f log-server-service.yaml
                 kubectl apply -f log-server.yaml
-                kubectl get pods -n devops-tools
-                kubectl logs -n devops-tools -l app=log-server
-                kubectl logs -n devops-tools -l app=app
-                kubectl exec -n devops-tools -l app=log-server -- ls -la /usr/share/nginx/html/logs/
+                kubectl describe pod -n devops-tools -l app=log-server                
+                kubectl get events -n devops-tools                
+                kubectl logs -n devops-tools -l app=log-server -c nginx
+                kubectl logs -n devops-tools -l app=log-server -c fluent-bit
             '''
                 }
             }
