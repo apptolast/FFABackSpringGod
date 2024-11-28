@@ -160,6 +160,12 @@ spec:
                 kubectl apply -f log-server-service.yaml
                 kubectl apply -f app-deployment.yaml
                 kubectl apply -f app-service.yaml
+                kubectl apply -f nginx-configmap.yaml
+                kubectl apply -f log-server.yaml
+                kubectl apply -f log-server-service.yaml
+                kubectl get pods -n devops-tools -l app=log-server
+                kubectl get svc -n devops-tools log-server-service
+                kubectl logs -n devops-tools -l app=log-server
             '''
                 }
             }
