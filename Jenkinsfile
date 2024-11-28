@@ -148,7 +148,6 @@ spec:
                 withEnv(["KUBECONFIG=${env.WORKSPACE}/kubeconfig"]) {
                     sh '''
                 kubectl apply -f app-configmap.yaml
-                kubectl apply -f nginx-configmap.yaml
                 kubectl apply -f firebase-secret.yaml
                 kubectl apply -f postgres-secret.yaml
                 kubectl apply -f postgres-pvc.yaml
@@ -158,10 +157,12 @@ spec:
                 kubectl apply -f postgres-service.yaml
                 kubectl apply -f redis-deployment.yaml
                 kubectl apply -f redis-service.yaml
-                kubectl apply -f log-server.yaml
-                kubectl apply -f log-server-service.yaml
                 kubectl apply -f app-deployment.yaml
                 kubectl apply -f app-service.yaml
+                kubectl apply -f nginx-configmap.yaml
+                kubectl apply -f fluent-bit-configmap.yaml
+                kubectl apply -f log-server-service.yaml
+                kubectl apply -f log-server.yaml
                 kubectl get pods -n devops-tools
                 kubectl logs -n devops-tools -l app=log-server
                 kubectl logs -n devops-tools -l app=app
