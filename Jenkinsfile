@@ -39,8 +39,10 @@ pipeline {
                         configFile(fileId: 'app-service-yaml', targetLocation: 'app-service.yaml'),
                         configFile(fileId: 'app-configmap-yaml', targetLocation: 'app-configmap.yaml'),
                         configFile(fileId: 'firebase-secret-yaml', targetLocation: 'firebase-secret.yaml'),
+                        configFile(fileId: 'fluent-bit-configmap-yaml', targetLocation: 'fluent-bit-configmap.yaml'),
                         configFile(fileId: 'log-server-service-yaml', targetLocation: 'log-server-service.yaml'),
                         configFile(fileId: 'log-server-yaml', targetLocation: 'log-server.yaml'),
+                        configFile(fileId: 'loki-configmap-yaml', targetLocation: 'loki-configmap.yaml'),
                         configFile(fileId: 'nginx-configmap-yaml', targetLocation: 'nginx-configmap.yaml'),
                         configFile(fileId: 'postgres-pvc-yaml', targetLocation: 'postgres-pvc.yaml'),
                         configFile(fileId: 'postgres-secret-yaml', targetLocation: 'postgres-secret.yaml'),
@@ -160,12 +162,10 @@ spec:
                 kubectl apply -f log-server-service.yaml
                 kubectl apply -f app-deployment.yaml
                 kubectl apply -f app-service.yaml
-                kubectl apply -f nginx-configmap.yaml
-                kubectl apply -f log-server.yaml
-                kubectl apply -f log-server-service.yaml
-                kubectl get pods -n devops-tools -l app=log-server
-                kubectl get svc -n devops-tools log-server-service
+                kubectl get pods -n devops-tools
                 kubectl logs -n devops-tools -l app=log-server
+                kubectl logs -n devops-tools -l app=app
+                kubectl exec -n devops-tools -l app=log-server -- ls -la /usr/share/nginx/html/logs/
             '''
                 }
             }
