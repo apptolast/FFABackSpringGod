@@ -163,11 +163,12 @@ spec:
                 kubectl apply -f app-logs-pvc.yaml
                 kubectl apply -f log-server.yaml
                 kubectl apply -f log-server-service.yaml
-                kubectl logs -n devops-tools -l app=log-server -c nginx
-                kubectl logs -n devops-tools -l app=log-server -c fluent-bit
-                kubectl get configmaps -n devops-tools
+                echo "Esperando a que los pods estén listos..."
+                sleep 30
+                kubectl wait --for=condition=ready pod -n devops-tools -l app=log-server --timeout=300s
                 kubectl get pods -n devops-tools -l app=log-server
-                kubectl get svc -n devops-tools log-server-service
+                kubectl logs -n devops-tools -l app=log-server -c log-server-container || true
+                kubectl logs -n devops-tools -l app=log-server -c fluent-bit || true
             '''
                 }
             }
