@@ -152,7 +152,6 @@ spec:
                 kubectl apply -f postgres-secret.yaml
                 kubectl apply -f postgres-pvc.yaml
                 kubectl apply -f redis-pvc.yaml
-                kubectl apply -f app-logs-pvc.yaml
                 kubectl apply -f postgres-deployment.yaml
                 kubectl apply -f postgres-service.yaml
                 kubectl apply -f redis-deployment.yaml
@@ -161,12 +160,14 @@ spec:
                 kubectl apply -f app-service.yaml
                 kubectl apply -f nginx-configmap.yaml
                 kubectl apply -f fluent-bit-configmap.yaml
-                kubectl apply -f log-server-service.yaml
+                kubectl apply -f app-logs-pvc.yaml
                 kubectl apply -f log-server.yaml
-                kubectl describe pod -n devops-tools -l app=log-server                
-                kubectl get events -n devops-tools                
+                kubectl apply -f log-server-service.yaml
                 kubectl logs -n devops-tools -l app=log-server -c nginx
                 kubectl logs -n devops-tools -l app=log-server -c fluent-bit
+                kubectl get configmaps -n devops-tools
+                kubectl get pods -n devops-tools -l app=log-server
+                kubectl get svc -n devops-tools log-server-service
             '''
                 }
             }
