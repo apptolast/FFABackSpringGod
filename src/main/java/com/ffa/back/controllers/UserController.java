@@ -38,6 +38,16 @@ public class UserController {
     }
 
     @CrossOrigin
+    @GetMapping("/test")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsersTest() {
+        List<User> users = (List<User>) userRepository.findAll();
+        List<UserResponseDTO> userDTOs = users.stream()
+                .map(UserResponseDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userDTOs);
+    }
+
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         Optional<User> userOpt = userRepository.findById(id);
