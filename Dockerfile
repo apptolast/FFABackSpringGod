@@ -8,4 +8,5 @@ ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 COPY src/main/resources/application.properties /config/application.properties
 COPY familyfilmapp-4f3cb-cea8abe4e18b.json familyfilmapp-4f3cb-cea8abe4e18b.json
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app.jar"]
