@@ -1,18 +1,14 @@
 package com.ffa.back.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ffa.back.dto.*;
 import com.ffa.back.services.TmdbService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -23,118 +19,69 @@ public class TmdbController {
     @Autowired
     private TmdbService tmdbService;
 
-    /**
-     * Obtener películas populares.
-     * GET /familyfilmapp/api/movies/popular?page=1
-     */
-    @Operation(summary = "Obtener peliculas populares", responses = {
-            @ApiResponse(responseCode = "200", description = "Operación exitosa",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = MoviesPopular.class)))
-    })
+    @Operation(summary = "Obtener películas populares")
+    @ApiResponse(responseCode = "200", description = "Operación exitosa")
     @GetMapping("/movies/popular")
-    public Mono<ResponseEntity<JsonNode>> getPopularMovies(
+    public ResponseEntity<JsonNode> getPopularMovies(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
-        return tmdbService.getPopularMovies(page)
-                .map(ResponseEntity::ok);
+        JsonNode result = tmdbService.getPopularMovies(page);
+        return ResponseEntity.ok(result);
     }
 
-    /**
-     * Obtener películas en cartelera.
-     * GET /familyfilmapp/api/movies/now-playing?page=1
-     */
-    @Operation(summary = "Obtener peliculas que estan en cartelera", responses = {
-            @ApiResponse(responseCode = "200", description = "Operación exitosa",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = MoviesNowPlaying.class)))
-    })
+    @Operation(summary = "Obtener películas en cartelera")
+    @ApiResponse(responseCode = "200", description = "Operación exitosa")
     @GetMapping("/movies/now-playing")
-    public Mono<ResponseEntity<JsonNode>> getNowPlayingMovies(
+    public ResponseEntity<JsonNode> getNowPlayingMovies(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
-        return tmdbService.getNowPlayingMovies(page)
-                .map(ResponseEntity::ok);
+        JsonNode result = tmdbService.getNowPlayingMovies(page);
+        return ResponseEntity.ok(result);
     }
 
-    /**
-     * Obtener series populares.
-     * GET /familyfilmapp/api/series/popular?page=1
-     */
-    @Operation(summary = "Obtener series populares", responses = {
-            @ApiResponse(responseCode = "200", description = "Operación exitosa",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PopularSeries.class)))
-    })
+    @Operation(summary = "Obtener series populares")
+    @ApiResponse(responseCode = "200", description = "Operación exitosa")
     @GetMapping("/series/popular")
-    public Mono<ResponseEntity<JsonNode>> getPopularSeries(
+    public ResponseEntity<JsonNode> getPopularSeries(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
-        return tmdbService.getPopularSeries(page)
-                .map(ResponseEntity::ok);
+        JsonNode result = tmdbService.getPopularSeries(page);
+        return ResponseEntity.ok(result);
     }
 
-    /**
-     * Obtener series en emisión.
-     * GET /familyfilmapp/api/series/on-the-air?page=1
-     */
-    @Operation(summary = "Obtener series en Emision", responses = {
-            @ApiResponse(responseCode = "200", description = "Operación exitosa",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = OnTheAirSeries.class)))
-    })
+    @Operation(summary = "Obtener series en emisión")
+    @ApiResponse(responseCode = "200", description = "Operación exitosa")
     @GetMapping("/series/on-the-air")
-    public Mono<ResponseEntity<JsonNode>> getOnTheAirSeries(
+    public ResponseEntity<JsonNode> getOnTheAirSeries(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
-        return tmdbService.getOnTheAirSeries(page)
-                .map(ResponseEntity::ok);
+        JsonNode result = tmdbService.getOnTheAirSeries(page);
+        return ResponseEntity.ok(result);
     }
 
-    /**
-     * Buscar películas y series por nombre.
-     * GET /familyfilmapp/api/search?query=nombre&page=1
-     */
-    @Operation(summary = "Buscar peliculas y series por nombre", responses = {
-            @ApiResponse(responseCode = "200", description = "Operación exitosa",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SearchMoviesAndFilmsByName.class)))
-    })
+    @Operation(summary = "Buscar películas y series por nombre")
+    @ApiResponse(responseCode = "200", description = "Operación exitosa")
     @GetMapping("/search")
-    public Mono<ResponseEntity<JsonNode>> searchMoviesAndSeries(
+    public ResponseEntity<JsonNode> searchMoviesAndSeries(
             @RequestParam("query") @NotBlank String query,
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
-        return tmdbService.searchMoviesAndSeries(query, page)
-                .map(ResponseEntity::ok);
+        JsonNode result = tmdbService.searchMoviesAndSeries(query, page);
+        return ResponseEntity.ok(result);
     }
 
-    /**
-     * Obtener detalles de una película o serie específica por ID.
-     * GET /familyfilmapp/api/details?mediaType=movie&id=123
-     */
-    @Operation(summary = "Obtener detalles de una pelicula o serie pero por ID (parametro tambien en la peticion que se llama id ) que es pasado como parametro en la peticion al igual que el mediaType  si quieres buscar pelicula (movie) si quieres buscar serie (serie) ", responses = {
-            @ApiResponse(responseCode = "200", description = "Operación exitosa",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(oneOf = {DetailMovieById.class, DetailSerieById.class})))
-    })
+    @Operation(summary = "Obtener detalles de una película o serie por ID")
+    @ApiResponse(responseCode = "200", description = "Operación exitosa")
     @GetMapping("/details")
-    public Mono<ResponseEntity<JsonNode>> getDetails(
+    public ResponseEntity<JsonNode> getDetails(
             @RequestParam("mediaType") @NotBlank String mediaType,
             @RequestParam("id") @Min(1) int id) {
-        return tmdbService.getDetails(mediaType, id)
-                .map(ResponseEntity::ok);
+        JsonNode result = tmdbService.getDetails(mediaType, id);
+        return ResponseEntity.ok(result);
     }
 
-    /**
-     * Obtener películas populares combinadas.
-     * GET /familyfilmapp/api/movies/popular-combined?page=1
-     */
-    @Operation(summary = "Obtener series populares pero dos paginas en 1 es decir 40 elementos", responses = {
-            @ApiResponse(responseCode = "200", description = "Operación exitosa",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = com.ffa.back.dto.MoviesPopularTwoPageInOne.class)))
-    })
+    @Operation(summary = "Obtener películas populares combinadas")
+    @ApiResponse(responseCode = "200", description = "Operación exitosa")
     @GetMapping("/movies/popular-combined")
-    public Mono<ResponseEntity<JsonNode>> getCombinedPopularMovies(
+    public ResponseEntity<JsonNode> getCombinedPopularMovies(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
-        return tmdbService.getCombinedPopularMovies(page)
-                .map(ResponseEntity::ok);
+        JsonNode result = tmdbService.getCombinedPopularMovies(page);
+        return ResponseEntity.ok(result);
     }
 
 

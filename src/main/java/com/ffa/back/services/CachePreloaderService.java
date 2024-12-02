@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -20,58 +21,50 @@ public class CachePreloaderService {
     @Autowired
     private TmdbService tmdbService;
 
+    // Utilizamos RedisTemplate en lugar de ReactiveRedisTemplate
     @Autowired
-    private ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate;
+    private RedisTemplate<String, JsonNode> redisTemplate;
 
     private static final int BATCH_SIZE = 5;
 
     /**
-     * Pre-carga las primeras 5 páginas de películas populares cada hora utilizando operaciones reactivas concurrentes.
+     * Pre-carga las primeras 5 páginas de películas populares cada hora.
      */
     @Scheduled(fixedRate = 60 * 60 * 1000) // Cada hora
     public void preloadPopularMovies() {
-        Flux.range(1, BATCH_SIZE)
-                .flatMap(page -> tmdbService.getPopularMovies(page)
-                        .flatMap(movie -> {
-                            String key = "popularMovies:" + page;
-                            return reactiveRedisTemplate.opsForValue().set(key, movie)
-                                    .doOnSuccess(success -> {
-                                        if (success) {
-                                            log.info("Guardada película en Redis: {}", key);
-                                        }
-                                    });
-                        })
-                )
-                .collectList()
-                .subscribe(
-                        results -> log.info("Precarga de películas completada. Total de entradas agregadas: {}", results.size()),
-                        error -> log.error("Error al precargar películas: {}", error.getMessage())
-                );
+        log.info("Iniciando precarga de películas populares...");
+        for (int page = 1; page <= BATCH_SIZE; page++) {
+            try {
+                JsonNode movies = tmdbService.getPopularMovies(page);
+                String key = "popularMovies:" + page;
+                redisTemplate.opsForValue().set(key, movies);
+                log.info("Guardadas películas en Redis con clave: {}", key);
+            } catch (Exception e) {
+                log.error("Error al precargar películas en la página {}: {}", page, e.getMessage());
+            }
+        }
+        log.info("Precarga de películas populares completada.");
     }
 
     /**
-     * Pre-carga las primeras 5 páginas de series populares cada hora utilizando operaciones reactivas concurrentes.
+     * Pre-carga las primeras 5 páginas de series populares cada hora.
      */
     @Scheduled(fixedRate = 60 * 60 * 1000) // Cada hora
     public void preloadPopularSeries() {
-        Flux.range(1, BATCH_SIZE)
-                .flatMap(page -> tmdbService.getPopularSeries(page)
-                        .flatMap(serie -> {
-                            String key = "popularSeries:" + page;
-                            return reactiveRedisTemplate.opsForValue().set(key, serie)
-                                    .doOnSuccess(success -> {
-                                        if (success) {
-                                            log.info("Guardada serie en Redis: {}", key);
-                                        }
-                                    });
-                        })
-                )
-                .collectList()
-                .subscribe(
-                        results -> log.info("Precarga de series completada. Total de entradas agregadas se agregaron muy bien: {}", results.size()),
-                        error -> log.error("Error al precargar series: {}", error.getMessage())
-                );
+        log.info("Iniciando precarga de series populares...");
+        for (int page = 1; page <= BATCH_SIZE; page++) {
+            try {
+                JsonNode series = tmdbService.getPopularSeries(page);
+                String key = "popularSeries:" + page;
+                redisTemplate.opsForValue().set(key, series);
+                log.info("Guardadas series en Redis con clave: {}", key);
+            } catch (Exception e) {
+                log.error("Error al precargar series en la página {}: {}", page, e.getMessage());
+            }
+        }
+        log.info("Precarga de series populares completada.");
     }
+
 
     // Puedes añadir más métodos si es necesario
 }
