@@ -32,11 +32,7 @@ public class UserController {
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<User> users = (List<User>) userRepository.findAll();
         List<UserResponseDTO> userDTOs = users.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getEmail(),
-                        user.getProvider(),
-                        user.getLanguage().getLanguage()))
+                .map(UserResponseDTO::new)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(userDTOs);
     }
@@ -47,11 +43,7 @@ public class UserController {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            UserResponseDTO userDTO = new UserResponseDTO(
-                    user.getId(),
-                    user.getEmail(),
-                    user.getProvider(),
-                    user.getLanguage().getLanguage());
+            UserResponseDTO userDTO = new UserResponseDTO(user);
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
@@ -80,11 +72,7 @@ public class UserController {
             // Guardar cambios
             userRepository.save(user);
 
-            UserResponseDTO userDTO = new UserResponseDTO(
-                    user.getId(),
-                    user.getEmail(),
-                    user.getProvider(),
-                    user.getLanguage().getLanguage());
+            UserResponseDTO userDTO = new UserResponseDTO(user);
 
             return ResponseEntity.ok(userDTO);
         } else {

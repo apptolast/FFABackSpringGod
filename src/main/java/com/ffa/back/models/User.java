@@ -71,6 +71,22 @@ public class User {
         return id;
     }
 
+    public List<GroupUser> getGroupUsers() {
+        return groupUsers;
+    }
+
+    public void setGroupUsers(List<GroupUser> groupUsers) {
+        this.groupUsers = groupUsers;
+    }
+
+    public List<Group> getOwnedGroups() {
+        return ownedGroups;
+    }
+
+    public void setOwnedGroups(List<Group> ownedGroups) {
+        this.ownedGroups = ownedGroups;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
