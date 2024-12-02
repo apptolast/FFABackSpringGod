@@ -5,11 +5,9 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_ID}" // Etiqueta dinámica con el número de build
     }
     stages {
-        stages {
-            stage('Checkout Código Fuente') {
-                steps {
-                    checkout scm
-                }
+        stage('Checkout Código Fuente') {
+            script {
+                checkout scm
             }
         }
         stage('Notificar Inicio') {
