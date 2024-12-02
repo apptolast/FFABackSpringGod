@@ -8,6 +8,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -30,21 +31,22 @@ public class AppConfig {
     }
 
     @Bean
-    public ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate(LettuceConnectionFactory connectionFactory) {
-        // Serializadores personalizados
+    public RedisTemplate<String, JsonNode> redisTemplate(LettuceConnectionFactory connectionFactory) {
+        RedisTemplate<String, JsonNode> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
+        // Configurar serializadores
         Jackson2JsonRedisSerializer<JsonNode> jsonSerializer = new Jackson2JsonRedisSerializer<>(JsonNode.class);
         StringRedisSerializer stringSerializer = new StringRedisSerializer();
 
-        // Construir el contexto de serialización
-        RedisSerializationContext<String, JsonNode> context = RedisSerializationContext
-                .<String, JsonNode>newSerializationContext(stringSerializer)
-                .key(stringSerializer)
-                .value(jsonSerializer)
-                .hashKey(stringSerializer)
-                .hashValue(jsonSerializer)
-                .build();
+        // Configurar serializadores para claves y valores
+        template.setKeySerializer(stringSerializer);
+        template.setValueSerializer(jsonSerializer);
+        template.setHashKeySerializer(stringSerializer);
+        template.setHashValueSerializer(jsonSerializer);
 
-        return new ReactiveRedisTemplate<>(connectionFactory, context);
+        template.afterPropertiesSet();
+        return template;
     }
 
     @Bean
@@ -69,7 +71,6 @@ public class AppConfig {
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(defaultCacheConfig)
-                .enableStatistics()
                 .build();
     }
 }
