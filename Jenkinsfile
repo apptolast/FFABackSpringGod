@@ -6,8 +6,10 @@ pipeline {
     }
     stages {
         stage('Checkout Código Fuente') {
-            script {
-                checkout scm
+            steps {
+                script {
+                    checkout scm
+                }
             }
         }
         stage('Notificar Inicio') {
