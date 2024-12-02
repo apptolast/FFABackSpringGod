@@ -22,6 +22,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<GroupUser> groupUsers;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Group> ownedGroups;
+
     @Column(nullable = false)
     private String provider;
 
