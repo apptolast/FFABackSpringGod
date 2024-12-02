@@ -3,6 +3,8 @@ package com.ffa.back.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -16,6 +18,9 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @OneToMany(mappedBy = "user")
+    private List<GroupUser> groupUsers;
 
     @Column(nullable = false)
     private String provider;
