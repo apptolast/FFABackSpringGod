@@ -34,9 +34,18 @@ public class UserController {
         List<UserResponseDTO> userDTOs = users.stream()
                 .map(user -> new UserResponseDTO(
                         user.getId(),
+                        user.getFirebaseUuid(),
                         user.getEmail(),
                         user.getProvider(),
-                        user.getLanguage().getLanguage()))
+                        user.getRole(),
+                        user.getSub(),
+                        user.getAuthTime(),
+                        user.getIat(),
+                        user.getExp(),
+                        user.getEmailVerified(),
+                        user.getSignInProvider(),
+                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
+                ))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(userDTOs);
     }
@@ -48,9 +57,18 @@ public class UserController {
         List<UserResponseDTO> userDTOs = users.stream()
                 .map(user -> new UserResponseDTO(
                         user.getId(),
+                        user.getFirebaseUuid(),
                         user.getEmail(),
                         user.getProvider(),
-                        user.getLanguage().getLanguage()))
+                        user.getRole(),
+                        user.getSub(),
+                        user.getAuthTime(),
+                        user.getIat(),
+                        user.getExp(),
+                        user.getEmailVerified(),
+                        user.getSignInProvider(),
+                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
+                ))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(userDTOs);
     }
