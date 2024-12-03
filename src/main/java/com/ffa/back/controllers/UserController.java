@@ -34,9 +34,41 @@ public class UserController {
         List<UserResponseDTO> userDTOs = users.stream()
                 .map(user -> new UserResponseDTO(
                         user.getId(),
+                        user.getFirebaseUuid(),
                         user.getEmail(),
                         user.getProvider(),
-                        user.getLanguage().getLanguage()))
+                        user.getRole(),
+                        user.getSub(),
+                        user.getAuthTime(),
+                        user.getIat(),
+                        user.getExp(),
+                        user.getEmailVerified(),
+                        user.getSignInProvider(),
+                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
+                ))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userDTOs);
+    }
+
+    @CrossOrigin
+    @GetMapping("/test/jenkins")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsersTest() {
+        List<User> users = (List<User>) userRepository.findAll();
+        List<UserResponseDTO> userDTOs = users.stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getFirebaseUuid(),
+                        user.getEmail(),
+                        user.getProvider(),
+                        user.getRole(),
+                        user.getSub(),
+                        user.getAuthTime(),
+                        user.getIat(),
+                        user.getExp(),
+                        user.getEmailVerified(),
+                        user.getSignInProvider(),
+                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
+                ))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(userDTOs);
     }
@@ -49,9 +81,17 @@ public class UserController {
             User user = userOpt.get();
             UserResponseDTO userDTO = new UserResponseDTO(
                     user.getId(),
+                    user.getFirebaseUuid(),
                     user.getEmail(),
                     user.getProvider(),
-                    user.getLanguage().getLanguage());
+                    user.getRole(),
+                    user.getSub(),
+                    user.getAuthTime(),
+                    user.getIat(),
+                    user.getExp(),
+                    user.getEmailVerified(),
+                    user.getSignInProvider(),
+                    user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
@@ -82,9 +122,17 @@ public class UserController {
 
             UserResponseDTO userDTO = new UserResponseDTO(
                     user.getId(),
+                    user.getFirebaseUuid(),
                     user.getEmail(),
                     user.getProvider(),
-                    user.getLanguage().getLanguage());
+                    user.getRole(),
+                    user.getSub(),
+                    user.getAuthTime(),
+                    user.getIat(),
+                    user.getExp(),
+                    user.getEmailVerified(),
+                    user.getSignInProvider(),
+                    user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
 
             return ResponseEntity.ok(userDTO);
         } else {

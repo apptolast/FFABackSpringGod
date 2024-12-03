@@ -39,8 +39,10 @@ pipeline {
                         configFile(fileId: 'app-service-yaml', targetLocation: 'app-service.yaml'),
                         configFile(fileId: 'app-configmap-yaml', targetLocation: 'app-configmap.yaml'),
                         configFile(fileId: 'firebase-secret-yaml', targetLocation: 'firebase-secret.yaml'),
+                        configFile(fileId: 'fluent-bit-configmap-yaml', targetLocation: 'fluent-bit-configmap.yaml'),
                         configFile(fileId: 'log-server-service-yaml', targetLocation: 'log-server-service.yaml'),
                         configFile(fileId: 'log-server-yaml', targetLocation: 'log-server.yaml'),
+                        configFile(fileId: 'loki-configmap-yaml', targetLocation: 'loki-configmap.yaml'),
                         configFile(fileId: 'nginx-configmap-yaml', targetLocation: 'nginx-configmap.yaml'),
                         configFile(fileId: 'postgres-pvc-yaml', targetLocation: 'postgres-pvc.yaml'),
                         configFile(fileId: 'postgres-secret-yaml', targetLocation: 'postgres-secret.yaml'),
@@ -146,20 +148,27 @@ spec:
                 withEnv(["KUBECONFIG=${env.WORKSPACE}/kubeconfig"]) {
                     sh '''
                 kubectl apply -f app-configmap.yaml
-                kubectl apply -f nginx-configmap.yaml
                 kubectl apply -f firebase-secret.yaml
                 kubectl apply -f postgres-secret.yaml
                 kubectl apply -f postgres-pvc.yaml
                 kubectl apply -f redis-pvc.yaml
-                kubectl apply -f app-logs-pvc.yaml
                 kubectl apply -f postgres-deployment.yaml
                 kubectl apply -f postgres-service.yaml
                 kubectl apply -f redis-deployment.yaml
                 kubectl apply -f redis-service.yaml
-                kubectl apply -f log-server.yaml
-                kubectl apply -f log-server-service.yaml
                 kubectl apply -f app-deployment.yaml
                 kubectl apply -f app-service.yaml
+                kubectl apply -f nginx-configmap.yaml
+                kubectl apply -f fluent-bit-configmap.yaml
+                kubectl apply -f app-logs-pvc.yaml
+                kubectl apply -f log-server.yaml
+                kubectl apply -f log-server-service.yaml
+                echo "Esperando a que los pods estén listos..."
+                sleep 30
+                kubectl wait --for=condition=ready pod -n devops-tools -l app=log-server --timeout=300s
+                kubectl get pods -n devops-tools -l app=log-server
+                kubectl logs -n devops-tools -l app=log-server -c log-server-container || true
+                kubectl logs -n devops-tools -l app=log-server -c fluent-bit || true
             '''
                 }
             }
