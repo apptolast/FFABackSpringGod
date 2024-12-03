@@ -18,10 +18,21 @@ public class Genre {
     @ManyToMany(mappedBy = "genres")
     private List<Movie> movies;
 
+    // Constructores
     protected Genre() {}
 
-    public Genre(String name) {
+    public Genre(Long id, String name, List<Movie> movies) {
+        this.id = id;
         this.name = name;
+        this.movies = movies;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

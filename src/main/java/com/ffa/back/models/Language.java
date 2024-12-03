@@ -8,6 +8,7 @@ import java.util.List;
 @Table(name = "language")
 public class Language {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,25 +20,36 @@ public class Language {
     @JsonManagedReference
     private List<User> users;
 
+    // Constructores
     protected Language() {}
 
-    public Language(String language) {
+    public Language(Long id, String language, List<User> users) {
+        this.id = id;
         this.language = language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
+        this.users = users;
     }
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getLanguage() {
         return language;
     }
 
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
     public List<User> getUsers() {
         return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

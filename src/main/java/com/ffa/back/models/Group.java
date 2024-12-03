@@ -12,6 +12,7 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Propietario del grupo
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private User owner;
@@ -19,9 +20,16 @@ public class Group {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "group")
-    private List<GroupUser> groupUsers;
+    // Miembros del grupo
+    @ManyToMany
+    @JoinTable(
+            name = "group_users",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> members;
 
+    // Otros campos y relaciones
     @OneToMany(mappedBy = "group")
     private List<WatchList> watchLists;
 
@@ -31,10 +39,27 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<MovieUserGroup> movieUserGroups;
 
+    // Constructores
     protected Group() {}
 
-    public Group(String name) {
+    public Group(Long id, User owner, String name, List<User> members,
+                 List<WatchList> watchLists, List<ViewList> viewLists,
+                 List<MovieUserGroup> movieUserGroups) {
+        this.id = id;
+        this.owner = owner;
         this.name = name;
+        this.members = members;
+        this.watchLists = watchLists;
+        this.viewLists = viewLists;
+        this.movieUserGroups = movieUserGroups;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public User getOwner() {
@@ -45,12 +70,20 @@ public class Group {
         this.owner = owner;
     }
 
-    public List<GroupUser> getGroupUsers() {
-        return groupUsers;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupUsers(List<GroupUser> groupUsers) {
-        this.groupUsers = groupUsers;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<User> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<User> members) {
+        this.members = members;
     }
 
     public List<WatchList> getWatchLists() {
@@ -75,13 +108,5 @@ public class Group {
 
     public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
         this.movieUserGroups = movieUserGroups;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

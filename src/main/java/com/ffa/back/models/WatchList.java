@@ -6,23 +6,35 @@ import jakarta.persistence.*;
 @Table(name = "watch_lists")
 public class WatchList {
 
-    @Id
+    @EmbeddedId
+    private WatchListId id;
+
     @ManyToOne
+    @MapsId("groupId")
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @Id
     @ManyToOne
+    @MapsId("movieId")
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
+    // Constructores
     protected WatchList() {}
 
-    public WatchList(Group group, Movie movie) {
+    public WatchList(WatchListId id, Group group, Movie movie) {
+        this.id = id;
         this.group = group;
         this.movie = movie;
     }
 
+    public WatchListId getId() {
+        return id;
+    }
+
+    public void setId(WatchListId id) {
+        this.id = id;
+    }
 
     public Group getGroup() {
         return group;

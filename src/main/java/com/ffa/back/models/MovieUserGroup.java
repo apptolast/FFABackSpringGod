@@ -6,31 +6,44 @@ import jakarta.persistence.*;
 @Table(name = "movie_user_group")
 public class MovieUserGroup {
 
-    @Id
+    @EmbeddedId
+    private MovieUserGroupId id;
+
     @ManyToOne
+    @MapsId("movieId")
     @JoinColumn(name = "id_movie")
     private Movie movie;
 
-    @Id
     @ManyToOne
+    @MapsId("userId")
     @JoinColumn(name = "id_user")
     private User user;
 
-    @Id
     @ManyToOne
+    @MapsId("groupId")
     @JoinColumn(name = "id_group")
     private Group group;
 
     @Column(nullable = true, name = "to_watch")
     private Boolean toWatch;
 
+    // Constructores
     protected MovieUserGroup() {}
 
-    public MovieUserGroup(Movie movie, User user, Group group, Boolean toWatch) {
+    public MovieUserGroup(MovieUserGroupId id, Movie movie, User user, Group group, Boolean toWatch) {
+        this.id = id;
         this.movie = movie;
         this.user = user;
         this.group = group;
         this.toWatch = toWatch;
+    }
+
+    public MovieUserGroupId getId() {
+        return id;
+    }
+
+    public void setId(MovieUserGroupId id) {
+        this.id = id;
     }
 
     public Movie getMovie() {

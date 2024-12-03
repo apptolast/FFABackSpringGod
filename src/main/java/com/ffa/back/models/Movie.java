@@ -16,17 +16,7 @@ public class Movie {
     @Column(nullable = false)
     private String title;
 
-    @ManyToMany
-    @JoinTable(
-            name = "movie_genres",
-            joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
-    private List<Genre> genres;
-
-    @Column(nullable = true)
-    private List<Integer> genre_ids;
-
+    // Otros campos
     @Column(nullable = true)
     private String language;
 
@@ -48,6 +38,21 @@ public class Movie {
     @Column(nullable = true)
     private Integer vote_count;
 
+    // Relaciones
+    @ManyToMany
+    @JoinTable(
+            name = "movie_genres",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<Genre> genres;
+
+    @ManyToMany(mappedBy = "viewedMovies")
+    private List<User> usersViewed;
+
+    @ManyToMany(mappedBy = "watchlistMovies")
+    private List<User> usersWatchlist;
+
     @OneToMany(mappedBy = "movie")
     private List<WatchList> watchLists;
 
@@ -57,50 +62,37 @@ public class Movie {
     @OneToMany(mappedBy = "movie")
     private List<MovieUserGroup> movieUserGroups;
 
+    // Constructores
     protected Movie() {}
 
-    public Movie(String title, List<Integer> genre_ids, String language, String synopsis, String image, Date release_date, Boolean adult, Double vote_average, Integer vote_count) {
+    public Movie(Long id, String title, String language, String synopsis, String image, Boolean adult,
+                 Date release_date, Double vote_average, Integer vote_count, List<Genre> genres,
+                 List<User> usersViewed, List<User> usersWatchlist, List<WatchList> watchLists,
+                 List<ViewList> viewLists, List<MovieUserGroup> movieUserGroups) {
+        this.id = id;
         this.title = title;
-        this.genre_ids = genre_ids;
         this.language = language;
         this.synopsis = synopsis;
         this.image = image;
-        this.release_date = release_date;
         this.adult = adult;
+        this.release_date = release_date;
         this.vote_average = vote_average;
         this.vote_count = vote_count;
-    }
-
-    public List<Genre> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<Genre> genres) {
         this.genres = genres;
-    }
-
-    public List<WatchList> getWatchLists() {
-        return watchLists;
-    }
-
-    public void setWatchLists(List<WatchList> watchLists) {
+        this.usersViewed = usersViewed;
+        this.usersWatchlist = usersWatchlist;
         this.watchLists = watchLists;
-    }
-
-    public List<ViewList> getViewLists() {
-        return viewLists;
-    }
-
-    public void setViewLists(List<ViewList> viewLists) {
         this.viewLists = viewLists;
-    }
-
-    public List<MovieUserGroup> getMovieUserGroups() {
-        return movieUserGroups;
-    }
-
-    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
         this.movieUserGroups = movieUserGroups;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -109,14 +101,6 @@ public class Movie {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<Integer> getGenre_ids() {
-        return genre_ids;
-    }
-
-    public void setGenre_ids(List<Integer> genre_ids) {
-        this.genre_ids = genre_ids;
     }
 
     public String getLanguage() {
@@ -173,5 +157,53 @@ public class Movie {
 
     public void setVote_count(Integer vote_count) {
         this.vote_count = vote_count;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public List<User> getUsersViewed() {
+        return usersViewed;
+    }
+
+    public void setUsersViewed(List<User> usersViewed) {
+        this.usersViewed = usersViewed;
+    }
+
+    public List<User> getUsersWatchlist() {
+        return usersWatchlist;
+    }
+
+    public void setUsersWatchlist(List<User> usersWatchlist) {
+        this.usersWatchlist = usersWatchlist;
+    }
+
+    public List<WatchList> getWatchLists() {
+        return watchLists;
+    }
+
+    public void setWatchLists(List<WatchList> watchLists) {
+        this.watchLists = watchLists;
+    }
+
+    public List<ViewList> getViewLists() {
+        return viewLists;
+    }
+
+    public void setViewLists(List<ViewList> viewLists) {
+        this.viewLists = viewLists;
+    }
+
+    public List<MovieUserGroup> getMovieUserGroups() {
+        return movieUserGroups;
+    }
+
+    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
+        this.movieUserGroups = movieUserGroups;
     }
 }

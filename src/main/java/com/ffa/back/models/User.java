@@ -3,6 +3,8 @@ package com.ffa.back.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -48,17 +50,62 @@ public class User {
     @JsonBackReference
     private Language language;
 
+    // Grupos donde el usuario es propietario
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private List<Group> ownedGroups;
+
+    // Grupos donde el usuario es miembro
+    @ManyToMany
+    @JoinTable(
+            name = "group_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groups;
+
+    // Películas vistas
+    @ManyToMany
+    @JoinTable(
+            name = "user_viewed_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> viewedMovies;
+
+    // Películas por ver
+    @ManyToMany
+    @JoinTable(
+            name = "user_watchlist_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> watchlistMovies;
+
     // Constructores
     public User() {}
 
-    public User(String email, String firebaseUuid, String provider, String role) {
-        this.email = email;
+    public User(Long id, String firebaseUuid, String email, String provider, String role, String sub,
+                Long authTime, Long iat, Long exp, Boolean emailVerified, String signInProvider,
+                Language language, List<Group> ownedGroups, List<Group> groups,
+                List<Movie> viewedMovies, List<Movie> watchlistMovies) {
+        this.id = id;
         this.firebaseUuid = firebaseUuid;
+        this.email = email;
         this.provider = provider;
         this.role = role;
+        this.sub = sub;
+        this.authTime = authTime;
+        this.iat = iat;
+        this.exp = exp;
+        this.emailVerified = emailVerified;
+        this.signInProvider = signInProvider;
+        this.language = language;
+        this.ownedGroups = ownedGroups;
+        this.groups = groups;
+        this.viewedMovies = viewedMovies;
+        this.watchlistMovies = watchlistMovies;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -153,5 +200,37 @@ public class User {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public List<Group> getOwnedGroups() {
+        return ownedGroups;
+    }
+
+    public void setOwnedGroups(List<Group> ownedGroups) {
+        this.ownedGroups = ownedGroups;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public List<Movie> getViewedMovies() {
+        return viewedMovies;
+    }
+
+    public void setViewedMovies(List<Movie> viewedMovies) {
+        this.viewedMovies = viewedMovies;
+    }
+
+    public List<Movie> getWatchlistMovies() {
+        return watchlistMovies;
+    }
+
+    public void setWatchlistMovies(List<Movie> watchlistMovies) {
+        this.watchlistMovies = watchlistMovies;
     }
 }

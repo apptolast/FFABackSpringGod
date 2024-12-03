@@ -6,21 +6,34 @@ import jakarta.persistence.*;
 @Table(name = "group_users")
 public class GroupUser {
 
-    @Id
+    @EmbeddedId
+    private GroupUserId id;
+
     @ManyToOne
+    @MapsId("userId")
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Id
     @ManyToOne
+    @MapsId("groupId")
     @JoinColumn(name = "group_id")
     private Group group;
 
+    // Constructores
     protected GroupUser() {}
 
-    public GroupUser(User user, Group group) {
+    public GroupUser(GroupUserId id, User user, Group group) {
+        this.id = id;
         this.user = user;
         this.group = group;
+    }
+
+    public GroupUserId getId() {
+        return id;
+    }
+
+    public void setId(GroupUserId id) {
+        this.id = id;
     }
 
     public User getUser() {
