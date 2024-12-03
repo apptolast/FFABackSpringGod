@@ -23,6 +23,10 @@ public class Language {
     // Constructores
     protected Language() {}
 
+    public Language(String language) {
+        this.language = language;
+    }
+
     public Language(Long id, String language, List<User> users) {
         this.id = id;
         this.language = language;

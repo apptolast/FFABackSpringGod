@@ -30,6 +30,10 @@ public class UserController {
     @CrossOrigin
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return getListResponseEntity();
+    }
+
+    private ResponseEntity<List<UserResponseDTO>> getListResponseEntity() {
         List<User> users = (List<User>) userRepository.findAll();
         List<UserResponseDTO> userDTOs = users.stream()
                 .map(user -> new UserResponseDTO(
@@ -53,24 +57,7 @@ public class UserController {
     @CrossOrigin
     @GetMapping("/test/jenkins")
     public ResponseEntity<List<UserResponseDTO>> getAllUsersTest() {
-        List<User> users = (List<User>) userRepository.findAll();
-        List<UserResponseDTO> userDTOs = users.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getFirebaseUuid(),
-                        user.getEmail(),
-                        user.getProvider(),
-                        user.getRole(),
-                        user.getSub(),
-                        user.getAuthTime(),
-                        user.getIat(),
-                        user.getExp(),
-                        user.getEmailVerified(),
-                        user.getSignInProvider(),
-                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
-                ))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(userDTOs);
+        return getListResponseEntity();
     }
 
     @CrossOrigin
@@ -79,23 +66,27 @@ public class UserController {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            UserResponseDTO userDTO = new UserResponseDTO(
-                    user.getId(),
-                    user.getFirebaseUuid(),
-                    user.getEmail(),
-                    user.getProvider(),
-                    user.getRole(),
-                    user.getSub(),
-                    user.getAuthTime(),
-                    user.getIat(),
-                    user.getExp(),
-                    user.getEmailVerified(),
-                    user.getSignInProvider(),
-                    user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
-            return ResponseEntity.ok(userDTO);
+            return getUserResponseDTOResponseEntity(user);
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private ResponseEntity<UserResponseDTO> getUserResponseDTOResponseEntity(User user) {
+        UserResponseDTO userDTO = new UserResponseDTO(
+                user.getId(),
+                user.getFirebaseUuid(),
+                user.getEmail(),
+                user.getProvider(),
+                user.getRole(),
+                user.getSub(),
+                user.getAuthTime(),
+                user.getIat(),
+                user.getExp(),
+                user.getEmailVerified(),
+                user.getSignInProvider(),
+                user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
+        return ResponseEntity.ok(userDTO);
     }
 
     @CrossOrigin
@@ -120,21 +111,7 @@ public class UserController {
             // Guardar cambios
             userRepository.save(user);
 
-            UserResponseDTO userDTO = new UserResponseDTO(
-                    user.getId(),
-                    user.getFirebaseUuid(),
-                    user.getEmail(),
-                    user.getProvider(),
-                    user.getRole(),
-                    user.getSub(),
-                    user.getAuthTime(),
-                    user.getIat(),
-                    user.getExp(),
-                    user.getEmailVerified(),
-                    user.getSignInProvider(),
-                    user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
-
-            return ResponseEntity.ok(userDTO);
+            return getUserResponseDTOResponseEntity(user);
         } else {
             return ResponseEntity.notFound().build();
         }
