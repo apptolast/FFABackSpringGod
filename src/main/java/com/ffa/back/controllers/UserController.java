@@ -42,6 +42,20 @@ public class UserController {
     }
 
     @CrossOrigin
+    @GetMapping("/test/jenkins")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsersTest() {
+        List<User> users = (List<User>) userRepository.findAll();
+        List<UserResponseDTO> userDTOs = users.stream()
+                .map(user -> new UserResponseDTO(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getProvider(),
+                        user.getLanguage().getLanguage()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userDTOs);
+    }
+
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         Optional<User> userOpt = userRepository.findById(id);
