@@ -25,7 +25,8 @@ public class GroupUser {
     private Group group;
 
     // Constructores
-    protected GroupUser() {}
+    public GroupUser() {
+    }
 
     public GroupUser(GroupUserId id, User user, Group group) {
         this.id = id;

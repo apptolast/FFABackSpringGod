@@ -25,7 +25,8 @@ public class WatchList {
     private Movie movie;
 
     // Constructores
-    protected WatchList() {}
+    public WatchList() {
+    }
 
     public WatchList(WatchListId id, Group group, Movie movie) {
         this.id = id;

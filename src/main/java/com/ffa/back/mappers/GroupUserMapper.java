@@ -5,7 +5,7 @@ import com.ffa.back.models.GroupUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, GroupMapper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class, GroupMapper.class, GroupUserIdMapper.class})
 public interface GroupUserMapper {
 
     // Mapear GroupUser a GroupUserDTO

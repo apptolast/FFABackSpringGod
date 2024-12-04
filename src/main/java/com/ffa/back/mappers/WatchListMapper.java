@@ -1,13 +1,12 @@
 package com.ffa.back.mappers;
 
+
 import com.ffa.back.dto.WatchListDTO;
-import com.ffa.back.dto.WatchListIdDTO;
 import com.ffa.back.models.WatchList;
-import com.ffa.back.models.WatchListId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {GroupMapper.class, MovieMapper.class})
+@Mapper(componentModel = "spring", uses = {GroupMapper.class, MovieMapper.class, WatchListIdMapper.class})
 public interface WatchListMapper {
 
     // Mapear WatchList a WatchListDTO
@@ -21,10 +20,4 @@ public interface WatchListMapper {
     @Mapping(source = "group", target = "group")
     @Mapping(source = "movie", target = "movie")
     WatchList toWatchList(WatchListDTO watchListDTO);
-
-    // Mapear WatchListId a WatchListIdDTO
-    WatchListIdDTO toWatchListIdDTO(WatchListId watchListId);
-
-    // Mapear WatchListIdDTO a WatchListId
-    WatchListId toWatchListId(WatchListIdDTO watchListIdDTO);
 }

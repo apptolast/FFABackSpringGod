@@ -68,7 +68,8 @@ public class Movie {
     private List<MovieUserGroup> movieUserGroups;
 
     // Constructores
-    protected Movie() {}
+    public Movie() {
+    }
 
     public Movie(Long id, String title, String language, String synopsis, String image, Boolean adult,
                  Date release_date, Double vote_average, Integer vote_count, List<Genre> genres,

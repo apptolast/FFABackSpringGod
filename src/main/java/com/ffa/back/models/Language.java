@@ -26,7 +26,8 @@ public class Language {
     private List<User> users;
 
     // Constructores
-    protected Language() {}
+    public Language() {
+    }
 
     public Language(String language) {
         this.language = language;

@@ -45,7 +45,8 @@ public class Group {
     private List<MovieUserGroup> movieUserGroups;
 
     // Constructores
-    protected Group() {}
+    public Group() {
+    }
 
     public Group(Long id, User owner, String name, List<User> members,
                  List<WatchList> watchLists, List<ViewList> viewLists,

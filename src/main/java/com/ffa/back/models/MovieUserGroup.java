@@ -33,7 +33,8 @@ public class MovieUserGroup {
     private Boolean toWatch;
 
     // Constructores
-    protected MovieUserGroup() {}
+    public MovieUserGroup() {
+    }
 
     public MovieUserGroup(MovieUserGroupId id, Movie movie, User user, Group group, Boolean toWatch) {
         this.id = id;

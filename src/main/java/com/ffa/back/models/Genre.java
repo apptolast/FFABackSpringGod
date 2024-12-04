@@ -24,7 +24,8 @@ public class Genre {
     private List<Movie> movies;
 
     // Constructores
-    protected Genre() {}
+    public Genre() {
+    }
 
     public Genre(Long id, String name, List<Movie> movies) {
         this.id = id;

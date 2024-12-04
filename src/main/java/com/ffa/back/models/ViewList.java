@@ -26,7 +26,8 @@ public class ViewList {
     private Movie movie;
 
     // Constructores
-    protected ViewList() {}
+    public ViewList() {
+    }
 
     public ViewList(ViewListId id, Group group, Movie movie) {
         this.id = id;
