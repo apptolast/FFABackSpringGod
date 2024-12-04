@@ -1,7 +1,9 @@
 package com.ffa.back.controllers;
 
+import com.ffa.back.dto.UserDTO;
 import com.ffa.back.dto.UserResponseDTO;
 import com.ffa.back.dto.UserUpdateRequestDTO;
+import com.ffa.back.mappers.UserMapper;
 import com.ffa.back.models.Language;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.LanguageRepository;
@@ -20,36 +22,26 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final LanguageRepository languageRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    private LanguageRepository languageRepository;
-
+    public UserController(UserRepository userRepository,
+                          LanguageRepository languageRepository,
+                          UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.languageRepository = languageRepository;
+        this.userMapper = userMapper;
+    }
 
     @CrossOrigin
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        return getListResponseEntity();
-    }
-
-    private ResponseEntity<List<UserResponseDTO>> getListResponseEntity() {
-        List<User> users = (List<User>) userRepository.findAll();
+        List<User> users = userRepository.findAll();
         List<UserResponseDTO> userDTOs = users.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getFirebaseUuid(),
-                        user.getEmail(),
-                        user.getProvider(),
-                        user.getRole(),
-                        user.getSub(),
-                        user.getAuthTime(),
-                        user.getIat(),
-                        user.getExp(),
-                        user.getEmailVerified(),
-                        user.getSignInProvider(),
-                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
-                ))
+                .map(userMapper::toUserDTO)
+                .map(this::convertToUserResponseDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(userDTOs);
     }
@@ -57,7 +49,7 @@ public class UserController {
     @CrossOrigin
     @GetMapping("/test/jenkins")
     public ResponseEntity<List<UserResponseDTO>> getAllUsersTest() {
-        return getListResponseEntity();
+        return getAllUsers();
     }
 
     @CrossOrigin
@@ -66,27 +58,11 @@ public class UserController {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            return getUserResponseDTOResponseEntity(user);
+            UserResponseDTO userDTO = convertToUserResponseDTO(userMapper.toUserDTO(user));
+            return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    private ResponseEntity<UserResponseDTO> getUserResponseDTOResponseEntity(User user) {
-        UserResponseDTO userDTO = new UserResponseDTO(
-                user.getId(),
-                user.getFirebaseUuid(),
-                user.getEmail(),
-                user.getProvider(),
-                user.getRole(),
-                user.getSub(),
-                user.getAuthTime(),
-                user.getIat(),
-                user.getExp(),
-                user.getEmailVerified(),
-                user.getSignInProvider(),
-                user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
-        return ResponseEntity.ok(userDTO);
     }
 
     @CrossOrigin
@@ -101,20 +77,57 @@ public class UserController {
 
             // Actualizar los campos permitidos
             if (userUpdateRequest.getLanguage() != null) {
-                Optional<Language> language = languageRepository.findByLanguage(userUpdateRequest.getLanguage());
-                if (language.isEmpty()) {
-                    language = Optional.of(languageRepository.save(new Language(userUpdateRequest.getLanguage())));
+                Optional<Language> languageOpt = languageRepository.findByLanguage(userUpdateRequest.getLanguage());
+                if (languageOpt.isEmpty()) {
+                    languageOpt = Optional.of(languageRepository.save(new Language(userUpdateRequest.getLanguage())));
                 }
-                user.setLanguage(language.get());
+                user.setLanguage(languageOpt.get());
+            }
+
+            // Actualizar otros campos si es necesario (ejemplo: email)
+            if (userUpdateRequest.getEmail() != null) {
+                user.setEmail(userUpdateRequest.getEmail());
             }
 
             // Guardar cambios
             userRepository.save(user);
 
-            return getUserResponseDTOResponseEntity(user);
+            UserResponseDTO userDTO = convertToUserResponseDTO(userMapper.toUserDTO(user));
+            return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    /**
+     * Método auxiliar para convertir UserDTO a UserResponseDTO.
+     * Esto es necesario si UserResponseDTO es diferente a UserDTO.
+     */
+    private UserResponseDTO convertToUserResponseDTO(UserDTO userDTO) {
+        return new UserResponseDTO(
+                userDTO.getId(),
+                userDTO.getFirebaseUuid(),
+                userDTO.getEmail(),
+                userDTO.getProvider(),
+                userDTO.getRole(),
+                userDTO.getSub(),
+                userDTO.getAuthTime(),
+                userDTO.getIat(),
+                userDTO.getExp(),
+                userDTO.getEmailVerified(),
+                userDTO.getSignInProvider(),
+                userDTO.getLanguageId() != null ? getLanguageNameById(userDTO.getLanguageId()) : null
+        );
+    }
+
+
+    /**
+     * Método auxiliar para obtener el nombre del lenguaje por su ID.
+     */
+    private String getLanguageNameById(Long languageId) {
+        Optional<Language> languageOpt = languageRepository.findById(languageId);
+        return languageOpt.map(Language::getLanguage).orElse(null);
     }
 
 }
