@@ -1,7 +1,6 @@
 package com.ffa.back.controllers;
 
 import com.ffa.back.dto.UserDTO;
-import com.ffa.back.dto.UserResponseDTO;
 import com.ffa.back.dto.UserUpdateRequestDTO;
 import com.ffa.back.mappers.UserMapper;
 import com.ffa.back.models.Language;
@@ -35,39 +34,33 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @CrossOrigin
     @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<User> users = userRepository.findAll();
-        List<UserResponseDTO> userDTOs = users.stream()
+        List<UserDTO> userDTOs = users.stream()
                 .map(userMapper::toUserDTO)
-                .map(this::convertToUserResponseDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(userDTOs);
     }
 
-    @CrossOrigin
     @GetMapping("/test/jenkins")
-    public ResponseEntity<List<UserResponseDTO>> getAllUsersTest() {
+    public ResponseEntity<List<UserDTO>> getAllUsersTest() {
         return getAllUsers();
     }
 
-    @CrossOrigin
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            UserResponseDTO userDTO = convertToUserResponseDTO(userMapper.toUserDTO(user));
+            UserDTO userDTO = userMapper.toUserDTO(userOpt.get());
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @CrossOrigin
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(
+    public ResponseEntity<UserDTO> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequestDTO userUpdateRequest) {
 
@@ -92,42 +85,12 @@ public class UserController {
             // Guardar cambios
             userRepository.save(user);
 
-            UserResponseDTO userDTO = convertToUserResponseDTO(userMapper.toUserDTO(user));
+            // Mapear a UserDTO y retornar
+            UserDTO userDTO = userMapper.toUserDTO(user);
             return ResponseEntity.ok(userDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-
-    /**
-     * Método auxiliar para convertir UserDTO a UserResponseDTO.
-     * Esto es necesario si UserResponseDTO es diferente a UserDTO.
-     */
-    private UserResponseDTO convertToUserResponseDTO(UserDTO userDTO) {
-        return new UserResponseDTO(
-                userDTO.getId(),
-                userDTO.getFirebaseUuid(),
-                userDTO.getEmail(),
-                userDTO.getProvider(),
-                userDTO.getRole(),
-                userDTO.getSub(),
-                userDTO.getAuthTime(),
-                userDTO.getIat(),
-                userDTO.getExp(),
-                userDTO.getEmailVerified(),
-                userDTO.getSignInProvider(),
-                userDTO.getLanguageId() != null ? getLanguageNameById(userDTO.getLanguageId()) : null
-        );
-    }
-
-
-    /**
-     * Método auxiliar para obtener el nombre del lenguaje por su ID.
-     */
-    private String getLanguageNameById(Long languageId) {
-        Optional<Language> languageOpt = languageRepository.findById(languageId);
-        return languageOpt.map(Language::getLanguage).orElse(null);
     }
 
 }
