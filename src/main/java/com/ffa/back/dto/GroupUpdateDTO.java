@@ -9,10 +9,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GenreDTO {
-
-    private Long id;
+public class GroupUpdateDTO {
     private String name;
-    private List<Long> movieIds;
-
+    private Long ownerId;
+    private List<Long> memberIds;
+    private List<Long> watchListIds;
+    private List<Long> viewListIds;
+    private List<Long> movieUserGroupIds;
 }

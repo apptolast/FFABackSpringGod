@@ -1,16 +1,13 @@
 package com.ffa.back.mappers;
 
+import com.ffa.back.dto.GroupCreateDTO;
 import com.ffa.back.dto.GroupDTO;
-import com.ffa.back.models.Group;
-import com.ffa.back.models.MovieUserGroup;
-import com.ffa.back.models.MovieUserGroupId;
-import com.ffa.back.models.User;
-import com.ffa.back.models.WatchList;
-import com.ffa.back.models.ViewList;
-import com.ffa.back.models.ViewListId;
-import com.ffa.back.models.WatchListId;
+import com.ffa.back.dto.GroupUpdateDTO;
+import com.ffa.back.models.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +29,25 @@ public interface GroupMapper {
     @Mapping(target = "movieUserGroups", ignore = true)
     Group toGroup(GroupDTO groupDTO);
 
-    // Métodos auxiliares
+    // Mapeo de DTO a Entidad para Creación
+    @Mapping(source = "ownerId", target = "owner")
+    @Mapping(source = "memberIds", target = "members")
+    @Mapping(source = "watchListIds", target = "watchLists")
+    @Mapping(source = "viewListIds", target = "viewLists")
+    @Mapping(source = "movieUserGroupIds", target = "movieUserGroups")
+    Group groupCreateDTOToGroup(GroupCreateDTO groupCreateDTO, @MappingTarget Group group);
+
+    // Mapeo de DTO a Entidad para Actualización
+    @Mapping(source = "ownerId", target = "owner")
+    @Mapping(source = "memberIds", target = "members")
+    @Mapping(source = "watchListIds", target = "watchLists")
+    @Mapping(source = "viewListIds", target = "viewLists")
+    @Mapping(source = "movieUserGroupIds", target = "movieUserGroups")
+    void updateGroupFromDTO(GroupUpdateDTO groupUpdateDTO, @MappingTarget Group group);
+
+
+    // Métodos auxiliares para mapear entidades a IDs
+
     default Long mapOwnerToId(User owner) {
         return owner != null ? owner.getId() : null;
     }
@@ -70,4 +85,21 @@ public interface GroupMapper {
                 .map(movieUserGroup -> movieUserGroup.getId().getMovieId())
                 .collect(Collectors.toList());
     }
+
+    // Métodos para mapear IDs a entidades (para mapeo de DTO a Entidad)
+    @Named("mapIdsToUsers")
+    default List<User> mapIdsToUsers(List<Long> ids) {
+        if (ids == null) {
+            return null;
+        }
+        return ids.stream()
+                .map(id -> {
+                    User user = new User();
+                    user.setId(id);
+                    return user;
+                })
+                .collect(Collectors.toList());
+    }
+
+    // Similarmente, puedes agregar métodos para mapear IDs a WatchList, ViewList, etc., si es necesario
 }

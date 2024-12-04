@@ -1,32 +1,13 @@
 package com.ffa.back.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupUserIdDTO {
     private Long userId;
     private Long groupId;
-
-    // Constructores
-    public GroupUserIdDTO() {
-    }
-
-    public GroupUserIdDTO(Long userId, Long groupId) {
-        this.userId = userId;
-        this.groupId = groupId;
-    }
-
-    // Getters y Setters
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
-    }
 }
