@@ -37,5 +37,4 @@ public class GroupController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(groupDTOs);
     }
-
 }
