@@ -7,6 +7,12 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.*;
+
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @JsonIdentityInfo(
@@ -52,7 +58,6 @@ public class User {
     // Relación con Language
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_language", referencedColumnName = "id")
-    @JsonBackReference
     private Language language;
 
     // Grupos donde el usuario es propietario
@@ -111,6 +116,7 @@ public class User {
         this.watchlistMovies = watchlistMovies;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }

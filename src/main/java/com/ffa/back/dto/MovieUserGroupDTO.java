@@ -2,24 +2,25 @@ package com.ffa.back.dto;
 
 public class MovieUserGroupDTO {
     private MovieUserGroupIdDTO id;
-    private MovieDTO movie;
-    private UserDTO user;
-    private GroupDTO group;
+    private Long movieId;
+    private Long userId;
+    private Long groupId;
     private Boolean toWatch;
 
     // Constructores
     public MovieUserGroupDTO() {
     }
 
-    public MovieUserGroupDTO(MovieUserGroupIdDTO id, MovieDTO movie, UserDTO user,
-                             GroupDTO group, Boolean toWatch) {
+    public MovieUserGroupDTO(MovieUserGroupIdDTO id, Long movieId, Long userId,
+                             Long groupId, Boolean toWatch) {
         this.id = id;
-        this.movie = movie;
-        this.user = user;
-        this.group = group;
+        this.movieId = movieId;
+        this.userId = userId;
+        this.groupId = groupId;
         this.toWatch = toWatch;
     }
 
+    // Getters y Setters
     public MovieUserGroupIdDTO getId() {
         return id;
     }
@@ -28,28 +29,28 @@ public class MovieUserGroupDTO {
         this.id = id;
     }
 
-    public MovieDTO getMovie() {
-        return movie;
+    public Long getMovieId() {
+        return movieId;
     }
 
-    public void setMovie(MovieDTO movie) {
-        this.movie = movie;
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 
-    public UserDTO getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(UserDTO user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public GroupDTO getGroup() {
-        return group;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(GroupDTO group) {
-        this.group = group;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public Boolean getToWatch() {

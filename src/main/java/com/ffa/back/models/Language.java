@@ -1,9 +1,10 @@
 package com.ffa.back.models;
 
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity
@@ -22,7 +23,6 @@ public class Language {
     private String language;
 
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<User> users;
 
     // Constructores
@@ -39,6 +39,7 @@ public class Language {
         this.users = users;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }

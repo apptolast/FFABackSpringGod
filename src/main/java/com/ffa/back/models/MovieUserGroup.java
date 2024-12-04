@@ -44,6 +44,7 @@ public class MovieUserGroup {
         this.toWatch = toWatch;
     }
 
+    // Getters y Setters
     public MovieUserGroupId getId() {
         return id;
     }

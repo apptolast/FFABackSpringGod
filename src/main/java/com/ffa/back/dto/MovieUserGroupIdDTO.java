@@ -15,7 +15,7 @@ public class MovieUserGroupIdDTO {
         this.groupId = groupId;
     }
 
-
+    // Getters y Setters
     public Long getMovieId() {
         return movieId;
     }

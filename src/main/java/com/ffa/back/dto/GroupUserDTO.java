@@ -2,19 +2,20 @@ package com.ffa.back.dto;
 
 public class GroupUserDTO {
     private GroupUserIdDTO id;
-    private UserDTO user;
-    private GroupDTO group;
+    private Long userId;
+    private Long groupId;
 
     // Constructores
     public GroupUserDTO() {
     }
 
-    public GroupUserDTO(GroupUserIdDTO id, UserDTO user, GroupDTO group) {
+    public GroupUserDTO(GroupUserIdDTO id, Long userId, Long groupId) {
         this.id = id;
-        this.user = user;
-        this.group = group;
+        this.userId = userId;
+        this.groupId = groupId;
     }
 
+    // Getters y Setters
     public GroupUserIdDTO getId() {
         return id;
     }
@@ -23,19 +24,19 @@ public class GroupUserDTO {
         this.id = id;
     }
 
-    public UserDTO getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(UserDTO user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public GroupDTO getGroup() {
-        return group;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(GroupDTO group) {
-        this.group = group;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 }

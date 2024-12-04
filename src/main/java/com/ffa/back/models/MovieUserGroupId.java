@@ -28,7 +28,6 @@ public class MovieUserGroupId implements Serializable {
     }
 
     // Getters y Setters
-
     public Long getMovieId() {
         return movieId;
     }
@@ -53,20 +52,24 @@ public class MovieUserGroupId implements Serializable {
         this.groupId = groupId;
     }
 
-
     // Equals y hashCode
-    // ... (implementación de equals y hashCode)
-
-
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         MovieUserGroupId that = (MovieUserGroupId) o;
-        return Objects.equals(movieId, that.movieId) && Objects.equals(userId, that.userId) && Objects.equals(groupId, that.groupId);
+
+        if (!Objects.equals(movieId, that.movieId)) return false;
+        if (!Objects.equals(userId, that.userId)) return false;
+        return Objects.equals(groupId, that.groupId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(movieId, userId, groupId);
+        int result = movieId != null ? movieId.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
+        return result;
     }
 }

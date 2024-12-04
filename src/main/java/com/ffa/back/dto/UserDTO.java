@@ -14,11 +14,11 @@ public class UserDTO {
     private Long exp;
     private Boolean emailVerified;
     private String signInProvider;
-    private LanguageDTO language;
-    private List<GroupDTO> ownedGroups;
-    private List<GroupDTO> groups;
-    private List<MovieDTO> viewedMovies;
-    private List<MovieDTO> watchlistMovies;
+    private Long languageId;
+    private List<Long> ownedGroupIds;
+    private List<Long> groupIds;
+    private List<Long> viewedMovieIds;
+    private List<Long> watchlistMovieIds;
 
     // Constructores
     public UserDTO() {
@@ -26,8 +26,8 @@ public class UserDTO {
 
     public UserDTO(Long id, String firebaseUuid, String email, String provider, String role, String sub,
                    Long authTime, Long iat, Long exp, Boolean emailVerified, String signInProvider,
-                   LanguageDTO language, List<GroupDTO> ownedGroups, List<GroupDTO> groups,
-                   List<MovieDTO> viewedMovies, List<MovieDTO> watchlistMovies) {
+                   Long languageId, List<Long> ownedGroupIds, List<Long> groupIds,
+                   List<Long> viewedMovieIds, List<Long> watchlistMovieIds) {
         this.id = id;
         this.firebaseUuid = firebaseUuid;
         this.email = email;
@@ -39,13 +39,14 @@ public class UserDTO {
         this.exp = exp;
         this.emailVerified = emailVerified;
         this.signInProvider = signInProvider;
-        this.language = language;
-        this.ownedGroups = ownedGroups;
-        this.groups = groups;
-        this.viewedMovies = viewedMovies;
-        this.watchlistMovies = watchlistMovies;
+        this.languageId = languageId;
+        this.ownedGroupIds = ownedGroupIds;
+        this.groupIds = groupIds;
+        this.viewedMovieIds = viewedMovieIds;
+        this.watchlistMovieIds = watchlistMovieIds;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -134,43 +135,43 @@ public class UserDTO {
         this.signInProvider = signInProvider;
     }
 
-    public LanguageDTO getLanguage() {
-        return language;
+    public Long getLanguageId() {
+        return languageId;
     }
 
-    public void setLanguage(LanguageDTO language) {
-        this.language = language;
+    public void setLanguageId(Long languageId) {
+        this.languageId = languageId;
     }
 
-    public List<GroupDTO> getOwnedGroups() {
-        return ownedGroups;
+    public List<Long> getOwnedGroupIds() {
+        return ownedGroupIds;
     }
 
-    public void setOwnedGroups(List<GroupDTO> ownedGroups) {
-        this.ownedGroups = ownedGroups;
+    public void setOwnedGroupIds(List<Long> ownedGroupIds) {
+        this.ownedGroupIds = ownedGroupIds;
     }
 
-    public List<GroupDTO> getGroups() {
-        return groups;
+    public List<Long> getGroupIds() {
+        return groupIds;
     }
 
-    public void setGroups(List<GroupDTO> groups) {
-        this.groups = groups;
+    public void setGroupIds(List<Long> groupIds) {
+        this.groupIds = groupIds;
     }
 
-    public List<MovieDTO> getViewedMovies() {
-        return viewedMovies;
+    public List<Long> getViewedMovieIds() {
+        return viewedMovieIds;
     }
 
-    public void setViewedMovies(List<MovieDTO> viewedMovies) {
-        this.viewedMovies = viewedMovies;
+    public void setViewedMovieIds(List<Long> viewedMovieIds) {
+        this.viewedMovieIds = viewedMovieIds;
     }
 
-    public List<MovieDTO> getWatchlistMovies() {
-        return watchlistMovies;
+    public List<Long> getWatchlistMovieIds() {
+        return watchlistMovieIds;
     }
 
-    public void setWatchlistMovies(List<MovieDTO> watchlistMovies) {
-        this.watchlistMovies = watchlistMovies;
+    public void setWatchlistMovieIds(List<Long> watchlistMovieIds) {
+        this.watchlistMovieIds = watchlistMovieIds;
     }
 }

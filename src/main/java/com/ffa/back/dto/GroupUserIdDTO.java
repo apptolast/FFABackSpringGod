@@ -13,6 +13,7 @@ public class GroupUserIdDTO {
         this.groupId = groupId;
     }
 
+    // Getters y Setters
     public Long getUserId() {
         return userId;
     }

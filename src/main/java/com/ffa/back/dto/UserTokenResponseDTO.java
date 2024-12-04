@@ -14,6 +14,7 @@ public class UserTokenResponseDTO {
         this.expiresIn = expiresIn;
     }
 
+    // Getters y Setters
     public String getIdToken() {
         return idToken;
     }

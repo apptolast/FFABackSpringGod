@@ -92,7 +92,7 @@ public class Movie {
         this.movieUserGroups = movieUserGroups;
     }
 
-
+    // Getters y Setters
     public Long getId() {
         return id;
     }

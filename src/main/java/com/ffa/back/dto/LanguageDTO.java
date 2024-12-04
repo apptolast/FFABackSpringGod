@@ -5,18 +5,19 @@ import java.util.List;
 public class LanguageDTO {
     private Long id;
     private String language;
-    private List<UserDTO> users;
+    private List<Long> userIds;
 
     // Constructores
     public LanguageDTO() {
     }
 
-    public LanguageDTO(Long id, String language, List<UserDTO> users) {
+    public LanguageDTO(Long id, String language, List<Long> userIds) {
         this.id = id;
         this.language = language;
-        this.users = users;
+        this.userIds = userIds;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -33,11 +34,11 @@ public class LanguageDTO {
         this.language = language;
     }
 
-    public List<UserDTO> getUsers() {
-        return users;
+    public List<Long> getUserIds() {
+        return userIds;
     }
 
-    public void setUsers(List<UserDTO> users) {
-        this.users = users;
+    public void setUserIds(List<Long> userIds) {
+        this.userIds = userIds;
     }
 }

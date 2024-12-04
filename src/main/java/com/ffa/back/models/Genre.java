@@ -33,6 +33,7 @@ public class Genre {
         this.movies = movies;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }

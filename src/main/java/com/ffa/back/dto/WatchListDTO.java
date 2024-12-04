@@ -2,20 +2,20 @@ package com.ffa.back.dto;
 
 public class WatchListDTO {
     private WatchListIdDTO id;
-    private GroupDTO group;
-    private MovieDTO movie;
+    private Long groupId;
+    private Long movieId;
 
     // Constructores
     public WatchListDTO() {
     }
 
-    public WatchListDTO(WatchListIdDTO id, GroupDTO group, MovieDTO movie) {
+    public WatchListDTO(WatchListIdDTO id, Long groupId, Long movieId) {
         this.id = id;
-        this.group = group;
-        this.movie = movie;
+        this.groupId = groupId;
+        this.movieId = movieId;
     }
 
-
+    // Getters y Setters
     public WatchListIdDTO getId() {
         return id;
     }
@@ -24,19 +24,19 @@ public class WatchListDTO {
         this.id = id;
     }
 
-    public GroupDTO getGroup() {
-        return group;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(GroupDTO group) {
-        this.group = group;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
-    public MovieDTO getMovie() {
-        return movie;
+    public Long getMovieId() {
+        return movieId;
     }
 
-    public void setMovie(MovieDTO movie) {
-        this.movie = movie;
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 }

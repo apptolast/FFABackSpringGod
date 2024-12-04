@@ -24,7 +24,6 @@ public class ViewListId implements Serializable {
     }
 
     // Getters y Setters
-
     public Long getGroupId() {
         return groupId;
     }
@@ -41,19 +40,22 @@ public class ViewListId implements Serializable {
         this.movieId = movieId;
     }
 
-
     // Equals y hashCode
-    // ... (implementación de equals y hashCode)
-
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ViewListId that = (ViewListId) o;
-        return Objects.equals(groupId, that.groupId) && Objects.equals(movieId, that.movieId);
+
+        if (!Objects.equals(groupId, that.groupId)) return false;
+        return Objects.equals(movieId, that.movieId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(groupId, movieId);
+        int result = groupId != null ? groupId.hashCode() : 0;
+        result = 31 * result + (movieId != null ? movieId.hashCode() : 0);
+        return result;
     }
 }

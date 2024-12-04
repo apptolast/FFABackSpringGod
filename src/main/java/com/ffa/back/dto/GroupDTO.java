@@ -4,29 +4,30 @@ import java.util.List;
 
 public class GroupDTO {
     private Long id;
-    private UserDTO owner;
+    private Long ownerId;
     private String name;
-    private List<UserDTO> members;
-    private List<WatchListDTO> watchLists;
-    private List<ViewListDTO> viewLists;
-    private List<MovieUserGroupDTO> movieUserGroups;
+    private List<Long> memberIds;
+    private List<Long> watchListIds;
+    private List<Long> viewListIds;
+    private List<Long> movieUserGroupIds;
 
     // Constructores
     public GroupDTO() {
     }
 
-    public GroupDTO(Long id, UserDTO owner, String name, List<UserDTO> members,
-                    List<WatchListDTO> watchLists, List<ViewListDTO> viewLists,
-                    List<MovieUserGroupDTO> movieUserGroups) {
+    public GroupDTO(Long id, Long ownerId, String name, List<Long> memberIds,
+                    List<Long> watchListIds, List<Long> viewListIds,
+                    List<Long> movieUserGroupIds) {
         this.id = id;
-        this.owner = owner;
+        this.ownerId = ownerId;
         this.name = name;
-        this.members = members;
-        this.watchLists = watchLists;
-        this.viewLists = viewLists;
-        this.movieUserGroups = movieUserGroups;
+        this.memberIds = memberIds;
+        this.watchListIds = watchListIds;
+        this.viewListIds = viewListIds;
+        this.movieUserGroupIds = movieUserGroupIds;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -35,12 +36,12 @@ public class GroupDTO {
         this.id = id;
     }
 
-    public UserDTO getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(UserDTO owner) {
-        this.owner = owner;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getName() {
@@ -51,35 +52,35 @@ public class GroupDTO {
         this.name = name;
     }
 
-    public List<UserDTO> getMembers() {
-        return members;
+    public List<Long> getMemberIds() {
+        return memberIds;
     }
 
-    public void setMembers(List<UserDTO> members) {
-        this.members = members;
+    public void setMemberIds(List<Long> memberIds) {
+        this.memberIds = memberIds;
     }
 
-    public List<WatchListDTO> getWatchLists() {
-        return watchLists;
+    public List<Long> getWatchListIds() {
+        return watchListIds;
     }
 
-    public void setWatchLists(List<WatchListDTO> watchLists) {
-        this.watchLists = watchLists;
+    public void setWatchListIds(List<Long> watchListIds) {
+        this.watchListIds = watchListIds;
     }
 
-    public List<ViewListDTO> getViewLists() {
-        return viewLists;
+    public List<Long> getViewListIds() {
+        return viewListIds;
     }
 
-    public void setViewLists(List<ViewListDTO> viewLists) {
-        this.viewLists = viewLists;
+    public void setViewListIds(List<Long> viewListIds) {
+        this.viewListIds = viewListIds;
     }
 
-    public List<MovieUserGroupDTO> getMovieUserGroups() {
-        return movieUserGroups;
+    public List<Long> getMovieUserGroupIds() {
+        return movieUserGroupIds;
     }
 
-    public void setMovieUserGroups(List<MovieUserGroupDTO> movieUserGroups) {
-        this.movieUserGroups = movieUserGroups;
+    public void setMovieUserGroupIds(List<Long> movieUserGroupIds) {
+        this.movieUserGroupIds = movieUserGroupIds;
     }
 }

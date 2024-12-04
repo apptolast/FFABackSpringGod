@@ -13,6 +13,7 @@ public class ViewListIdDTO {
         this.movieId = movieId;
     }
 
+    // Getters y Setters
     public Long getGroupId() {
         return groupId;
     }

@@ -19,7 +19,7 @@ public class UserUpdateRequestDTO {
         this.email = email;
     }
 
-    // Getter y Setter
+    // Getters y Setters
     public String getLanguage() {
         return language;
     }

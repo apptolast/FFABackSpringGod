@@ -13,7 +13,7 @@ public class UserResponseDTO {
     private Long exp;
     private Boolean emailVerified;
     private String signInProvider;
-    private String language; // Mantenemos el language como String para simplicidad
+    private String language; // Manteniendo el language como String para simplicidad
 
     // Constructor vacío
     public UserResponseDTO() {

@@ -6,18 +6,19 @@ public class GenreDTO {
 
     private Long id;
     private String name;
-    private List<MovieDTO> movies;
+    private List<Long> movieIds;
 
     // Constructores
     public GenreDTO() {
     }
 
-    public GenreDTO(Long id, String name, List<MovieDTO> movies) {
+    public GenreDTO(Long id, String name, List<Long> movieIds) {
         this.id = id;
         this.name = name;
-        this.movies = movies;
+        this.movieIds = movieIds;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -34,11 +35,11 @@ public class GenreDTO {
         this.name = name;
     }
 
-    public List<MovieDTO> getMovies() {
-        return movies;
+    public List<Long> getMovieIds() {
+        return movieIds;
     }
 
-    public void setMovies(List<MovieDTO> movies) {
-        this.movies = movies;
+    public void setMovieIds(List<Long> movieIds) {
+        this.movieIds = movieIds;
     }
 }

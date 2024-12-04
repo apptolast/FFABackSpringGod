@@ -34,6 +34,7 @@ public class WatchList {
         this.movie = movie;
     }
 
+    // Getters y Setters
     public WatchListId getId() {
         return id;
     }

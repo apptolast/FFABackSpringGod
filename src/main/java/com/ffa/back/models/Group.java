@@ -60,6 +60,7 @@ public class Group {
         this.movieUserGroups = movieUserGroups;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }

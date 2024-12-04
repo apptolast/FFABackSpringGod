@@ -24,7 +24,6 @@ public class GroupUserId implements Serializable {
     }
 
     // Getters y Setters
-
     public Long getUserId() {
         return userId;
     }
@@ -41,20 +40,22 @@ public class GroupUserId implements Serializable {
         this.groupId = groupId;
     }
 
-
     // Equals y hashCode
-    // ... (implementación de equals y hashCode)
-
-
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         GroupUserId that = (GroupUserId) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(groupId, that.groupId);
+
+        if (!Objects.equals(userId, that.userId)) return false;
+        return Objects.equals(groupId, that.groupId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, groupId);
+        int result = userId != null ? userId.hashCode() : 0;
+        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
+        return result;
     }
 }

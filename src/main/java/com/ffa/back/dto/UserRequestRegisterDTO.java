@@ -3,13 +3,13 @@ package com.ffa.back.dto;
 public class UserRequestRegisterDTO {
 
     private String email;
-
     private String password;
-
     private String language;
 
+    // Constructor sin argumentos
     public UserRequestRegisterDTO() {}
 
+    // Constructor con argumentos
     public UserRequestRegisterDTO(String email, String password, String language) {
         this.email = email;
         this.password = password;
@@ -17,8 +17,6 @@ public class UserRequestRegisterDTO {
     }
 
     // Getters y Setters
-
-
     public String getEmail() {
         return email;
     }

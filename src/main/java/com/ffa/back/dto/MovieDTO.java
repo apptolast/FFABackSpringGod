@@ -13,21 +13,21 @@ public class MovieDTO {
     private Date release_date;
     private Double vote_average;
     private Integer vote_count;
-    private List<GenreDTO> genres;
-    private List<UserDTO> usersViewed;
-    private List<UserDTO> usersWatchlist;
-    private List<WatchListDTO> watchLists;
-    private List<ViewListDTO> viewLists;
-    private List<MovieUserGroupDTO> movieUserGroups;
+    private List<Long> genreIds;
+    private List<Long> userViewedIds;
+    private List<Long> userWatchlistIds;
+    private List<Long> watchListIds;
+    private List<Long> viewListIds;
+    private List<Long> movieUserGroupIds;
 
     // Constructores
     public MovieDTO() {
     }
 
     public MovieDTO(Long id, String title, String language, String synopsis, String image, Boolean adult,
-                    Date release_date, Double vote_average, Integer vote_count, List<GenreDTO> genres,
-                    List<UserDTO> usersViewed, List<UserDTO> usersWatchlist, List<WatchListDTO> watchLists,
-                    List<ViewListDTO> viewLists, List<MovieUserGroupDTO> movieUserGroups) {
+                    Date release_date, Double vote_average, Integer vote_count, List<Long> genreIds,
+                    List<Long> userViewedIds, List<Long> userWatchlistIds, List<Long> watchListIds,
+                    List<Long> viewListIds, List<Long> movieUserGroupIds) {
         this.id = id;
         this.title = title;
         this.language = language;
@@ -37,15 +37,15 @@ public class MovieDTO {
         this.release_date = release_date;
         this.vote_average = vote_average;
         this.vote_count = vote_count;
-        this.genres = genres;
-        this.usersViewed = usersViewed;
-        this.usersWatchlist = usersWatchlist;
-        this.watchLists = watchLists;
-        this.viewLists = viewLists;
-        this.movieUserGroups = movieUserGroups;
+        this.genreIds = genreIds;
+        this.userViewedIds = userViewedIds;
+        this.userWatchlistIds = userWatchlistIds;
+        this.watchListIds = watchListIds;
+        this.viewListIds = viewListIds;
+        this.movieUserGroupIds = movieUserGroupIds;
     }
 
-
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -118,51 +118,51 @@ public class MovieDTO {
         this.vote_count = vote_count;
     }
 
-    public List<GenreDTO> getGenres() {
-        return genres;
+    public List<Long> getGenreIds() {
+        return genreIds;
     }
 
-    public void setGenres(List<GenreDTO> genres) {
-        this.genres = genres;
+    public void setGenreIds(List<Long> genreIds) {
+        this.genreIds = genreIds;
     }
 
-    public List<UserDTO> getUsersViewed() {
-        return usersViewed;
+    public List<Long> getUserViewedIds() {
+        return userViewedIds;
     }
 
-    public void setUsersViewed(List<UserDTO> usersViewed) {
-        this.usersViewed = usersViewed;
+    public void setUserViewedIds(List<Long> userViewedIds) {
+        this.userViewedIds = userViewedIds;
     }
 
-    public List<UserDTO> getUsersWatchlist() {
-        return usersWatchlist;
+    public List<Long> getUserWatchlistIds() {
+        return userWatchlistIds;
     }
 
-    public void setUsersWatchlist(List<UserDTO> usersWatchlist) {
-        this.usersWatchlist = usersWatchlist;
+    public void setUserWatchlistIds(List<Long> userWatchlistIds) {
+        this.userWatchlistIds = userWatchlistIds;
     }
 
-    public List<WatchListDTO> getWatchLists() {
-        return watchLists;
+    public List<Long> getWatchListIds() {
+        return watchListIds;
     }
 
-    public void setWatchLists(List<WatchListDTO> watchLists) {
-        this.watchLists = watchLists;
+    public void setWatchListIds(List<Long> watchListIds) {
+        this.watchListIds = watchListIds;
     }
 
-    public List<ViewListDTO> getViewLists() {
-        return viewLists;
+    public List<Long> getViewListIds() {
+        return viewListIds;
     }
 
-    public void setViewLists(List<ViewListDTO> viewLists) {
-        this.viewLists = viewLists;
+    public void setViewListIds(List<Long> viewListIds) {
+        this.viewListIds = viewListIds;
     }
 
-    public List<MovieUserGroupDTO> getMovieUserGroups() {
-        return movieUserGroups;
+    public List<Long> getMovieUserGroupIds() {
+        return movieUserGroupIds;
     }
 
-    public void setMovieUserGroups(List<MovieUserGroupDTO> movieUserGroups) {
-        this.movieUserGroups = movieUserGroups;
+    public void setMovieUserGroupIds(List<Long> movieUserGroupIds) {
+        this.movieUserGroupIds = movieUserGroupIds;
     }
 }

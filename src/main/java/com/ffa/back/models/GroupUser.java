@@ -34,6 +34,7 @@ public class GroupUser {
         this.group = group;
     }
 
+    // Getters y Setters
     public GroupUserId getId() {
         return id;
     }

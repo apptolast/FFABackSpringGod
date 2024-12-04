@@ -35,6 +35,7 @@ public class ViewList {
         this.movie = movie;
     }
 
+    // Getters y Setters
     public ViewListId getId() {
         return id;
     }
