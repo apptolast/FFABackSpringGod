@@ -2,6 +2,7 @@ package com.ffa.back.controllers;
 
 
 import com.ffa.back.dto.GroupDTO;
+import com.ffa.back.mappers.GroupMapper;
 import com.ffa.back.models.Group;
 import com.ffa.back.repositories.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,22 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 public class GroupController {
 
-    @Autowired
-    private GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
+    private final GroupMapper groupMapper;
 
-    @CrossOrigin
+    @Autowired
+    public GroupController(GroupRepository groupRepository, GroupMapper groupMapper) {
+        this.groupRepository = groupRepository;
+        this.groupMapper = groupMapper;
+    }
+
     @GetMapping
     public ResponseEntity<List<GroupDTO>> getAllGroups() {
         List<Group> groups = groupRepository.findAll();
-        return null;
+        List<GroupDTO> groupDTOs = groups.stream()
+                .map(groupMapper::toGroupDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(groupDTOs);
     }
-
 
 }

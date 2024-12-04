@@ -1,5 +1,7 @@
 package com.ffa.back.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.sql.Date;
@@ -7,6 +9,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "movies")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Movie {
 
     @Id
