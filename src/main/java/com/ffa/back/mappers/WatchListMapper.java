@@ -6,26 +6,25 @@ import com.ffa.back.models.WatchList;
 import com.ffa.back.models.WatchListId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {GroupMapper.class, MovieMapper.class})
 public interface WatchListMapper {
 
-    WatchListMapper INSTANCE = Mappers.getMapper(WatchListMapper.class);
-
-    @Mapping(source = "id.groupId", target = "groupId")
-    @Mapping(source = "id.movieId", target = "movieId")
+    // Mapear WatchList a WatchListDTO
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "group", target = "group")
+    @Mapping(source = "movie", target = "movie")
     WatchListDTO toWatchListDTO(WatchList watchList);
 
-    @Mapping(source = "groupId", target = "id.groupId")
-    @Mapping(source = "movieId", target = "id.movieId")
+    // Mapear WatchListDTO a WatchList
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "group", target = "group")
+    @Mapping(source = "movie", target = "movie")
     WatchList toWatchList(WatchListDTO watchListDTO);
 
-    @Mapping(source = "groupId", target = "groupId")
-    @Mapping(source = "movieId", target = "movieId")
+    // Mapear WatchListId a WatchListIdDTO
     WatchListIdDTO toWatchListIdDTO(WatchListId watchListId);
 
-    @Mapping(source = "groupId", target = "groupId")
-    @Mapping(source = "movieId", target = "movieId")
+    // Mapear WatchListIdDTO a WatchListId
     WatchListId toWatchListId(WatchListIdDTO watchListIdDTO);
 }

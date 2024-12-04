@@ -6,26 +6,25 @@ import com.ffa.back.models.ViewList;
 import com.ffa.back.models.ViewListId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {GroupMapper.class, MovieMapper.class})
 public interface ViewListMapper {
 
-    ViewListMapper INSTANCE = Mappers.getMapper(ViewListMapper.class);
-
-    @Mapping(source = "id.groupId", target = "groupId")
-    @Mapping(source = "id.movieId", target = "movieId")
+    // Mapear ViewList a ViewListDTO
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "group", target = "group")
+    @Mapping(source = "movie", target = "movie")
     ViewListDTO toViewListDTO(ViewList viewList);
 
-    @Mapping(source = "groupId", target = "id.groupId")
-    @Mapping(source = "movieId", target = "id.movieId")
+    // Mapear ViewListDTO a ViewList
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "group", target = "group")
+    @Mapping(source = "movie", target = "movie")
     ViewList toViewList(ViewListDTO viewListDTO);
 
-    @Mapping(source = "groupId", target = "groupId")
-    @Mapping(source = "movieId", target = "movieId")
+    // Mapear ViewListId a ViewListIdDTO
     ViewListIdDTO toViewListIdDTO(ViewListId viewListId);
 
-    @Mapping(source = "groupId", target = "groupId")
-    @Mapping(source = "movieId", target = "movieId")
+    // Mapear ViewListIdDTO a ViewListId
     ViewListId toViewListId(ViewListIdDTO viewListIdDTO);
 }

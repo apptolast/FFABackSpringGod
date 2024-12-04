@@ -7,30 +7,29 @@ import com.ffa.back.models.MovieUserGroup;
 import com.ffa.back.models.MovieUserGroupId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = {MovieMapper.class, UserMapper.class, GroupMapper.class})
 public interface MovieUserGroupMapper {
 
-    MovieUserGroupMapper INSTANCE = Mappers.getMapper(MovieUserGroupMapper.class);
-
-    @Mapping(source = "id.movieId", target = "movieId")
-    @Mapping(source = "id.userId", target = "userId")
-    @Mapping(source = "id.groupId", target = "groupId")
+    // Mapear MovieUserGroup a MovieUserGroupDTO
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "movie", target = "movie")
+    @Mapping(source = "user", target = "user")
+    @Mapping(source = "group", target = "group")
+    @Mapping(source = "toWatch", target = "toWatch")
     MovieUserGroupDTO toMovieUserGroupDTO(MovieUserGroup movieUserGroup);
 
-    @Mapping(source = "movieId", target = "id.movieId")
-    @Mapping(source = "userId", target = "id.userId")
-    @Mapping(source = "groupId", target = "id.groupId")
+    // Mapear MovieUserGroupDTO a MovieUserGroup
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "movie", target = "movie")
+    @Mapping(source = "user", target = "user")
+    @Mapping(source = "group", target = "group")
+    @Mapping(source = "toWatch", target = "toWatch")
     MovieUserGroup toMovieUserGroup(MovieUserGroupDTO movieUserGroupDTO);
 
-    @Mapping(source = "movieId", target = "movieId")
-    @Mapping(source = "userId", target = "userId")
-    @Mapping(source = "groupId", target = "groupId")
+    // Mapear MovieUserGroupId a MovieUserGroupIdDTO
     MovieUserGroupIdDTO toMovieUserGroupIdDTO(MovieUserGroupId id);
 
-    @Mapping(source = "movieId", target = "movieId")
-    @Mapping(source = "userId", target = "userId")
-    @Mapping(source = "groupId", target = "groupId")
+    // Mapear MovieUserGroupIdDTO a MovieUserGroupId
     MovieUserGroupId toMovieUserGroupId(MovieUserGroupIdDTO idDTO);
 }
