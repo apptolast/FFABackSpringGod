@@ -9,6 +9,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WatchListDTO {
     private WatchListIdDTO id;
-    private Long groupId;
-    private Long movieId;
 }

@@ -7,17 +7,21 @@ import com.ffa.back.models.Movie;
 import com.ffa.back.models.WatchList;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {WatchListIdMapper.class})
 public interface WatchListMapper {
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "groupId", expression = "java(watchList.getGroup() != null ? watchList.getGroup().getId() : null)")
-    @Mapping(target = "movieId", expression = "java(watchList.getMovie() != null ? watchList.getMovie().getId() : null)")
+    // Mapeo de Entidad a DTO
     WatchListDTO toWatchListDTO(WatchList watchList);
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "group", ignore = true)
-    @Mapping(target = "movie", ignore = true)
-    WatchList toWatchList(WatchListDTO watchListDTO);
+    // Mapeo de DTO a Entidad para Creación
+    @Mapping(source = "groupId", target = "group")
+    @Mapping(source = "movieId", target = "movie")
+    WatchList watchListCreateDTOToWatchList(WatchListCreateDTO watchListCreateDTO);
+
+    // Mapeo de DTO a Entidad para Actualización
+    @Mapping(source = "groupId", target = "group")
+    @Mapping(source = "movieId", target = "movie")
+    void updateWatchListFromDTO(WatchListUpdateDTO watchListUpdateDTO, @MappingTarget WatchList watchList);
 }

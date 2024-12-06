@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ViewListDTO {
-    private ViewListIdDTO id;
+public class ViewListUpdateDTO {
+
+    private Long groupId;
+
+    private Long movieId;
 }

@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MovieUserGroupDTO {
     private MovieUserGroupIdDTO id;
-    private Long movieId;
-    private Long userId;
-    private Long groupId;
     private Boolean toWatch;
 
 }

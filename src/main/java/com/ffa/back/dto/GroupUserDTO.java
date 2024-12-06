@@ -9,6 +9,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GroupUserDTO {
     private GroupUserIdDTO id;
-    private Long userId;
-    private Long groupId;
 }

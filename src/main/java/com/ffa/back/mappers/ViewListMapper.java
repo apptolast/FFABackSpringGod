@@ -1,22 +1,27 @@
 package com.ffa.back.mappers;
 
 import com.ffa.back.dto.ViewListDTO;
-import com.ffa.back.models.Group;
-import com.ffa.back.models.Movie;
+import com.ffa.back.dto.WatchListDTO;
 import com.ffa.back.models.ViewList;
+import com.ffa.back.models.WatchList;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {ViewListIdMapper.class})
 public interface ViewListMapper {
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "groupId", expression = "java(viewList.getGroup() != null ? viewList.getGroup().getId() : null)")
-    @Mapping(target = "movieId", expression = "java(viewList.getMovie() != null ? viewList.getMovie().getId() : null)")
+    // Mapeo de Entidad a DTO
     ViewListDTO toViewListDTO(ViewList viewList);
 
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "group", ignore = true)
-    @Mapping(target = "movie", ignore = true)
-    ViewList toViewList(ViewListDTO viewListDTO);
+    // Mapeo de DTO a Entidad para Creación
+    @Mapping(source = "groupId", target = "group")
+    @Mapping(source = "movieId", target = "movie")
+    ViewList viewListCreateDTOToViewList(ViewListCreateDTO viewListCreateDTO);
+
+    // Mapeo de DTO a Entidad para Actualización
+    @Mapping(source = "groupId", target = "group")
+    @Mapping(source = "movieId", target = "movie")
+    void updateViewListFromDTO(ViewListUpdateDTO viewListUpdateDTO, @MappingTarget ViewList viewList);
+
 }
