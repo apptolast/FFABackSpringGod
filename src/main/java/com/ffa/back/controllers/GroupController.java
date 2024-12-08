@@ -1,10 +1,16 @@
 package com.ffa.back.controllers;
 
+import com.ffa.back.dto.AddMovieToGroupRequestDTO;
 import com.ffa.back.models.Group;
+import com.ffa.back.models.User;
+import com.ffa.back.repositories.UserRepository;
 import com.ffa.back.services.GroupService;
+import com.ffa.back.services.MovieGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -16,6 +22,13 @@ public class GroupController {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    private MovieGroupService movieGroupService;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     @PostMapping
     public Mono<ResponseEntity<Group>> createGroup(@RequestBody Group group) {
@@ -46,6 +59,26 @@ public class GroupController {
         return Mono.fromRunnable(() -> groupService.deleteGroup(id))
                 .then(Mono.just(ResponseEntity.noContent().build()));
     }
+
+    @PostMapping("/addMovie")
+    public Mono<ResponseEntity<String>> addMovieToGroups(@RequestBody AddMovieToGroupRequestDTO request,
+                                                         @org.springframework.security.core.annotation.AuthenticationPrincipal Mono<org.springframework.security.core.Authentication> authenticationMono) {
+        return authenticationMono.flatMap(auth -> {
+            String uid = auth.getName();
+            return Mono.fromCallable(() -> {
+                // Obtenemos el usuario actual a partir del uid
+                User currentUser = userRepository.findByFirebaseUuid(uid)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+                movieGroupService.addMovieToGroups(request.getMovieId(),
+                        request.getGroupIds(),
+                        request.isToWatch(),
+                        currentUser);
+                return ResponseEntity.ok("Movie added successfully");
+            });
+        });
+    }
+
 
 }
 

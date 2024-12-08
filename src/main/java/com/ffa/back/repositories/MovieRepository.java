@@ -1,0 +1,10 @@
+package com.ffa.back.repositories;
+
+import com.ffa.back.models.Movie;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface MovieRepository extends JpaRepository<Movie, Long> {
+    // Aquí puedes agregar métodos de búsqueda personalizados si es necesario
+}
