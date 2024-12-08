@@ -26,6 +26,4 @@ public class MovieDTO {
     private List<Long> watchListIds;
     private List<Long> viewListIds;
     private List<Long> movieUserGroupIds;
-
-
 }
