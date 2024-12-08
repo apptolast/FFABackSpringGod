@@ -7,23 +7,37 @@ import com.ffa.back.dto.WatchListUpdateDTO;
 import com.ffa.back.models.Group;
 import com.ffa.back.models.Movie;
 import com.ffa.back.models.WatchList;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import com.ffa.back.repositories.GroupRepository;
+import com.ffa.back.repositories.MovieRepository;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", uses = {WatchListIdMapper.class})
-public interface WatchListMapper {
+public abstract class WatchListMapper {
 
-    // Mapeo de Entidad a DTO
-    WatchListDTO toWatchListDTO(WatchList watchList);
+    @Autowired
+    protected GroupRepository groupRepository;
 
-    // Mapeo de DTO a Entidad para Creación
-    @Mapping(source = "groupId", target = "group")
-    @Mapping(source = "movieId", target = "movie")
-    WatchList watchListCreateDTOToWatchList(WatchListCreateDTO watchListCreateDTO);
+    @Autowired
+    protected MovieRepository movieRepository;
 
-    // Mapeo de DTO a Entidad para Actualización
-    @Mapping(source = "groupId", target = "group")
-    @Mapping(source = "movieId", target = "movie")
-    void updateWatchListFromDTO(WatchListUpdateDTO watchListUpdateDTO, @MappingTarget WatchList watchList);
+    public abstract WatchListDTO toWatchListDTO(WatchList watchList);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "group", expression = "java(mapGroup(watchListCreateDTO.getGroupId()))")
+    @Mapping(target = "movie", expression = "java(mapMovie(watchListCreateDTO.getMovieId()))")
+    public abstract WatchList watchListCreateDTOToWatchList(WatchListCreateDTO watchListCreateDTO);
+
+    @Mapping(target = "group", expression = "java(mapGroup(watchListUpdateDTO.getGroupId()))")
+    @Mapping(target = "movie", expression = "java(mapMovie(watchListUpdateDTO.getMovieId()))")
+    public abstract void updateWatchListFromDTO(WatchListUpdateDTO watchListUpdateDTO, @MappingTarget WatchList watchList);
+
+    // Métodos auxiliares
+    protected Group mapGroup(Long groupId) {
+        return groupId != null ? groupRepository.findById(groupId).orElse(null) : null;
+    }
+
+    protected Movie mapMovie(Long movieId) {
+        return movieId != null ? movieRepository.findById(movieId).orElse(null) : null;
+    }
 }

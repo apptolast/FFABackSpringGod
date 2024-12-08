@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 public class MovieUserGroupDTO {
     private MovieUserGroupIdDTO id;
     private Boolean toWatch;
-
+    private Long userId;
+    private Long groupId;
+    private Long movieId;
 }
