@@ -1,6 +1,8 @@
 package com.ffa.back.mappers;
 
+import com.ffa.back.dto.ViewListCreateDTO;
 import com.ffa.back.dto.ViewListDTO;
+import com.ffa.back.dto.ViewListUpdateDTO;
 import com.ffa.back.dto.WatchListDTO;
 import com.ffa.back.models.ViewList;
 import com.ffa.back.models.WatchList;

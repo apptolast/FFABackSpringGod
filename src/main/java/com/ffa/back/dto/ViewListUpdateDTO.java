@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewListUpdateDTO {
-
     private Long groupId;
-
     private Long movieId;
 }

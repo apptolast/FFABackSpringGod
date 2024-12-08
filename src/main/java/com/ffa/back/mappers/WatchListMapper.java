@@ -1,7 +1,9 @@
 package com.ffa.back.mappers;
 
 
+import com.ffa.back.dto.WatchListCreateDTO;
 import com.ffa.back.dto.WatchListDTO;
+import com.ffa.back.dto.WatchListUpdateDTO;
 import com.ffa.back.models.Group;
 import com.ffa.back.models.Movie;
 import com.ffa.back.models.WatchList;

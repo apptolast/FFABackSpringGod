@@ -1,5 +1,6 @@
 package com.ffa.back.dto;
 
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewListCreateDTO {
-
     @NotNull(message = "El ID del grupo es obligatorio")
     private Long groupId;
 

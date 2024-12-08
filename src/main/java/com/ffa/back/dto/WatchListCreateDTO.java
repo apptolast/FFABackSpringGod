@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WatchListCreateDTO {
-
     @NotNull(message = "El ID del grupo es obligatorio")
     private Long groupId;
 
