@@ -16,7 +16,8 @@ public class GroupUser {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    protected GroupUser() {}
+    public GroupUser() {
+    }
 
     public GroupUser(User user, Group group) {
         this.user = user;

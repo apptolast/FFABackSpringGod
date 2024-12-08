@@ -31,7 +31,8 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<MovieUserGroup> movieUserGroups;
 
-    protected Group() {}
+    public Group() {
+    }
 
     public Group(String name) {
         this.name = name;

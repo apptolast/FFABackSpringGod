@@ -57,7 +57,8 @@ public class Movie {
     @OneToMany(mappedBy = "movie")
     private List<MovieUserGroup> movieUserGroups;
 
-    protected Movie() {}
+    public Movie() {
+    }
 
     public Movie(String title, List<Integer> genre_ids, String language, String synopsis, String image, Date release_date, Boolean adult, Double vote_average, Integer vote_count) {
         this.title = title;

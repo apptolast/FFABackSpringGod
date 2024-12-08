@@ -16,7 +16,8 @@ public class WatchList {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    protected WatchList() {}
+    public WatchList() {
+    }
 
     public WatchList(Group group, Movie movie) {
         this.group = group;

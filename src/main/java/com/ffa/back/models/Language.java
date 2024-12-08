@@ -19,7 +19,8 @@ public class Language {
     @JsonManagedReference
     private List<User> users;
 
-    protected Language() {}
+    public Language() {
+    }
 
     public Language(String language) {
         this.language = language;

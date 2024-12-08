@@ -24,7 +24,8 @@ public class MovieUserGroup {
     @Column(nullable = true, name = "to_watch")
     private Boolean toWatch;
 
-    protected MovieUserGroup() {}
+    public MovieUserGroup() {
+    }
 
     public MovieUserGroup(Movie movie, User user, Group group, Boolean toWatch) {
         this.movie = movie;

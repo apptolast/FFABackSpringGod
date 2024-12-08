@@ -16,7 +16,8 @@ public class ViewList {
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    protected ViewList() {}
+    public ViewList() {
+    }
 
     public ViewList(Group group, Movie movie) {
         this.group = group;

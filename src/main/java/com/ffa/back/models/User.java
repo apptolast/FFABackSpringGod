@@ -3,6 +3,8 @@ package com.ffa.back.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -48,17 +50,55 @@ public class User {
     @JsonBackReference
     private Language language;
 
-    // Constructores
-    public User() {}
+    // NUEVOS CAMPOS
+    // Relación con grupos a través de GroupUser
+    @ManyToMany
+    @JoinTable(
+            name = "group_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<Group> groups;
 
-    public User(String email, String firebaseUuid, String provider, String role) {
-        this.email = email;
-        this.firebaseUuid = firebaseUuid;
-        this.provider = provider;
-        this.role = role;
+    // Películas vistas
+    @ManyToMany
+    @JoinTable(
+            name = "user_viewed_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> vistas;
+
+    // Películas por ver
+    @ManyToMany
+    @JoinTable(
+            name = "user_to_watch_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> porVer;
+
+    public User() {
     }
 
-    // Getters y Setters
+    public User(Long id, String firebaseUuid, String email, String provider, String role, String sub, Long authTime, Long iat, Long exp, Boolean emailVerified, String signInProvider, Language language, List<Group> groups, List<Movie> vistas, List<Movie> porVer) {
+        this.id = id;
+        this.firebaseUuid = firebaseUuid;
+        this.email = email;
+        this.provider = provider;
+        this.role = role;
+        this.sub = sub;
+        this.authTime = authTime;
+        this.iat = iat;
+        this.exp = exp;
+        this.emailVerified = emailVerified;
+        this.signInProvider = signInProvider;
+        this.language = language;
+        this.groups = groups;
+        this.vistas = vistas;
+        this.porVer = porVer;
+    }
+
     public Long getId() {
         return id;
     }
@@ -153,5 +193,29 @@ public class User {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public List<Movie> getVistas() {
+        return vistas;
+    }
+
+    public void setVistas(List<Movie> vistas) {
+        this.vistas = vistas;
+    }
+
+    public List<Movie> getPorVer() {
+        return porVer;
+    }
+
+    public void setPorVer(List<Movie> porVer) {
+        this.porVer = porVer;
     }
 }
