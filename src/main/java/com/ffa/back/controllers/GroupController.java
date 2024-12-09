@@ -63,7 +63,7 @@ public class GroupController {
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<GroupResponseDTO>> updateGroup(@PathVariable Long id, @RequestBody Group groupDetails) {
+    public Mono<ResponseEntity<GroupResponseDTO>> updateGroup(@PathVariable Long id, @RequestBody GroupCreateRequestDTO groupDetails) {
         return Mono.fromCallable(() -> ResponseEntity.ok(groupService.updateGroup(id, groupDetails)));
     }
 

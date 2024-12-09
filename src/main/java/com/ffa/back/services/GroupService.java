@@ -1,5 +1,6 @@
 package com.ffa.back.services;
 
+import com.ffa.back.dto.GroupCreateRequestDTO;
 import com.ffa.back.dto.GroupResponseDTO;
 import com.ffa.back.dto.MovieResponseDTO;
 import com.ffa.back.dto.UserResponseDTO;
@@ -59,10 +60,9 @@ public class GroupService {
                 .map(this::toGroupResponseDTO);
     }
 
-    public GroupResponseDTO updateGroup(Long id, Group groupDetails) {
+    public GroupResponseDTO updateGroup(Long id, GroupCreateRequestDTO groupDetails) {
         Group updated = groupRepository.findById(id).map(group -> {
             group.setName(groupDetails.getName());
-            group.setOwner(groupDetails.getOwner());
             return groupRepository.save(group);
         }).orElseThrow(() -> new RuntimeException("Group not found"));
 
