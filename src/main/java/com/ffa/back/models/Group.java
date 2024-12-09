@@ -20,7 +20,7 @@ public class Group {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupUser> groupUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")

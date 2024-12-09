@@ -7,6 +7,10 @@ import jakarta.persistence.*;
 public class ViewList {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Id
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;

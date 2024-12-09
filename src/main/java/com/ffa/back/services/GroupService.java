@@ -28,18 +28,17 @@ public class GroupService {
         newGroup.setName(name);
         newGroup.setOwner(userfromtoken);
 
-        // Primero guardamos el grupo para que se genere el ID
+        // Guardamos el grupo para obtener su ID
         Group savedGroup = groupRepository.save(newGroup);
 
-        // Ahora creamos el GroupUser que asocia el usuario (owner) con el grupo
+        // Creamos el GroupUser
         GroupUser groupUser = new GroupUser(userfromtoken, savedGroup);
         savedGroup.getGroupUsers().add(groupUser);
 
-        // Actualizamos el grupo con el nuevo GroupUser
-        // Esto puede requerir también persistir el GroupUser si no hay cascade
-        // Para simplificar, se asume que hay cascade desde Group a GroupUser
-        groupRepository.save(savedGroup);
-        return toGroupResponseDTO(savedGroup);
+        // Ahora guardamos el grupo de nuevo, este paso persistirá el GroupUser gracias al cascade
+        Group savedWithUser = groupRepository.save(savedGroup);
+
+        return toGroupResponseDTO(savedWithUser);
     }
 
     public List<GroupResponseDTO> getAllGroups() {

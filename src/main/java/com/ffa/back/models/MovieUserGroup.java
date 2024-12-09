@@ -7,6 +7,10 @@ import jakarta.persistence.*;
 public class MovieUserGroup {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Id
     @ManyToOne
     @JoinColumn(name = "id_movie")
     private Movie movie;

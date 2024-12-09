@@ -7,6 +7,10 @@ import jakarta.persistence.*;
 public class GroupUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Id
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
