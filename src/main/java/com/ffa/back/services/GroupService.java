@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +24,22 @@ public class GroupService {
     private GroupRepository groupRepository;
 
     public GroupResponseDTO createGroup(String name, User userfromtoken) {
-        Group saved = new Group();
-        saved.setName(name);
-        saved.setOwner(userfromtoken);
-        return toGroupResponseDTO(saved);
+        Group newGroup = new Group();
+        newGroup.setName(name);
+        newGroup.setOwner(userfromtoken);
+
+        // Primero guardamos el grupo para que se genere el ID
+        Group savedGroup = groupRepository.save(newGroup);
+
+        // Ahora creamos el GroupUser que asocia el usuario (owner) con el grupo
+        GroupUser groupUser = new GroupUser(userfromtoken, savedGroup);
+        savedGroup.getGroupUsers().add(groupUser);
+
+        // Actualizamos el grupo con el nuevo GroupUser
+        // Esto puede requerir también persistir el GroupUser si no hay cascade
+        // Para simplificar, se asume que hay cascade desde Group a GroupUser
+        groupRepository.save(savedGroup);
+        return toGroupResponseDTO(savedGroup);
     }
 
     public List<GroupResponseDTO> getAllGroups() {
