@@ -22,8 +22,10 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
-    public GroupResponseDTO createGroup(Group group) {
-        Group saved = groupRepository.save(group);
+    public GroupResponseDTO createGroup(String name, User userfromtoken) {
+        Group saved = new Group();
+        saved.setName(name);
+        saved.setOwner(userfromtoken);
         return toGroupResponseDTO(saved);
     }
 
@@ -73,6 +75,9 @@ public class GroupService {
     private UserResponseDTO toUserResponseDTO(User user) {
         List<MovieResponseDTO> vistas = toMovieResponseDTOList(user.getVistas());
         List<MovieResponseDTO> porVer = toMovieResponseDTOList(user.getPorVer());
+        List<Long> groupIds = user.getGroups().stream()
+                .map(Group::getId)
+                .toList();
 
         return new UserResponseDTO(
                 user.getId(),
@@ -88,7 +93,8 @@ public class GroupService {
                 user.getSignInProvider(),
                 user.getLanguage() != null ? user.getLanguage().getLanguage() : null,
                 vistas,
-                porVer
+                porVer,
+                groupIds
         );
     }
 

@@ -18,12 +18,13 @@ public class UserResponseDTO {
     private String language; // Mantenemos el language como String para simplicidad
     private List<MovieResponseDTO> vistas;
     private List<MovieResponseDTO> porVer;
+    private List<Long> groupIds;
 
     // Constructor vacío
     public UserResponseDTO() {
     }
 
-    public UserResponseDTO(Long id, String firebaseUuid, String email, String provider, String role, String sub, Long authTime, Long iat, Long exp, Boolean emailVerified, String signInProvider, String language, List<MovieResponseDTO> vistas, List<MovieResponseDTO> porVer) {
+    public UserResponseDTO(Long id, String firebaseUuid, String email, String provider, String role, String sub, Long authTime, Long iat, Long exp, Boolean emailVerified, String signInProvider, String language, List<MovieResponseDTO> vistas, List<MovieResponseDTO> porVer, List<Long> groupIds) {
         this.id = id;
         this.firebaseUuid = firebaseUuid;
         this.email = email;
@@ -38,7 +39,9 @@ public class UserResponseDTO {
         this.language = language;
         this.vistas = vistas;
         this.porVer = porVer;
+        this.groupIds = groupIds;
     }
+
 
     public Long getId() {
         return id;
@@ -150,5 +153,13 @@ public class UserResponseDTO {
 
     public void setPorVer(List<MovieResponseDTO> porVer) {
         this.porVer = porVer;
+    }
+
+    public List<Long> getGroupIds() {
+        return groupIds;
+    }
+
+    public void setGroupIds(List<Long> groupIds) {
+        this.groupIds = groupIds;
     }
 }

@@ -1,6 +1,7 @@
 package com.ffa.back.controllers;
 
 import com.ffa.back.dto.AddMovieToGroupRequestDTO;
+import com.ffa.back.dto.GroupCreateRequestDTO;
 import com.ffa.back.dto.GroupResponseDTO;
 import com.ffa.back.models.Group;
 import com.ffa.back.models.User;
@@ -32,8 +33,19 @@ public class GroupController {
 
 
     @PostMapping
-    public Mono<ResponseEntity<GroupResponseDTO>> createGroup(@RequestBody Group group) {
-        return Mono.fromCallable(() -> ResponseEntity.ok(groupService.createGroup(group)));
+    public Mono<ResponseEntity<GroupResponseDTO>> createGroup(@RequestBody GroupCreateRequestDTO group, @org.springframework.security.core.annotation.AuthenticationPrincipal Mono<org.springframework.security.core.Authentication> authenticationMono) {
+        return authenticationMono.flatMap(auth -> {
+            String uid = auth.getName();
+            return Mono.fromCallable(() -> {
+                // Obtenemos el usuario actual a partir del uid
+                User currentUser = userRepository.findByFirebaseUuid(uid)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+                GroupResponseDTO responseDTO = groupService.createGroup(group.getName(),
+                        currentUser);
+                return ResponseEntity.ok(responseDTO);
+            });
+        });
     }
 
     @GetMapping

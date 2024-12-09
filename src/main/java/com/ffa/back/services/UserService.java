@@ -3,6 +3,7 @@ package com.ffa.back.services;
 import com.ffa.back.dto.MovieResponseDTO;
 import com.ffa.back.dto.UserResponseDTO;
 import com.ffa.back.dto.UserUpdateRequestDTO;
+import com.ffa.back.models.Group;
 import com.ffa.back.models.Language;
 import com.ffa.back.models.Movie;
 import com.ffa.back.models.User;
@@ -59,6 +60,9 @@ public class UserService {
     private UserResponseDTO toUserResponseDTO(User user) {
         List<MovieResponseDTO> vistasDTO = toMovieResponseDTOList(user.getVistas());
         List<MovieResponseDTO> porVerDTO = toMovieResponseDTOList(user.getPorVer());
+        List<Long> groupIds = user.getGroups().stream()
+                .map(Group::getId)
+                .toList();
 
         return new UserResponseDTO(
                 user.getId(),
@@ -74,7 +78,8 @@ public class UserService {
                 user.getSignInProvider(),
                 user.getLanguage() != null ? user.getLanguage().getLanguage() : null,
                 vistasDTO,
-                porVerDTO
+                porVerDTO,
+                groupIds
         );
     }
 
