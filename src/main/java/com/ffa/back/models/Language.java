@@ -2,6 +2,8 @@ package com.ffa.back.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +19,7 @@ public class Language {
 
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     public Language() {
     }

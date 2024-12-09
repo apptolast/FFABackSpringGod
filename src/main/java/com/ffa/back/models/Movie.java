@@ -3,6 +3,7 @@ package com.ffa.back.models;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,13 +50,16 @@ public class Movie {
     private Integer vote_count;
 
     @OneToMany(mappedBy = "movie")
-    private List<WatchList> watchLists;
+    private List<WatchList> watchLists = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "movie")
-    private List<ViewList> viewLists;
+    private List<ViewList> viewLists = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "movie")
-    private List<MovieUserGroup> movieUserGroups;
+    private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
+
 
     public Movie() {
     }

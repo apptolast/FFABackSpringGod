@@ -3,6 +3,7 @@ package com.ffa.back.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -58,7 +59,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-    private List<Group> groups;
+    private List<Group> groups = new ArrayList<>();
+
 
     // Películas vistas
     @ManyToMany
@@ -67,7 +69,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private List<Movie> vistas;
+    private List<Movie> vistas = new ArrayList<>();
+
 
     // Películas por ver
     @ManyToMany
@@ -76,7 +79,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private List<Movie> porVer;
+    private List<Movie> porVer = new ArrayList<>();
+
 
     public User() {
     }

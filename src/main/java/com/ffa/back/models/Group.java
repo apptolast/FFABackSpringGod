@@ -2,6 +2,7 @@ package com.ffa.back.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,16 +21,16 @@ public class Group {
     private String name;
 
     @OneToMany(mappedBy = "group")
-    private List<GroupUser> groupUsers;
+    private List<GroupUser> groupUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
-    private List<WatchList> watchLists;
+    private List<WatchList> watchLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
-    private List<ViewList> viewLists;
+    private List<ViewList> viewLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
-    private List<MovieUserGroup> movieUserGroups;
+    private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
 
     public Group() {
     }
