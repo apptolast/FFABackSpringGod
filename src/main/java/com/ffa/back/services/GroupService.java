@@ -28,19 +28,22 @@ public class GroupService {
     private GroupRepository groupRepository;
 
     public GroupResponseDTO createGroup(String name, User userfromtoken) {
-        log.debug("Creando grupo con nombre: {} para el usuario: {}", name, userfromtoken.getEmail());
-
-        // Lógica de creación
         Group saved = new Group();
         saved.setName(name);
         saved.setOwner(userfromtoken);
+
+// Primero guardamos el grupo
         Group savedGroup = groupRepository.save(saved);
         log.debug("Grupo guardado con ID: {}", savedGroup.getId());
 
+// Creamos el GroupUser y lo añadimos a la lista del grupo
         GroupUser groupUser = new GroupUser(userfromtoken, savedGroup);
         savedGroup.getGroupUsers().add(groupUser);
+
+// Ahora guardamos nuevamente el grupo, no el groupUser por separado
         Group savedWithUser = groupRepository.save(savedGroup);
         log.debug("Grupo con usuario guardado. Cantidad de usuarios: {}", savedWithUser.getGroupUsers().size());
+
 
         return toGroupResponseDTO(savedWithUser);
     }
