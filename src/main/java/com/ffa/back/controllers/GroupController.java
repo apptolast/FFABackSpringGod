@@ -2,8 +2,8 @@ package com.ffa.back.controllers;
 
 import com.ffa.back.dto.AddMovieToGroupRequestDTO;
 import com.ffa.back.dto.GroupCreateRequestDTO;
+import com.ffa.back.dto.GroupMemberRequestDTO;
 import com.ffa.back.dto.GroupResponseDTO;
-import com.ffa.back.models.Group;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.UserRepository;
 import com.ffa.back.services.GroupService;
@@ -65,6 +65,11 @@ public class GroupController {
     @PutMapping("/{id}")
     public Mono<ResponseEntity<GroupResponseDTO>> updateGroup(@PathVariable Long id, @RequestBody GroupCreateRequestDTO groupDetails) {
         return Mono.fromCallable(() -> ResponseEntity.ok(groupService.updateGroup(id, groupDetails)));
+    }
+
+    @PutMapping("/addUser/{id}")
+    public Mono<ResponseEntity<GroupResponseDTO>> addMemberToGroup(@PathVariable Long id, @RequestBody GroupMemberRequestDTO email) {
+        return Mono.fromCallable(() -> ResponseEntity.ok(groupService.addMemberToGroup(id, email)));
     }
 
     @DeleteMapping("/{id}")

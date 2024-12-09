@@ -1,9 +1,6 @@
 package com.ffa.back.services;
 
-import com.ffa.back.dto.GroupCreateRequestDTO;
-import com.ffa.back.dto.GroupResponseDTO;
-import com.ffa.back.dto.MovieResponseDTO;
-import com.ffa.back.dto.UserResponseDTO;
+import com.ffa.back.dto.*;
 import com.ffa.back.models.Group;
 import com.ffa.back.models.GroupUser;
 import com.ffa.back.models.Movie;
@@ -15,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +62,14 @@ public class GroupService {
             return groupRepository.save(group);
         }).orElseThrow(() -> new RuntimeException("Group not found"));
 
+        return toGroupResponseDTO(updated);
+    }
+
+    public GroupResponseDTO addMemberToGroup(Long id, GroupMemberRequestDTO email) {
+        Group updated = groupRepository.findById(id).map(group -> {
+            group.getGroupUsers();
+            return groupRepository.save(group);
+        }).orElseThrow(() -> new RuntimeException("Group not found"));
         return toGroupResponseDTO(updated);
     }
 
