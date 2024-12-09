@@ -72,36 +72,12 @@ public class Movie {
         this.vote_count = vote_count;
     }
 
-    public List<Genre> getGenres() {
-        return genres;
+    public Long getId() {
+        return id;
     }
 
-    public void setGenres(List<Genre> genres) {
-        this.genres = genres;
-    }
-
-    public List<WatchList> getWatchLists() {
-        return watchLists;
-    }
-
-    public void setWatchLists(List<WatchList> watchLists) {
-        this.watchLists = watchLists;
-    }
-
-    public List<ViewList> getViewLists() {
-        return viewLists;
-    }
-
-    public void setViewLists(List<ViewList> viewLists) {
-        this.viewLists = viewLists;
-    }
-
-    public List<MovieUserGroup> getMovieUserGroups() {
-        return movieUserGroups;
-    }
-
-    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
-        this.movieUserGroups = movieUserGroups;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -110,6 +86,14 @@ public class Movie {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 
     public List<Integer> getGenre_ids() {
@@ -174,5 +158,29 @@ public class Movie {
 
     public void setVote_count(Integer vote_count) {
         this.vote_count = vote_count;
+    }
+
+    public List<WatchList> getWatchLists() {
+        return watchLists;
+    }
+
+    public void setWatchLists(List<WatchList> watchLists) {
+        this.watchLists = watchLists;
+    }
+
+    public List<ViewList> getViewLists() {
+        return viewLists;
+    }
+
+    public void setViewLists(List<ViewList> viewLists) {
+        this.viewLists = viewLists;
+    }
+
+    public List<MovieUserGroup> getMovieUserGroups() {
+        return movieUserGroups;
+    }
+
+    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
+        this.movieUserGroups = movieUserGroups;
     }
 }

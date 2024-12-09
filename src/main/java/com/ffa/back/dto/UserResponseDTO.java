@@ -1,5 +1,7 @@
 package com.ffa.back.dto;
 
+import java.util.List;
+
 public class UserResponseDTO {
 
     private Long id;
@@ -14,15 +16,14 @@ public class UserResponseDTO {
     private Boolean emailVerified;
     private String signInProvider;
     private String language; // Mantenemos el language como String para simplicidad
+    private List<MovieResponseDTO> vistas;
+    private List<MovieResponseDTO> porVer;
 
     // Constructor vacío
     public UserResponseDTO() {
     }
 
-    // Constructor completo
-    public UserResponseDTO(Long id, String firebaseUuid, String email, String provider,
-                           String role, String sub, Long authTime, Long iat, Long exp,
-                           Boolean emailVerified, String signInProvider, String language) {
+    public UserResponseDTO(Long id, String firebaseUuid, String email, String provider, String role, String sub, Long authTime, Long iat, Long exp, Boolean emailVerified, String signInProvider, String language, List<MovieResponseDTO> vistas, List<MovieResponseDTO> porVer) {
         this.id = id;
         this.firebaseUuid = firebaseUuid;
         this.email = email;
@@ -35,9 +36,10 @@ public class UserResponseDTO {
         this.emailVerified = emailVerified;
         this.signInProvider = signInProvider;
         this.language = language;
+        this.vistas = vistas;
+        this.porVer = porVer;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -132,5 +134,21 @@ public class UserResponseDTO {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public List<MovieResponseDTO> getVistas() {
+        return vistas;
+    }
+
+    public void setVistas(List<MovieResponseDTO> vistas) {
+        this.vistas = vistas;
+    }
+
+    public List<MovieResponseDTO> getPorVer() {
+        return porVer;
+    }
+
+    public void setPorVer(List<MovieResponseDTO> porVer) {
+        this.porVer = porVer;
     }
 }

@@ -6,6 +6,7 @@ import com.ffa.back.models.Language;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
+import com.ffa.back.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,82 +21,31 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
-    private LanguageRepository languageRepository;
-
+    private UserService userService;
 
     @CrossOrigin
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<User> users = (List<User>) userRepository.findAll();
-        List<UserResponseDTO> userDTOs = users.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getFirebaseUuid(),
-                        user.getEmail(),
-                        user.getProvider(),
-                        user.getRole(),
-                        user.getSub(),
-                        user.getAuthTime(),
-                        user.getIat(),
-                        user.getExp(),
-                        user.getEmailVerified(),
-                        user.getSignInProvider(),
-                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
-                ))
-                .collect(Collectors.toList());
+        List<UserResponseDTO> userDTOs = userService.getAllUsers();
         return ResponseEntity.ok(userDTOs);
     }
 
     @CrossOrigin
     @GetMapping("/test/jenkins")
     public ResponseEntity<List<UserResponseDTO>> getAllUsersTest() {
-        List<User> users = (List<User>) userRepository.findAll();
-        List<UserResponseDTO> userDTOs = users.stream()
-                .map(user -> new UserResponseDTO(
-                        user.getId(),
-                        user.getFirebaseUuid(),
-                        user.getEmail(),
-                        user.getProvider(),
-                        user.getRole(),
-                        user.getSub(),
-                        user.getAuthTime(),
-                        user.getIat(),
-                        user.getExp(),
-                        user.getEmailVerified(),
-                        user.getSignInProvider(),
-                        user.getLanguage() != null ? user.getLanguage().getLanguage() : null
-                ))
-                .collect(Collectors.toList());
+        // Se puede usar el mismo método
+        List<UserResponseDTO> userDTOs = userService.getAllUsers();
         return ResponseEntity.ok(userDTOs);
     }
 
     @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
-        Optional<User> userOpt = userRepository.findById(id);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            UserResponseDTO userDTO = new UserResponseDTO(
-                    user.getId(),
-                    user.getFirebaseUuid(),
-                    user.getEmail(),
-                    user.getProvider(),
-                    user.getRole(),
-                    user.getSub(),
-                    user.getAuthTime(),
-                    user.getIat(),
-                    user.getExp(),
-                    user.getEmailVerified(),
-                    user.getSignInProvider(),
-                    user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @CrossOrigin
@@ -104,40 +54,9 @@ public class UserController {
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequestDTO userUpdateRequest) {
 
-        Optional<User> userOpt = userRepository.findById(id);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-
-            // Actualizar los campos permitidos
-            if (userUpdateRequest.getLanguage() != null) {
-                Optional<Language> language = languageRepository.findByLanguage(userUpdateRequest.getLanguage());
-                if (language.isEmpty()) {
-                    language = Optional.of(languageRepository.save(new Language(userUpdateRequest.getLanguage())));
-                }
-                user.setLanguage(language.get());
-            }
-
-            // Guardar cambios
-            userRepository.save(user);
-
-            UserResponseDTO userDTO = new UserResponseDTO(
-                    user.getId(),
-                    user.getFirebaseUuid(),
-                    user.getEmail(),
-                    user.getProvider(),
-                    user.getRole(),
-                    user.getSub(),
-                    user.getAuthTime(),
-                    user.getIat(),
-                    user.getExp(),
-                    user.getEmailVerified(),
-                    user.getSignInProvider(),
-                    user.getLanguage() != null ? user.getLanguage().getLanguage() : null);
-
-            return ResponseEntity.ok(userDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return userService.updateUser(id, userUpdateRequest)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

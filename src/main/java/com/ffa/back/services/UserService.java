@@ -1,0 +1,87 @@
+package com.ffa.back.services;
+
+import com.ffa.back.dto.MovieResponseDTO;
+import com.ffa.back.dto.UserResponseDTO;
+import com.ffa.back.dto.UserUpdateRequestDTO;
+import com.ffa.back.models.Language;
+import com.ffa.back.models.Movie;
+import com.ffa.back.models.User;
+import com.ffa.back.repositories.LanguageRepository;
+import com.ffa.back.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Transactional
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private LanguageRepository languageRepository;
+
+    public List<UserResponseDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(this::toUserResponseDTO)
+                .toList();
+    }
+
+    public Optional<UserResponseDTO> getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(this::toUserResponseDTO);
+    }
+
+    public Optional<UserResponseDTO> updateUser(Long id, UserUpdateRequestDTO userUpdateRequest) {
+        return userRepository.findById(id).map(user -> {
+            // Actualizar language si se proporciona
+            if (userUpdateRequest.getLanguage() != null) {
+                Optional<Language> langOpt = languageRepository.findByLanguage(userUpdateRequest.getLanguage());
+                Language lang = langOpt.orElseGet(() -> languageRepository.save(new Language(userUpdateRequest.getLanguage())));
+                user.setLanguage(lang);
+            }
+            // Actualizar email si se proporciona
+            if (userUpdateRequest.getEmail() != null && !userUpdateRequest.getEmail().isBlank()) {
+                user.setEmail(userUpdateRequest.getEmail());
+            }
+
+            userRepository.save(user);
+            return toUserResponseDTO(user);
+        });
+    }
+
+    private UserResponseDTO toUserResponseDTO(User user) {
+        List<MovieResponseDTO> vistasDTO = toMovieResponseDTOList(user.getVistas());
+        List<MovieResponseDTO> porVerDTO = toMovieResponseDTOList(user.getPorVer());
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getFirebaseUuid(),
+                user.getEmail(),
+                user.getProvider(),
+                user.getRole(),
+                user.getSub(),
+                user.getAuthTime(),
+                user.getIat(),
+                user.getExp(),
+                user.getEmailVerified(),
+                user.getSignInProvider(),
+                user.getLanguage() != null ? user.getLanguage().getLanguage() : null,
+                vistasDTO,
+                porVerDTO
+        );
+    }
+
+    private List<MovieResponseDTO> toMovieResponseDTOList(List<Movie> movies) {
+        if (movies == null) return List.of();
+        return movies.stream()
+                .map(movie -> new MovieResponseDTO(movie.getTitle(), movie.getId()))
+                .toList();
+    }
+}

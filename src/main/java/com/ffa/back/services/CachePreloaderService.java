@@ -1,6 +1,7 @@
 package com.ffa.back.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class CachePreloaderService {
 
     private static final Logger log = LoggerFactory.getLogger(CachePreloaderService.class);

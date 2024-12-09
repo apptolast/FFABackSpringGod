@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Transactional
 public class FirebaseAuthService {
 
     @Autowired

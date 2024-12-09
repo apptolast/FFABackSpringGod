@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ffa.back.config.TmdbProperties;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 @Service
+@Transactional
 public class TmdbService {
 
     private static final Logger log = LoggerFactory.getLogger(TmdbService.class);
