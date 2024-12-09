@@ -38,6 +38,14 @@ public class MovieUserGroup {
         this.toWatch = toWatch;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Movie getMovie() {
         return movie;
     }

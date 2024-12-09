@@ -43,4 +43,12 @@ public class Language {
     public List<User> getUsers() {
         return users;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
 }
