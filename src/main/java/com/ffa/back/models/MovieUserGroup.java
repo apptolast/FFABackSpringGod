@@ -10,17 +10,17 @@ public class MovieUserGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "id_movie")
     private Movie movie;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "id_group")
     private Group group;

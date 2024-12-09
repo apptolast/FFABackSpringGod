@@ -10,12 +10,12 @@ public class WatchList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;

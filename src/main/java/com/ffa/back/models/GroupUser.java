@@ -10,14 +10,13 @@ public class GroupUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Id
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
     public GroupUser() {
