@@ -9,6 +9,8 @@ import com.ffa.back.models.Movie;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.GroupRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,23 +22,25 @@ import java.util.Optional;
 @Transactional
 public class GroupService {
 
+    private static final Logger log = LoggerFactory.getLogger(GroupService.class);
+
     @Autowired
     private GroupRepository groupRepository;
 
     public GroupResponseDTO createGroup(String name, User userfromtoken) {
-        Group newGroup = new Group();
-        newGroup.setName(name);
-        newGroup.setOwner(userfromtoken);
+        log.debug("Creando grupo con nombre: {} para el usuario: {}", name, userfromtoken.getEmail());
 
-        // Guardamos el grupo para obtener su ID
-        Group savedGroup = groupRepository.save(newGroup);
+        // Lógica de creación
+        Group saved = new Group();
+        saved.setName(name);
+        saved.setOwner(userfromtoken);
+        Group savedGroup = groupRepository.save(saved);
+        log.debug("Grupo guardado con ID: {}", savedGroup.getId());
 
-        // Creamos el GroupUser
         GroupUser groupUser = new GroupUser(userfromtoken, savedGroup);
         savedGroup.getGroupUsers().add(groupUser);
-
-        // Ahora guardamos el grupo de nuevo, este paso persistirá el GroupUser gracias al cascade
         Group savedWithUser = groupRepository.save(savedGroup);
+        log.debug("Grupo con usuario guardado. Cantidad de usuarios: {}", savedWithUser.getGroupUsers().size());
 
         return toGroupResponseDTO(savedWithUser);
     }
