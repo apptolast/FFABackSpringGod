@@ -1,6 +1,10 @@
 package com.ffa.back.services;
 
 import com.ffa.back.config.FirebaseProperties;
+import com.ffa.back.models.Language;
+import com.ffa.back.models.User;
+import com.ffa.back.repositories.LanguageRepository;
+import com.ffa.back.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -25,6 +29,12 @@ public class FirebaseAuthService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private LanguageRepository languageRepository;
+
     public UserRecord createFirebaseUser(String email, String password) {
         try {
             UserRecord.CreateRequest request = new UserRecord.CreateRequest()
@@ -34,6 +44,41 @@ public class FirebaseAuthService {
             return FirebaseAuth.getInstance().createUser(request);
         } catch (FirebaseAuthException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Firebase error: " + e.getMessage());
+        }
+    }
+
+    public User verifyAndGetUserByEmail(String email) {
+        try {
+            // Verificar si el usuario existe en Firebase
+            UserRecord firebaseUser = FirebaseAuth.getInstance().getUserByEmail(email);
+
+            // Buscar el usuario en nuestra base de datos
+            // Si no existe en BD pero sí en Firebase, lo creamos
+            // Idioma por defecto
+
+            return userRepository.findByEmail(email)
+                    .orElseGet(() -> {
+                        // Si no existe en BD pero sí en Firebase, lo creamos
+                        User newUser = new User();
+                        newUser.setEmail(email);
+                        newUser.setFirebaseUuid(firebaseUser.getUid());
+                        newUser.setProvider("firebase");
+                        newUser.setRole("USER");
+                        newUser.setEmailVerified(firebaseUser.isEmailVerified());
+
+                        // Idioma por defecto
+                        Language language = languageRepository.findByLanguage("en")
+                                .orElseGet(() -> {
+                                    Language newLanguage = new Language("en");
+                                    return languageRepository.save(newLanguage);
+                                });
+                        newUser.setLanguage(language);
+
+                        return userRepository.save(newUser);
+                    });
+
+        } catch (FirebaseAuthException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found in Firebase");
         }
     }
 

@@ -1,16 +1,19 @@
 package com.ffa.back.services;
 
 import com.ffa.back.dto.*;
-import com.ffa.back.models.Group;
-import com.ffa.back.models.GroupUser;
-import com.ffa.back.models.Movie;
-import com.ffa.back.models.User;
+import com.ffa.back.models.*;
 import com.ffa.back.repositories.GroupRepository;
+import com.ffa.back.repositories.LanguageRepository;
+import com.ffa.back.repositories.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,9 @@ public class GroupService {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private FirebaseAuthService firebaseAuthService;
 
     public GroupResponseDTO createGroup(String name, User userfromtoken) {
         Group saved = new Group();
@@ -66,11 +72,27 @@ public class GroupService {
     }
 
     public GroupResponseDTO addMemberToGroup(Long id, GroupMemberRequestDTO email) {
-        Group updated = groupRepository.findById(id).map(group -> {
-            group.getGroupUsers();
-            return groupRepository.save(group);
-        }).orElseThrow(() -> new RuntimeException("Group not found"));
-        return toGroupResponseDTO(updated);
+        // 1. Verificar que el grupo existe
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+
+        // 2. Verificar y obtener usuario (de Firebase y BD)
+        User userToAdd = firebaseAuthService.verifyAndGetUserByEmail(email.getEmail());
+
+        // 3. Verificar si el usuario ya está en el grupo
+        boolean userAlreadyInGroup = group.getGroupUsers().stream()
+                .anyMatch(groupUser -> groupUser.getUser().getId().equals(userToAdd.getId()));
+
+        if (userAlreadyInGroup) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already a member of this group");
+        }
+
+        // 4. Añadir el usuario al grupo
+        GroupUser groupUser = new GroupUser(userToAdd, group);
+        group.getGroupUsers().add(groupUser);
+        Group updatedGroup = groupRepository.save(group);
+
+        return toGroupResponseDTO(updatedGroup);
     }
 
     public void deleteGroup(Long id) {
