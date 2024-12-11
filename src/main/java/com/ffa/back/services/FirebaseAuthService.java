@@ -65,6 +65,7 @@ public class FirebaseAuthService {
                         newUser.setProvider("firebase");
                         newUser.setRole("USER");
                         newUser.setEmailVerified(firebaseUser.isEmailVerified());
+                        newUser.setSub(firebaseUser.getUid());
 
                         // Idioma por defecto
                         Language language = languageRepository.findByLanguage("en")
