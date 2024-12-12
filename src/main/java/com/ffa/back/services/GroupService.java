@@ -4,6 +4,7 @@ import com.ffa.back.dto.*;
 import com.ffa.back.models.*;
 import com.ffa.back.repositories.GroupRepository;
 import com.ffa.back.repositories.LanguageRepository;
+import com.ffa.back.repositories.MovieUserGroupRepository;
 import com.ffa.back.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
@@ -30,23 +31,25 @@ public class GroupService {
     @Autowired
     private FirebaseAuthService firebaseAuthService;
 
+    @Autowired
+    private MovieUserGroupRepository movieUserGroupRepository;
+
     public GroupResponseDTO createGroup(String name, User userfromtoken) {
         Group saved = new Group();
         saved.setName(name);
         saved.setOwner(userfromtoken);
 
-// Primero guardamos el grupo
+        // Primero guardamos el grupo
         Group savedGroup = groupRepository.save(saved);
         log.debug("Grupo guardado con ID: {}", savedGroup.getId());
 
-// Creamos el GroupUser y lo añadimos a la lista del grupo
+        // Creamos el GroupUser y lo añadimos a la lista del grupo
         GroupUser groupUser = new GroupUser(userfromtoken, savedGroup);
         savedGroup.getGroupUsers().add(groupUser);
 
-// Ahora guardamos nuevamente el grupo, no el groupUser por separado
+        // Ahora guardamos nuevamente el grupo
         Group savedWithUser = groupRepository.save(savedGroup);
         log.debug("Grupo con usuario guardado. Cantidad de usuarios: {}", savedWithUser.getGroupUsers().size());
-
 
         return toGroupResponseDTO(savedWithUser);
     }
@@ -91,7 +94,6 @@ public class GroupService {
         GroupUser groupUser = new GroupUser(userToAdd, group);
         group.getGroupUsers().add(groupUser);
         Group updatedGroup = groupRepository.save(group);
-
         return toGroupResponseDTO(updatedGroup);
     }
 
@@ -109,11 +111,24 @@ public class GroupService {
                 .map(this::toUserResponseDTO)
                 .toList();
 
+        // Obtener las películas vistas y por ver del grupo
+        List<MovieUserDTO> vistas = group.getMovieUserGroups().stream()
+                .filter(mug -> Boolean.FALSE.equals(mug.getToWatch()))
+                .map(mug -> new MovieUserDTO(mug.getUser().getId(), mug.getMovie().getId()))
+                .toList();
+
+        List<MovieUserDTO> porVer = group.getMovieUserGroups().stream()
+                .filter(mug -> Boolean.TRUE.equals(mug.getToWatch()))
+                .map(mug -> new MovieUserDTO(mug.getUser().getId(), mug.getMovie().getId()))
+                .toList();
+
         return new GroupResponseDTO(
                 group.getId(),
                 ownerId,
                 group.getName(),
-                userDTOs
+                userDTOs,
+                vistas,
+                porVer
         );
     }
 
