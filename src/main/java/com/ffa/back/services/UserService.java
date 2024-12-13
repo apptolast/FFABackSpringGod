@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,12 @@ public class UserService {
 
     public Optional<UserResponseDTO> getUserById(Long id) {
         return userRepository.findById(id)
+                .map(this::toUserResponseDTO);
+    }
+
+
+    public Optional<UserResponseDTO> getUser(String email) {
+        return userRepository.findByEmail(email)
                 .map(this::toUserResponseDTO);
     }
 
@@ -89,4 +96,5 @@ public class UserService {
                 .map(movie -> new MovieResponseDTO(movie.getTitle(), movie.getId()))
                 .toList();
     }
+
 }
