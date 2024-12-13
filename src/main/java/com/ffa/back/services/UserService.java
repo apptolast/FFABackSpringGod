@@ -73,16 +73,7 @@ public class UserService {
 
         return new UserResponseDTO(
                 user.getId(),
-                user.getFirebaseUuid(),
                 user.getEmail(),
-                user.getProvider(),
-                user.getRole(),
-                user.getSub(),
-                user.getAuthTime(),
-                user.getIat(),
-                user.getExp(),
-                user.getEmailVerified(),
-                user.getSignInProvider(),
                 user.getLanguage() != null ? user.getLanguage().getLanguage() : null,
                 vistasDTO,
                 porVerDTO,
