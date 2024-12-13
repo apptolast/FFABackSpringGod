@@ -9,38 +9,39 @@ public class GroupResponseDTO {
     private Long ownerId;
     private String name;
     private List<UserResponseDTO> users;
-    private List<MovieUserDTO> vistas;
-    private List<MovieUserDTO> porVer;
+    private List<MovieUsersDTO> watched;
+    private List<MovieUsersDTO> toWatch;
 
-    public GroupResponseDTO() {
-    }
-
-    public GroupResponseDTO(Long id, Long ownerId, String name, List<UserResponseDTO> users,
-                            List<MovieUserDTO> vistas, List<MovieUserDTO> porVer) {
+    public GroupResponseDTO(Long id, Long ownerId, String name,
+                            List<UserResponseDTO> users,
+                            List<MovieUsersDTO> watched,
+                            List<MovieUsersDTO> toWatch) {
         this.id = id;
         this.ownerId = ownerId;
         this.name = name;
         this.users = users;
-        this.vistas = vistas;
-        this.porVer = porVer;
+        this.watched = watched;
+        this.toWatch = toWatch;
     }
 
-    // Getters y setters existentes...
-
-    public List<MovieUserDTO> getVistas() {
-        return vistas;
+    public GroupResponseDTO() {
     }
 
-    public void setVistas(List<MovieUserDTO> vistas) {
-        this.vistas = vistas;
+    // Getters y setters
+    public List<MovieUsersDTO> getWatched() {
+        return watched;
     }
 
-    public List<MovieUserDTO> getPorVer() {
-        return porVer;
+    public void setWatched(List<MovieUsersDTO> watched) {
+        this.watched = watched;
     }
 
-    public void setPorVer(List<MovieUserDTO> porVer) {
-        this.porVer = porVer;
+    public List<MovieUsersDTO> getToWatch() {
+        return toWatch;
+    }
+
+    public void setToWatch(List<MovieUsersDTO> toWatch) {
+        this.toWatch = toWatch;
     }
 
     public Long getId() {

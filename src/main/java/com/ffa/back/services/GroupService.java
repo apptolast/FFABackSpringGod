@@ -3,11 +3,7 @@ package com.ffa.back.services;
 import com.ffa.back.dto.*;
 import com.ffa.back.models.*;
 import com.ffa.back.repositories.GroupRepository;
-import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.MovieUserGroupRepository;
-import com.ffa.back.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserRecord;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -111,15 +108,30 @@ public class GroupService {
                 .map(this::toUserResponseDTO)
                 .toList();
 
-        // Obtener las películas vistas y por ver del grupo
-        List<MovieUserDTO> vistas = group.getMovieUserGroups().stream()
+        // Agrupar películas vistas por movieId con sus respectivos usuarios
+        List<MovieUsersDTO> watched = group.getMovieUserGroups().stream()
                 .filter(mug -> Boolean.FALSE.equals(mug.getToWatch()))
-                .map(mug -> new MovieUserDTO(mug.getUser().getId(), mug.getMovie().getId()))
+                .collect(Collectors.groupingBy(
+                        mug -> mug.getMovie().getId(),
+                        Collectors.mapping(
+                                mug -> mug.getUser().getId(),
+                                Collectors.toList()
+                        )))
+                .entrySet().stream()
+                .map(entry -> new MovieUsersDTO(entry.getValue(), entry.getKey()))
                 .toList();
 
-        List<MovieUserDTO> porVer = group.getMovieUserGroups().stream()
+        // Agrupar películas por ver por movieId con sus respectivos usuarios
+        List<MovieUsersDTO> toWatch = group.getMovieUserGroups().stream()
                 .filter(mug -> Boolean.TRUE.equals(mug.getToWatch()))
-                .map(mug -> new MovieUserDTO(mug.getUser().getId(), mug.getMovie().getId()))
+                .collect(Collectors.groupingBy(
+                        mug -> mug.getMovie().getId(),
+                        Collectors.mapping(
+                                mug -> mug.getUser().getId(),
+                                Collectors.toList()
+                        )))
+                .entrySet().stream()
+                .map(entry -> new MovieUsersDTO(entry.getValue(), entry.getKey()))
                 .toList();
 
         return new GroupResponseDTO(
@@ -127,8 +139,8 @@ public class GroupService {
                 ownerId,
                 group.getName(),
                 userDTOs,
-                vistas,
-                porVer
+                watched,
+                toWatch
         );
     }
 
