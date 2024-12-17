@@ -7,23 +7,22 @@ public class UserResponseDTO {
     private Long id;
     private String email;
     private String language; // Mantenemos el language como String para simplicidad
-    private List<MovieResponseDTO> seenMoviesUser;
-    private List<MovieResponseDTO> toSeeMoviesUser;
-    private List<Long> joinedGroupsIds;
+    private List<MovieResponseDTO> watchedMovies;
+    private List<MovieResponseDTO> toWatchMovies;
+    private List<Long> joinedGroupIds;
 
     // Constructor vacío
     public UserResponseDTO() {
     }
 
-    public UserResponseDTO(Long id, String email, String language, List<MovieResponseDTO> seenMoviesUser, List<MovieResponseDTO> toSeeMoviesUser, List<Long> joinedGroupsIds) {
+    public UserResponseDTO(Long id, String email, String language, List<MovieResponseDTO> watchedMovies, List<MovieResponseDTO> toWatchMovies, List<Long> joinedGroupIds) {
         this.id = id;
         this.email = email;
         this.language = language;
-        this.seenMoviesUser = seenMoviesUser;
-        this.toSeeMoviesUser = toSeeMoviesUser;
-        this.joinedGroupsIds = joinedGroupsIds;
+        this.watchedMovies = watchedMovies;
+        this.toWatchMovies = toWatchMovies;
+        this.joinedGroupIds = joinedGroupIds;
     }
-
 
     public Long getId() {
         return id;
@@ -49,27 +48,27 @@ public class UserResponseDTO {
         this.language = language;
     }
 
-    public List<MovieResponseDTO> getSeenMoviesUser() {
-        return seenMoviesUser;
+    public List<MovieResponseDTO> getWatchedMovies() {
+        return watchedMovies;
     }
 
-    public void setSeenMoviesUser(List<MovieResponseDTO> seenMoviesUser) {
-        this.seenMoviesUser = seenMoviesUser;
+    public void setWatchedMovies(List<MovieResponseDTO> watchedMovies) {
+        this.watchedMovies = watchedMovies;
     }
 
-    public List<MovieResponseDTO> getToSeeMoviesUser() {
-        return toSeeMoviesUser;
+    public List<MovieResponseDTO> getToWatchMovies() {
+        return toWatchMovies;
     }
 
-    public void setToSeeMoviesUser(List<MovieResponseDTO> toSeeMoviesUser) {
-        this.toSeeMoviesUser = toSeeMoviesUser;
+    public void setToWatchMovies(List<MovieResponseDTO> toWatchMovies) {
+        this.toWatchMovies = toWatchMovies;
     }
 
-    public List<Long> getJoinedGroupsIds() {
-        return joinedGroupsIds;
+    public List<Long> getJoinedGroupIds() {
+        return joinedGroupIds;
     }
 
-    public void setJoinedGroupsIds(List<Long> joinedGroupsIds) {
-        this.joinedGroupsIds = joinedGroupsIds;
+    public void setJoinedGroupIds(List<Long> joinedGroupIds) {
+        this.joinedGroupIds = joinedGroupIds;
     }
 }

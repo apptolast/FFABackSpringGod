@@ -1,23 +1,32 @@
 package com.ffa.back.dto;
 
+import java.util.List;
+
 public class MovieResponseDTO {
-    private Long id;
+    private Long movieId;
     private String title;
+    private List<Long> groupIds;
 
     public MovieResponseDTO() {
     }
 
-    public MovieResponseDTO(String title, Long id) {
+    public MovieResponseDTO(Long movieId, String title, List<Long> groupIds) {
+        this.movieId = movieId;
         this.title = title;
-        this.id = id;
+        this.groupIds = groupIds;
     }
 
-    public Long getId() {
-        return id;
+    public MovieResponseDTO(List<Long> groupIds, Long movieId) {
+        this.groupIds = groupIds;
+        this.movieId = movieId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 
     public String getTitle() {
@@ -26,5 +35,13 @@ public class MovieResponseDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Long> getGroupIds() {
+        return groupIds;
+    }
+
+    public void setGroupIds(List<Long> groupIds) {
+        this.groupIds = groupIds;
     }
 }

@@ -134,13 +134,28 @@ public class GroupService {
                 .map(entry -> new MovieUsersDTO(entry.getValue(), entry.getKey()))
                 .toList();
 
+        MovieResponseDTO recommendedMovieDTO = null;
+        if (group.getRecommendedMovie() != null) {
+            // Obtener los IDs de los grupos donde está esta película
+            List<Long> groupIds = group.getRecommendedMovie().getMovieUserGroups().stream()
+                    .map(mug -> mug.getGroup().getId())
+                    .distinct()
+                    .toList();
+
+            recommendedMovieDTO = new MovieResponseDTO(
+                    groupIds,
+                    group.getRecommendedMovie().getId()
+            );
+        }
+
         return new GroupResponseDTO(
                 group.getId(),
                 ownerId,
                 group.getName(),
                 userDTOs,
                 watched,
-                toWatch
+                toWatch,
+                recommendedMovieDTO
         );
     }
 
@@ -164,7 +179,13 @@ public class GroupService {
     private List<MovieResponseDTO> toMovieResponseDTOList(List<Movie> movies) {
         if (movies == null) return List.of();
         return movies.stream()
-                .map(movie -> new MovieResponseDTO(movie.getTitle(), movie.getId()))
+                .map(movie -> {
+                    List<Long> groupIds = movie.getMovieUserGroups().stream()
+                            .map(mug -> mug.getGroup().getId())
+                            .distinct()
+                            .toList();
+                    return new MovieResponseDTO(groupIds, movie.getId());
+                })
                 .toList();
     }
 }

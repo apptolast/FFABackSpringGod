@@ -32,11 +32,22 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recommended_movie_id")
+    private Movie recommendedMovie;
+
     public Group() {
     }
 
-    public Group(String name) {
+    public Group(Long id, User owner, String name, List<GroupUser> groupUsers, List<WatchList> watchLists, List<ViewList> viewLists, List<MovieUserGroup> movieUserGroups, Movie recommendedMovie) {
+        this.id = id;
+        this.owner = owner;
         this.name = name;
+        this.groupUsers = groupUsers;
+        this.watchLists = watchLists;
+        this.viewLists = viewLists;
+        this.movieUserGroups = movieUserGroups;
+        this.recommendedMovie = recommendedMovie;
     }
 
     public Long getId() {
@@ -93,5 +104,13 @@ public class Group {
 
     public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
         this.movieUserGroups = movieUserGroups;
+    }
+
+    public Movie getRecommendedMovie() {
+        return recommendedMovie;
+    }
+
+    public void setRecommendedMovie(Movie recommendedMovie) {
+        this.recommendedMovie = recommendedMovie;
     }
 }

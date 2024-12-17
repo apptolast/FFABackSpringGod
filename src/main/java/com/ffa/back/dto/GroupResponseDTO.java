@@ -11,37 +11,19 @@ public class GroupResponseDTO {
     private List<UserResponseDTO> users;
     private List<MovieUsersDTO> watched;
     private List<MovieUsersDTO> toWatch;
+    private MovieResponseDTO recommendedMovie;
 
-    public GroupResponseDTO(Long id, Long ownerId, String name,
-                            List<UserResponseDTO> users,
-                            List<MovieUsersDTO> watched,
-                            List<MovieUsersDTO> toWatch) {
+    public GroupResponseDTO() {
+    }
+
+    public GroupResponseDTO(Long id, Long ownerId, String name, List<UserResponseDTO> users, List<MovieUsersDTO> watched, List<MovieUsersDTO> toWatch, MovieResponseDTO recommendedMovie) {
         this.id = id;
         this.ownerId = ownerId;
         this.name = name;
         this.users = users;
         this.watched = watched;
         this.toWatch = toWatch;
-    }
-
-    public GroupResponseDTO() {
-    }
-
-    // Getters y setters
-    public List<MovieUsersDTO> getWatched() {
-        return watched;
-    }
-
-    public void setWatched(List<MovieUsersDTO> watched) {
-        this.watched = watched;
-    }
-
-    public List<MovieUsersDTO> getToWatch() {
-        return toWatch;
-    }
-
-    public void setToWatch(List<MovieUsersDTO> toWatch) {
-        this.toWatch = toWatch;
+        this.recommendedMovie = recommendedMovie;
     }
 
     public Long getId() {
@@ -74,5 +56,29 @@ public class GroupResponseDTO {
 
     public void setUsers(List<UserResponseDTO> users) {
         this.users = users;
+    }
+
+    public List<MovieUsersDTO> getWatched() {
+        return watched;
+    }
+
+    public void setWatched(List<MovieUsersDTO> watched) {
+        this.watched = watched;
+    }
+
+    public List<MovieUsersDTO> getToWatch() {
+        return toWatch;
+    }
+
+    public void setToWatch(List<MovieUsersDTO> toWatch) {
+        this.toWatch = toWatch;
+    }
+
+    public MovieResponseDTO getRecommendedMovie() {
+        return recommendedMovie;
+    }
+
+    public void setRecommendedMovie(MovieResponseDTO recommendedMovie) {
+        this.recommendedMovie = recommendedMovie;
     }
 }
