@@ -8,7 +8,7 @@ import com.ffa.back.repositories.GroupRepository;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.MovieRepository;
 import com.ffa.back.repositories.UserRepository;
-import jakarta.persistence.Cacheable;
+import org.springframework.cache.annotation.Cacheable;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class MovieRecommendationService {
     @Autowired
     private MovieRepository movieRepository;
 
-    @Cacheable(value = "movieRecommendations", key = "#group.id")
+    @Cacheable(value = "movieRecommendations", key = "#group.id", unless = "#result == null")
     public Movie recommendMovie(Group group) {
         // Obtener géneros más vistos en el grupo
         Map<Genre, Long> genreCount = group.getMovieUserGroups().stream()

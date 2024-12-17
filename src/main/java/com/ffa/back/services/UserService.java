@@ -84,7 +84,13 @@ public class UserService {
     private List<MovieResponseDTO> toMovieResponseDTOList(List<Movie> movies) {
         if (movies == null) return List.of();
         return movies.stream()
-                .map(movie -> new MovieResponseDTO(movie.getTitle(), movie.getId()))
+                .map(movie -> {
+                    List<Long> groupIds = movie.getMovieUserGroups().stream()
+                            .map(mug -> mug.getGroup().getId())
+                            .distinct()
+                            .toList();
+                    return new MovieResponseDTO(groupIds, movie.getId());  // Ahora usa los parámetros correctos
+                })
                 .toList();
     }
 
