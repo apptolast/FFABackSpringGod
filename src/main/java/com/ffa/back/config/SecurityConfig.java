@@ -15,9 +15,10 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http,
                                                          FirebaseAuthenticationWebFilter firebaseAuthFilter) {
         http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)  // Nuevo método
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .addFilterAt(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/movie/*/status").authenticated()
                         .pathMatchers("/api/auth/**").authenticated()
                         .pathMatchers("/api/users/me").authenticated()
                         .anyExchange().permitAll()

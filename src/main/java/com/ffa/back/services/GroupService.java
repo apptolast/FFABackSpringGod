@@ -1,6 +1,7 @@
 package com.ffa.back.services;
 
 import com.ffa.back.dto.*;
+import com.ffa.back.enums.MovieGroupStatus;
 import com.ffa.back.models.*;
 import com.ffa.back.repositories.GroupRepository;
 import com.ffa.back.repositories.MovieUserGroupRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -187,5 +189,53 @@ public class GroupService {
                     return new MovieResponseDTO(groupIds, movie.getId());
                 })
                 .toList();
+    }
+
+    public MovieGroupStatusDTO getMovieGroupStatus(Long movieId, User user) {
+        // Obtener los IDs de los grupos del usuario
+        List<Long> userGroupIds = user.getGroups().stream()
+                .map(Group::getId)
+                .toList();
+
+        // Obtener todas las relaciones MovieUserGroup para esta película en los grupos del usuario
+        List<MovieUserGroup> movieGroups = movieUserGroupRepository.findByMovieIdAndGroupIds(movieId, userGroupIds);
+
+        // Crear un mapa para fácil acceso a los MovieUserGroup por groupId
+        Map<Long, List<MovieUserGroup>> groupMovieMap = movieGroups.stream()
+                .collect(Collectors.groupingBy(mug -> mug.getGroup().getId()));
+
+        // Procesar cada grupo del usuario
+        List<GroupMovieStatusDTO> groupStatuses = userGroupIds.stream()
+                .map(groupId -> {
+                    List<MovieUserGroup> groupMovies = groupMovieMap.getOrDefault(groupId, List.of());
+                    MovieGroupStatus status = determineMovieStatus(groupMovies, user.getId());
+                    return new GroupMovieStatusDTO(groupId, status);
+                })
+                .collect(Collectors.toList());
+
+        return new MovieGroupStatusDTO(movieId, groupStatuses);
+    }
+
+    private MovieGroupStatus determineMovieStatus(List<MovieUserGroup> groupMovies, Long userId) {
+        if (groupMovies.isEmpty()) {
+            return MovieGroupStatus.NOT_IN_GROUP;
+        }
+
+        // Buscar si el usuario actual tiene la película en este grupo
+        Optional<MovieUserGroup> userMovie = groupMovies.stream()
+                .filter(mug -> mug.getUser().getId().equals(userId))
+                .findFirst();
+
+        if (userMovie.isPresent()) {
+            // El usuario tiene la película
+            return userMovie.get().getToWatch()
+                    ? MovieGroupStatus.TO_WATCH_BY_USER
+                    : MovieGroupStatus.WATCHED_BY_USER;
+        } else {
+            // Otro usuario tiene la película
+            return groupMovies.get(0).getToWatch()
+                    ? MovieGroupStatus.TO_WATCH_BY_OTHER
+                    : MovieGroupStatus.WATCHED_BY_OTHER;
+        }
     }
 }

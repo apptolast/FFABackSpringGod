@@ -1,9 +1,6 @@
 package com.ffa.back.controllers;
 
-import com.ffa.back.dto.AddMovieToGroupRequestDTO;
-import com.ffa.back.dto.GroupCreateRequestDTO;
-import com.ffa.back.dto.GroupMemberRequestDTO;
-import com.ffa.back.dto.GroupResponseDTO;
+import com.ffa.back.dto.*;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.UserRepository;
 import com.ffa.back.services.GroupService;
@@ -11,6 +8,8 @@ import com.ffa.back.services.MovieGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
@@ -60,6 +59,21 @@ public class GroupController {
                         .map(ResponseEntity::ok)
                         .orElse(ResponseEntity.notFound().build())
         );
+    }
+
+    @GetMapping("/movie/{movieId}/status")
+    public Mono<ResponseEntity<MovieGroupStatusDTO>> getGroupById(@PathVariable Long id,
+                                                                  @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
+        return authenticationMono.flatMap(auth -> {
+            String uid = auth.getName();
+            return Mono.fromCallable(() -> {
+                User currentUser = userRepository.findByFirebaseUuid(uid)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+                MovieGroupStatusDTO status = groupService.getMovieGroupStatus(id, currentUser);
+                return ResponseEntity.ok(status);
+            });
+        });
     }
 
     @PutMapping("/{id}")
