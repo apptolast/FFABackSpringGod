@@ -208,8 +208,14 @@ public class GroupService {
         List<GroupMovieStatusDTO> groupStatuses = userGroupIds.stream()
                 .map(groupId -> {
                     List<MovieUserGroup> groupMovies = groupMovieMap.getOrDefault(groupId, List.of());
+                    Optional<Group> group = groupRepository.findById(groupId);
+                    String groupName = group.stream().map(
+                            group1 -> {
+                                return group1.getName();
+                            }
+                    ).toString();
                     MovieGroupStatus status = determineMovieStatus(groupMovies, user.getId());
-                    return new GroupMovieStatusDTO(groupId, status);
+                    return new GroupMovieStatusDTO(groupId, status, groupName);
                 })
                 .collect(Collectors.toList());
 
