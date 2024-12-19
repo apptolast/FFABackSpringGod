@@ -62,7 +62,7 @@ public class GroupController {
     }
 
     @GetMapping("/movie/{movieId}/status")
-    public Mono<ResponseEntity<MovieGroupStatusDTO>> getGroupById(@PathVariable Long id,
+    public Mono<ResponseEntity<MovieGroupStatusDTO>> getGroupById(@PathVariable Long movieId,
                                                                   @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
         return authenticationMono.flatMap(auth -> {
             String uid = auth.getName();
@@ -70,7 +70,7 @@ public class GroupController {
                 User currentUser = userRepository.findByFirebaseUuid(uid)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-                MovieGroupStatusDTO status = groupService.getMovieGroupStatus(id, currentUser);
+                MovieGroupStatusDTO status = groupService.getMovieGroupStatus(movieId, currentUser);
                 return ResponseEntity.ok(status);
             });
         });
