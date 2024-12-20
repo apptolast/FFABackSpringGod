@@ -53,7 +53,7 @@ public class User {
 
     // NUEVOS CAMPOS
     // Relación con grupos a través de GroupUser
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "group_users",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -63,7 +63,7 @@ public class User {
 
 
     // Películas vistas
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_viewed_movies",
             joinColumns = @JoinColumn(name = "user_id"),

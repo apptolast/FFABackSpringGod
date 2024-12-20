@@ -32,7 +32,7 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recommended_movie_id")
     private Movie recommendedMovie;
 
