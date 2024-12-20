@@ -73,7 +73,7 @@ public class User {
 
 
     // Películas por ver
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_to_watch_movies",
             joinColumns = @JoinColumn(name = "user_id"),
