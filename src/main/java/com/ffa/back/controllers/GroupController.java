@@ -62,7 +62,7 @@ public class GroupController {
     }
 
     @GetMapping("/movie/{movieId}/status")
-    public Mono<ResponseEntity<MovieGroupStatusDTO>> getGroupById(@PathVariable Long movieId,
+    public Mono<ResponseEntity<MovieGroupStatusDTO>> getMovieStatus(@PathVariable Long movieId,
                                                                   @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
         return authenticationMono.flatMap(auth -> {
             String uid = auth.getName();

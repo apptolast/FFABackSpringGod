@@ -193,7 +193,8 @@ public class GroupService {
 
     public MovieGroupStatusDTO getMovieGroupStatus(Long movieId, User user) {
         // Obtener los IDs de los grupos del usuario
-        List<Long> userGroupIds = user.getGroups().stream()
+        List<Group> userGroups = user.getGroups();
+        List<Long> userGroupIds = userGroups.stream()
                 .map(Group::getId)
                 .toList();
 
@@ -204,18 +205,17 @@ public class GroupService {
         Map<Long, List<MovieUserGroup>> groupMovieMap = movieGroups.stream()
                 .collect(Collectors.groupingBy(mug -> mug.getGroup().getId()));
 
+        // Crear un mapa de groupId -> nombre del grupo para fácil acceso
+        Map<Long, String> groupNames = userGroups.stream()
+                .collect(Collectors.toMap(Group::getId, Group::getName));
+
         // Procesar cada grupo del usuario
         List<GroupMovieStatusDTO> groupStatuses = userGroupIds.stream()
                 .map(groupId -> {
                     List<MovieUserGroup> groupMovies = groupMovieMap.getOrDefault(groupId, List.of());
-                    Optional<Group> group = groupRepository.findById(groupId);
-                    String groupName = group.stream().map(
-                            group1 -> {
-                                return group1.getName();
-                            }
-                    ).toString();
                     MovieGroupStatus status = determineMovieStatus(groupMovies, user.getId());
-                    return new GroupMovieStatusDTO(groupId, status, groupName);
+                    String groupName = groupNames.get(groupId);
+                    return new GroupMovieStatusDTO(groupId, groupName, status);
                 })
                 .collect(Collectors.toList());
 
