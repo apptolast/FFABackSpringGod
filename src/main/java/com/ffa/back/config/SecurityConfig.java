@@ -19,6 +19,7 @@ public class SecurityConfig {
                 .addFilterAt(firebaseAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/movie/*/status").authenticated()
+                        .pathMatchers("/groups/addMovie").authenticated()
                         .pathMatchers("/api/auth/**").authenticated()
                         .pathMatchers("/api/users/me").authenticated()
                         .anyExchange().permitAll()
