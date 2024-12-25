@@ -51,14 +51,18 @@ public class MovieGroupService {
                                     newMovie.setSynopsis(movieData.get("overview").asText());
                                     newMovie.setImage(movieData.get("poster_path").asText());
                                     newMovie.setAdult(movieData.get("adult").asBoolean());
-                                    String releaseDateStr = movieData.get("release_date").asText();
-                                    newMovie.setRelease_date(java.sql.Date.valueOf(releaseDateStr));
+                                    newMovie.setRelease_date(java.sql.Date.valueOf(movieData.get("release_date").asText()));
                                     newMovie.setVote_average(movieData.get("vote_average").asDouble());
                                     newMovie.setVote_count(movieData.get("vote_count").asInt());
 
-                                    ArrayNode genreIdsNode = (ArrayNode) movieData.get("genre_ids");
+                                    // Extracción correcta de los IDs de géneros
                                     List<Integer> genreIds = new ArrayList<>();
-                                    genreIdsNode.forEach(genreId -> genreIds.add(genreId.asInt()));
+                                    JsonNode genresNode = movieData.get("genres");
+                                    if (genresNode != null && genresNode.isArray()) {
+                                        for (JsonNode genre : genresNode) {
+                                            genreIds.add(genre.get("id").asInt());
+                                        }
+                                    }
                                     newMovie.setGenre_ids(genreIds);
 
                                     return movieRepository.save(newMovie);
@@ -81,12 +85,16 @@ public class MovieGroupService {
     @Transactional
     public Mono<Void> removeMovieFromGroup(Long tmdbMovieId, Long groupId, User user) {
         return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found")))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Movie with TMDB ID %d not found", tmdbMovieId))))
                 .flatMap(movie ->
                         Mono.justOrEmpty(movieUserGroupRepository
                                 .findByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId()))
                 )
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found in group")))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Movie relationship not found for group %d and user %d", groupId, user.getId()))))
                 .doOnNext(movieUserGroup -> movieUserGroupRepository.delete(movieUserGroup))
                 .then();
     }
