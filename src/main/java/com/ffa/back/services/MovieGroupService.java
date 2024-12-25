@@ -1,7 +1,6 @@
 package com.ffa.back.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.ffa.back.models.Group;
 import com.ffa.back.models.Movie;
 import com.ffa.back.models.MovieUserGroup;
@@ -10,6 +9,8 @@ import com.ffa.back.repositories.GroupRepository;
 import com.ffa.back.repositories.MovieRepository;
 import com.ffa.back.repositories.MovieUserGroupRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ import java.util.List;
 @Service
 @Transactional
 public class MovieGroupService {
+
+    private static final Logger log = LoggerFactory.getLogger(MovieGroupService.class);
 
     @Autowired
     private MovieRepository movieRepository;
@@ -69,14 +72,29 @@ public class MovieGroupService {
                                 })
                 )
                 .flatMap(movie -> {
+                    log.debug("Movie found/created with ID: {}", movie.getId());
+
                     Group group = groupRepository.findById(groupId)
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
 
+                    log.debug("Group found with ID: {}", group.getId());
+                    log.debug("Current User ID: {}", user.getId());
+
+                    // Verificar que todos los IDs son no-null
+                    if (movie.getId() == null || group.getId() == null || user.getId() == null) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Invalid IDs - Movie:" + movie.getId() + ", Group:" + group.getId() + ", User:" + user.getId()));
+                    }
+
                     if (movieUserGroupRepository.existsByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId())) {
-                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie already added to group by user"));
+                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Movie already added to group by user"));
                     }
 
                     MovieUserGroup movieUserGroup = new MovieUserGroup(movie, user, group, toWatch);
+                    log.debug("Created MovieUserGroup with Movie:{}, Group:{}, User:{}, ToWatch:{}",
+                            movie.getId(), group.getId(), user.getId(), toWatch);
+
                     return Mono.just(movieUserGroupRepository.save(movieUserGroup));
                 })
                 .then();

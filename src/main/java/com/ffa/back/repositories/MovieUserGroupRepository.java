@@ -21,7 +21,8 @@ public interface MovieUserGroupRepository extends JpaRepository<MovieUserGroup, 
     @Query("SELECT mug FROM MovieUserGroup mug WHERE mug.movie.id = :movieId AND mug.group.id = :groupId AND mug.user.id = :userId")
     Optional<MovieUserGroup> findByMovieIdAndGroupIdAndUserId(Long movieId, Long groupId, Long userId);
 
-    // Para verificar si ya existe la relación
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM MovieUserGroup m " +
+            "WHERE m.movie.id = :movieId AND m.group.id = :groupId AND m.user.id = :userId")
     boolean existsByMovieIdAndGroupIdAndUserId(Long movieId, Long groupId, Long userId);
 
     // Para eliminar una entrada específica
