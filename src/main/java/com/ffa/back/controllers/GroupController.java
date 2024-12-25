@@ -93,7 +93,7 @@ public class GroupController {
     }
 
     @PostMapping("/addMovie")
-    public Mono<ResponseEntity<String>> addMovieToGroups(@RequestBody AddMovieToGroupRequestDTO request,
+    public Mono<ResponseEntity<MovieGroupStatusDTO>> addMovieToGroups(@RequestBody AddMovieToGroupRequestDTO request,
                                                          @org.springframework.security.core.annotation.AuthenticationPrincipal Mono<org.springframework.security.core.Authentication> authenticationMono) {
         return authenticationMono.flatMap(auth -> {
             String uid = auth.getName();
@@ -102,11 +102,18 @@ public class GroupController {
                 User currentUser = userRepository.findByFirebaseUuid(uid)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-                movieGroupService.addMovieToGroups(request.getMovieId(),
-                        request.getGroupIds(),
-                        request.isToWatch(),
-                        currentUser);
-                return ResponseEntity.ok("Movie added successfully");
+                if (request.isAddMovie()) {
+                    movieGroupService.addMovieToGroup(request.getMovieId(),
+                            request.getGroupId(),
+                            request.isToWatch(),
+                            currentUser);
+                } else {
+                    movieGroupService.removeMovieFromGroup(request.getMovieId(),
+                            request.getGroupId(),
+                            currentUser);
+                }
+                MovieGroupStatusDTO status = groupService.getMovieGroupStatus(request.getMovieId(), currentUser);
+                return ResponseEntity.ok(status);
             });
         });
     }
