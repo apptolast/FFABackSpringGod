@@ -63,7 +63,7 @@ public class GroupController {
 
     @GetMapping("/movie/{movieId}/status")
     public Mono<ResponseEntity<MovieGroupStatusDTO>> getMovieStatus(@PathVariable Long movieId,
-                                                                  @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
+                                                                    @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
         return authenticationMono.flatMap(auth -> {
             String uid = auth.getName();
             return Mono.fromCallable(() -> {
@@ -94,27 +94,24 @@ public class GroupController {
 
     @PostMapping("/addMovie")
     public Mono<ResponseEntity<MovieGroupStatusDTO>> addMovieToGroups(@RequestBody AddMovieToGroupRequestDTO request,
-                                                         @org.springframework.security.core.annotation.AuthenticationPrincipal Mono<org.springframework.security.core.Authentication> authenticationMono) {
+                                                                      @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
         return authenticationMono.flatMap(auth -> {
             String uid = auth.getName();
-            return Mono.fromCallable(() -> {
-                // Obtenemos el usuario actual a partir del uid
-                User currentUser = userRepository.findByFirebaseUuid(uid)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+            return Mono.fromCallable(() ->
+                            userRepository.findByFirebaseUuid(uid)
+                                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
+                    )
+                    .flatMap(currentUser -> {
+                        Mono<Void> operation = request.isAddMovie() ?
+                                movieGroupService.addMovieToGroup(request.getMovieId(), request.getGroupId(), request.isToWatch(), currentUser) :
+                                movieGroupService.removeMovieFromGroup(request.getMovieId(), request.getGroupId(), currentUser);
 
-                if (request.isAddMovie()) {
-                    movieGroupService.addMovieToGroup(request.getMovieId(),
-                            request.getGroupId(),
-                            request.isToWatch(),
-                            currentUser);
-                } else {
-                    movieGroupService.removeMovieFromGroup(request.getMovieId(),
-                            request.getGroupId(),
-                            currentUser);
-                }
-                MovieGroupStatusDTO status = groupService.getMovieGroupStatus(request.getMovieId(), currentUser);
-                return ResponseEntity.ok(status);
-            });
+                        return operation
+                                .then(Mono.fromCallable(() ->
+                                        groupService.getMovieGroupStatus(request.getMovieId(), currentUser)
+                                ))
+                                .map(ResponseEntity::ok);
+                    });
         });
     }
 

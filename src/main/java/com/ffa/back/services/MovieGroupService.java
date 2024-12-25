@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,60 +39,55 @@ public class MovieGroupService {
     private TmdbService tmdbService;
 
     @Transactional
-    public void removeMovieFromGroup(Long tmdbMovieId, Long groupId, User user) {
-        Movie movie = movieRepository.findByTmdbId(tmdbMovieId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+    public Mono<Void> addMovieToGroup(Long tmdbMovieId, Long groupId, boolean toWatch, User user) {
+        return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
+                .switchIfEmpty(
+                        tmdbService.getDetails("movie", tmdbMovieId.intValue())
+                                .map(movieData -> {
+                                    Movie newMovie = new Movie();
+                                    newMovie.setTmdbId(tmdbMovieId);
+                                    newMovie.setTitle(movieData.get("title").asText());
+                                    newMovie.setLanguage(movieData.get("original_language").asText());
+                                    newMovie.setSynopsis(movieData.get("overview").asText());
+                                    newMovie.setImage(movieData.get("poster_path").asText());
+                                    newMovie.setAdult(movieData.get("adult").asBoolean());
+                                    String releaseDateStr = movieData.get("release_date").asText();
+                                    newMovie.setRelease_date(java.sql.Date.valueOf(releaseDateStr));
+                                    newMovie.setVote_average(movieData.get("vote_average").asDouble());
+                                    newMovie.setVote_count(movieData.get("vote_count").asInt());
 
-        MovieUserGroup movieUserGroup = movieUserGroupRepository
-                .findByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found in group"));
+                                    ArrayNode genreIdsNode = (ArrayNode) movieData.get("genre_ids");
+                                    List<Integer> genreIds = new ArrayList<>();
+                                    genreIdsNode.forEach(genreId -> genreIds.add(genreId.asInt()));
+                                    newMovie.setGenre_ids(genreIds);
 
-        movieUserGroupRepository.delete(movieUserGroup);
+                                    return movieRepository.save(newMovie);
+                                })
+                )
+                .flatMap(movie -> {
+                    Group group = groupRepository.findById(groupId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+
+                    if (movieUserGroupRepository.existsByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId())) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie already added to group by user"));
+                    }
+
+                    MovieUserGroup movieUserGroup = new MovieUserGroup(movie, user, group, toWatch);
+                    return Mono.just(movieUserGroupRepository.save(movieUserGroup));
+                })
+                .then();
     }
 
     @Transactional
-    public void addMovieToGroup(Long tmdbMovieId, Long groupId, boolean toWatch, User user) {
-        Movie movie = movieRepository.findByTmdbId(tmdbMovieId)
-                .orElseGet(() -> {
-                    try {
-                        JsonNode movieData = tmdbService.getDetails("movie", tmdbMovieId.intValue())
-                                .block();
-
-                        if (movieData != null) {
-                            Movie newMovie = new Movie();
-                            newMovie.setTmdbId(tmdbMovieId);
-                            newMovie.setTitle(movieData.get("title").asText());
-                            newMovie.setLanguage(movieData.get("original_language").asText());
-                            newMovie.setSynopsis(movieData.get("overview").asText());
-                            newMovie.setImage(movieData.get("poster_path").asText());
-                            newMovie.setAdult(movieData.get("adult").asBoolean());
-                            String releaseDateStr = movieData.get("release_date").asText();
-                            newMovie.setRelease_date(java.sql.Date.valueOf(releaseDateStr));
-                            newMovie.setVote_average(movieData.get("vote_average").asDouble());
-                            newMovie.setVote_count(movieData.get("vote_count").asInt());
-
-                            ArrayNode genreIdsNode = (ArrayNode) movieData.get("genre_ids");
-                            List<Integer> genreIds = new ArrayList<>();
-                            genreIdsNode.forEach(genreId -> genreIds.add(genreId.asInt()));
-                            newMovie.setGenre_ids(genreIds);
-
-                            return movieRepository.save(newMovie);
-                        }
-                    } catch (Exception e) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                "Error fetching movie details from TMDB: " + e.getMessage());
-                    }
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found in TMDB");
-                });
-
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
-
-        if (movieUserGroupRepository.existsByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Movie already added to group by user");
-        }
-
-        MovieUserGroup movieUserGroup = new MovieUserGroup(movie, user, group, toWatch);
-        movieUserGroupRepository.save(movieUserGroup);
+    public Mono<Void> removeMovieFromGroup(Long tmdbMovieId, Long groupId, User user) {
+        return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found")))
+                .flatMap(movie ->
+                        Mono.justOrEmpty(movieUserGroupRepository
+                                .findByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId()))
+                )
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found in group")))
+                .doOnNext(movieUserGroup -> movieUserGroupRepository.delete(movieUserGroup))
+                .then();
     }
 }
