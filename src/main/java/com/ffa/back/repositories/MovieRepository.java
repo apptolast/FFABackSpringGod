@@ -13,4 +13,6 @@ import java.util.Set;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("SELECT DISTINCT m FROM Movie m JOIN m.genres g WHERE g IN :genres AND m.id NOT IN :excludedIds ORDER BY RAND() LIMIT 1")
     Optional<Movie> findTopByGenresInAndIdNotIn(Set<Genre> genres, Set<Long> excludedIds);
+
+    Optional<Movie> findByTmdbId(Long tmdbId);
 }

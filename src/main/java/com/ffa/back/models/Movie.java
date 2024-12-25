@@ -25,6 +25,9 @@ public class Movie {
     )
     private List<Genre> genres;
 
+    @Column(name = "tmdb_id")
+    private Long tmdbId;
+
     @Column(nullable = true)
     private List<Integer> genre_ids;
 
@@ -64,16 +67,22 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String title, List<Integer> genre_ids, String language, String synopsis, String image, Date release_date, Boolean adult, Double vote_average, Integer vote_count) {
+    public Movie(Long id, String title, List<Genre> genres, Long tmdbId, List<Integer> genre_ids, String language, String synopsis, String image, Boolean adult, Date release_date, Double vote_average, Integer vote_count, List<WatchList> watchLists, List<ViewList> viewLists, List<MovieUserGroup> movieUserGroups) {
+        this.id = id;
         this.title = title;
+        this.genres = genres;
+        this.tmdbId = tmdbId;
         this.genre_ids = genre_ids;
         this.language = language;
         this.synopsis = synopsis;
         this.image = image;
-        this.release_date = release_date;
         this.adult = adult;
+        this.release_date = release_date;
         this.vote_average = vote_average;
         this.vote_count = vote_count;
+        this.watchLists = watchLists;
+        this.viewLists = viewLists;
+        this.movieUserGroups = movieUserGroups;
     }
 
     public Long getId() {
@@ -98,6 +107,14 @@ public class Movie {
 
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
+    }
+
+    public Long getTmdbId() {
+        return tmdbId;
+    }
+
+    public void setTmdbId(Long tmdbId) {
+        this.tmdbId = tmdbId;
     }
 
     public List<Integer> getGenre_ids() {
