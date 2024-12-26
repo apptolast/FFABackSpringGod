@@ -7,8 +7,6 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;  // Solo este import de Page
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,10 +32,6 @@ public class MovieService {
                 .collect(Collectors.toList());
     }
 
-    public org.springframework.data.domain.Page<MovieReponseIDdto> getAllMoviesPaged(Pageable pageable) {  // Especificamos el tipo completo
-        return movieRepository.findAll(pageable)
-                .map(this::toMovieReponseIDdto);
-    }
 
     public MovieReponseIDdto getMovieById(Long id) {
         return movieRepository.findById(id)
