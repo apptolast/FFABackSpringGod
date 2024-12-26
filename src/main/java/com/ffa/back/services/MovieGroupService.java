@@ -1,6 +1,9 @@
 package com.ffa.back.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ffa.back.dto.GroupMovieStatusDTO;
+import com.ffa.back.dto.MovieGroupStatusDTO;
+import com.ffa.back.enums.MovieGroupStatus;
 import com.ffa.back.models.Group;
 import com.ffa.back.models.Movie;
 import com.ffa.back.models.MovieUserGroup;
@@ -16,9 +19,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -39,10 +47,13 @@ public class MovieGroupService {
     private MovieRecommendationService recommendationService;
 
     @Autowired
+    private GroupService groupService;
+
+    @Autowired
     private TmdbService tmdbService;
 
     @Transactional
-    public Mono<Void> addMovieToGroup(Long tmdbMovieId, Long groupId, boolean toWatch, User user) {
+    public Mono<MovieGroupStatusDTO> addMovieToGroup(Long tmdbMovieId, Long groupId, boolean toWatch, User user) {
         return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
                 .switchIfEmpty(
                         tmdbService.getDetails("movie", tmdbMovieId.intValue())
@@ -54,11 +65,10 @@ public class MovieGroupService {
                                     newMovie.setSynopsis(movieData.get("overview").asText());
                                     newMovie.setImage(movieData.get("poster_path").asText());
                                     newMovie.setAdult(movieData.get("adult").asBoolean());
-                                    newMovie.setRelease_date(java.sql.Date.valueOf(movieData.get("release_date").asText()));
+                                    newMovie.setRelease_date(Date.valueOf(movieData.get("release_date").asText()));
                                     newMovie.setVote_average(movieData.get("vote_average").asDouble());
                                     newMovie.setVote_count(movieData.get("vote_count").asInt());
 
-                                    // Extracción correcta de los IDs de géneros
                                     List<Integer> genreIds = new ArrayList<>();
                                     JsonNode genresNode = movieData.get("genres");
                                     if (genresNode != null && genresNode.isArray()) {
@@ -71,16 +81,13 @@ public class MovieGroupService {
                                     return movieRepository.save(newMovie);
                                 })
                 )
+                .publishOn(Schedulers.boundedElastic())
                 .flatMap(movie -> {
                     log.debug("Movie found/created with ID: {}", movie.getId());
 
                     Group group = groupRepository.findById(groupId)
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
 
-                    log.debug("Group found with ID: {}", group.getId());
-                    log.debug("Current User ID: {}", user.getId());
-
-                    // Verificar que todos los IDs son no-null
                     if (movie.getId() == null || group.getId() == null || user.getId() == null) {
                         return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
                                 "Invalid IDs - Movie:" + movie.getId() + ", Group:" + group.getId() + ", User:" + user.getId()));
@@ -92,12 +99,68 @@ public class MovieGroupService {
                     }
 
                     MovieUserGroup movieUserGroup = new MovieUserGroup(movie, user, group, toWatch);
-                    log.debug("Created MovieUserGroup with Movie:{}, Group:{}, User:{}, ToWatch:{}",
-                            movie.getId(), group.getId(), user.getId(), toWatch);
+                    movieUserGroupRepository.save(movieUserGroup);
 
-                    return Mono.just(movieUserGroupRepository.save(movieUserGroup));
+                    return getMovieGroupStatusMovies(movie.getTmdbId(), user);
+                });
+    }
+
+
+    @Transactional
+    public Mono<MovieGroupStatusDTO> getMovieGroupStatusMovies(Long movieId, User user) {
+        // Obtener los IDs de los grupos del usuario
+        List<Group> userGroups = user.getGroups();
+        List<Long> userGroupIds = userGroups.stream()
+                .map(Group::getId)
+                .toList();
+
+        // Obtener todas las relaciones MovieUserGroup para esta película en los grupos del usuario
+        List<MovieUserGroup> movieGroups = movieUserGroupRepository.findByMovieIdAndGroupIds(movieId, userGroupIds);
+
+        // Crear un mapa para fácil acceso a los MovieUserGroup por groupId
+        Map<Long, List<MovieUserGroup>> groupMovieMap = movieGroups.stream()
+                .collect(Collectors.groupingBy(mug -> mug.getGroup().getId()));
+
+        // Crear un mapa de groupId -> nombre del grupo para fácil acceso
+        Map<Long, String> groupNames = userGroups.stream()
+                .collect(Collectors.toMap(Group::getId, Group::getName));
+
+        // Procesar cada grupo del usuario
+        List<GroupMovieStatusDTO> groupStatuses = userGroupIds.stream()
+                .map(groupId -> {
+                    List<MovieUserGroup> groupMovies = groupMovieMap.getOrDefault(groupId, List.of());
+                    MovieGroupStatus status = determineMovieStatus(groupMovies, user.getId());
+                    String groupName = groupNames.get(groupId);
+                    return new GroupMovieStatusDTO(groupId, groupName, status);
                 })
-                .then();
+                .collect(Collectors.toList());
+
+        return Mono.just(new MovieGroupStatusDTO(movieId, groupStatuses));
+    }
+
+
+    @Transactional
+    private MovieGroupStatus determineMovieStatus(List<MovieUserGroup> groupMovies, Long userId) {
+        if (groupMovies.isEmpty()) {
+            return MovieGroupStatus.NOT_IN_GROUP;
+        }
+
+        // Buscar si el usuario actual tiene la película en este grupo
+        Optional<MovieUserGroup> userMovie = groupMovies.stream()
+                .filter(mug -> mug.getUser().getId().equals(userId))
+                .findFirst();
+
+        if (userMovie.isPresent()) {
+            // El usuario tiene la película
+            return userMovie.get().getToWatch()
+                    ? MovieGroupStatus.TO_WATCH_BY_USER
+                    : MovieGroupStatus.WATCHED_BY_USER;
+        } else {
+            // Otro usuario tiene la película
+            return groupMovies.get(0).getToWatch()
+                    ? MovieGroupStatus.TO_WATCH_BY_OTHER
+                    : MovieGroupStatus.WATCHED_BY_OTHER;
+        }
     }
 
     @Transactional

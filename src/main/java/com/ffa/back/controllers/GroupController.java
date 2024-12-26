@@ -102,16 +102,22 @@ public class GroupController {
                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
                     )
                     .flatMap(currentUser -> {
-                        Mono<Void> operation = request.isAddMovie() ?
-                                movieGroupService.addMovieToGroup(request.getMovieId(), request.getGroupId(), request.isToWatch(), currentUser) :
-                                movieGroupService.removeMovieFromGroup(request.getMovieId(), request.getGroupId(), currentUser);
-
-                        return operation
-                                .then(Mono.fromCallable(() ->
-                                        groupService.getMovieGroupStatus(request.getMovieId(), currentUser)
-                                ))
-                                .map(ResponseEntity::ok);
-                    });
+                        if (request.isAddMovie()) {
+                            return movieGroupService.addMovieToGroup(
+                                    request.getMovieId(),
+                                    request.getGroupId(),
+                                    request.isToWatch(),
+                                    currentUser
+                            );
+                        } else {
+                            return movieGroupService.removeMovieFromGroup(
+                                    request.getMovieId(),
+                                    request.getGroupId(),
+                                    currentUser
+                            ).then(movieGroupService.getMovieGroupStatusMovies(request.getMovieId(), currentUser));
+                        }
+                    })
+                    .map(ResponseEntity::ok);
         });
     }
 
