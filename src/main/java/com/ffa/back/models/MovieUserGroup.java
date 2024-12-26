@@ -12,17 +12,17 @@ public class MovieUserGroup {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_movie")
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 
 
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "user_id")
     private User user;
 
 
     @ManyToOne
-    @JoinColumn(name = "id_group")
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @Column(nullable = true, name = "to_watch")
