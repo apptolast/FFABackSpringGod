@@ -2,10 +2,12 @@ package com.ffa.back.repositories;
 
 import com.ffa.back.models.Genre;
 import com.ffa.back.models.Movie;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,7 +18,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Optional<Movie> findByTmdbId(Long tmdbId);
 
-    // Nuevos métodos
-    boolean existsByTmdbId(Long tmdbId);
+    @Query("SELECT m FROM Movie m WHERE m.id IN :movieIds")
+    List<Movie> findAllByIds(@Param("movieIds") List<Long> movieIds);
 
 }

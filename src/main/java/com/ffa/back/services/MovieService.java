@@ -52,6 +52,15 @@ public class MovieService {
         movieRepository.deleteById(id);
     }
 
+    public List<MovieReponseIDdto> getMoviesByIds(List<Long> movieIds) {
+        log.debug("Buscando películas por IDs: {}", movieIds);
+        List<Movie> movies = movieRepository.findAllByIds(movieIds);
+        log.debug("Encontradas {} películas", movies.size());
+        return movies.stream()
+                .map(this::toMovieReponseIDdto)
+                .collect(Collectors.toList());
+    }
+
     private MovieReponseIDdto toMovieReponseIDdto(Movie movie) {
         return new MovieReponseIDdto(
                 movie.getId(),
