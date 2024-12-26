@@ -167,9 +167,10 @@ public class MovieGroupService {
     }
 
     @Transactional
-    public Mono<Void> removeMovieFromGroup(Long tmdbMovieId, Long groupId, User user) {
+    public Mono<MovieGroupStatusDTO> removeMovieFromGroup(Long tmdbMovieId, Long groupId, User user) {
         log.debug("Removiendo película tmdbMovieId={} del grupo={} para usuario={}",
                 tmdbMovieId, groupId, user.getId());
+
         return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
                 .switchIfEmpty(Mono.error(new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -182,10 +183,12 @@ public class MovieGroupService {
                         HttpStatus.NOT_FOUND,
                         String.format("Movie relationship not found for group %d and user %d",
                                 groupId, user.getId()))))
-                .doOnNext(movieUserGroup -> {
+                .flatMap(movieUserGroup -> {
                     log.debug("Eliminando relación movieUserGroup.id={}", movieUserGroup.getId());
                     movieUserGroupRepository.delete(movieUserGroup);
-                })
-                .then();
+
+                    // Después de eliminar, obtenemos el estado actualizado
+                    return getMovieGroupStatusMovies(tmdbMovieId, user);
+                });
     }
 }
