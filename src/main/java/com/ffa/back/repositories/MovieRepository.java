@@ -2,13 +2,10 @@ package com.ffa.back.repositories;
 
 import com.ffa.back.models.Genre;
 import com.ffa.back.models.Movie;
-import com.google.api.gax.paging.Page;
-import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,8 +19,4 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     // Nuevos métodos
     boolean existsByTmdbId(Long tmdbId);
 
-    @Query("SELECT m FROM Movie m WHERE " +
-            "LOWER(m.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-            "LOWER(m.synopsis) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
-    Page<Movie> searchMovies(@Param("searchTerm") String searchTerm, Pageable pageable);
 }
