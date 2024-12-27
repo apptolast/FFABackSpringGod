@@ -40,16 +40,10 @@ public class MovieGroupService {
     private GroupRepository groupRepository;
 
     @Autowired
-    private MovieUserGroupRepository movieUserGroupRepository;
-
-    @Autowired
-    private MovieRecommendationService recommendationService;
-
-    @Autowired
-    private GroupService groupService;
-
-    @Autowired
     private TmdbService tmdbService;
+
+    @Autowired
+    private MovieUserGroupRepository movieUserGroupRepository;
 
     @Transactional
     public Mono<MovieGroupStatusDTO> addMovieToGroup(Long tmdbMovieId, Long groupId, boolean toWatch, User user) {
@@ -61,29 +55,41 @@ public class MovieGroupService {
                         movie.getId(), movie.getTmdbId()))
                 .switchIfEmpty(
                         tmdbService.getDetails("movie", tmdbMovieId.intValue())
-                                .doOnNext(movieData -> log.debug("Creando nueva película de TMDB"))
                                 .map(movieData -> {
                                     Movie newMovie = new Movie();
                                     newMovie.setTmdbId(tmdbMovieId);
                                     newMovie.setTitle(movieData.get("title").asText());
-                                    // ... resto del mapeo
+                                    newMovie.setLanguage(movieData.get("original_language").asText());
+                                    newMovie.setSynopsis(movieData.get("overview").asText());
+                                    newMovie.setImage(movieData.get("poster_path").asText());
+                                    newMovie.setAdult(movieData.get("adult").asBoolean());
+                                    newMovie.setRelease_date(Date.valueOf(movieData.get("release_date").asText()));
+                                    newMovie.setVote_average(movieData.get("vote_average").asDouble());
+                                    newMovie.setVote_count(movieData.get("vote_count").asInt());
+
+                                    List<Integer> genreIds = new ArrayList<>();
+                                    JsonNode genresNode = movieData.get("genres");
+                                    if (genresNode != null && genresNode.isArray()) {
+                                        for (JsonNode genre : genresNode) {
+                                            genreIds.add(genre.get("id").asInt());
+                                        }
+                                    }
+                                    newMovie.setGenre_ids(genreIds);
+
                                     Movie savedMovie = movieRepository.save(newMovie);
                                     log.debug("Nueva película guardada: id={}, tmdbId={}",
                                             savedMovie.getId(), savedMovie.getTmdbId());
                                     return savedMovie;
                                 })
                 )
-                .publishOn(Schedulers.boundedElastic())
                 .flatMap(movie -> {
                     Group group = groupRepository.findById(groupId)
                             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
-                    log.debug("Verificando existencia previa en grupo para movie.id={}, group.id={}, user.id={}",
-                            movie.getTmdbId(), groupId, user.getId());
 
-                    boolean exists = movieUserGroupRepository.existsByMovieIdAndGroupIdAndUserId(
-                            movie.getTmdbId(), groupId, user.getId());
+                    log.debug("Verificando existencia previa para movie.id={}, group.id={}, user.id={}",
+                            movie.getId(), groupId, user.getId());
 
-                    if (exists) {
+                    if (movieUserGroupRepository.existsByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId())) {
                         log.debug("Relación ya existe");
                         return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST,
                                 "Movie already added to group by user"));
@@ -98,46 +104,72 @@ public class MovieGroupService {
     }
 
     @Transactional
+    public Mono<MovieGroupStatusDTO> removeMovieFromGroup(Long tmdbMovieId, Long groupId, User user) {
+        log.debug("Iniciando removeMovieFromGroup: tmdbMovieId={}, groupId={}, userId={}",
+                tmdbMovieId, groupId, user.getId());
+
+        return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Movie with TMDB ID %d not found", tmdbMovieId))))
+                .flatMap(movie -> {
+                    log.debug("Buscando relación para movie.id={}, group.id={}, user.id={}",
+                            movie.getId(), groupId, user.getId());
+
+                    Optional<MovieUserGroup> relation = movieUserGroupRepository
+                            .findByMovieIdAndGroupIdAndUserId(movie.getId(), groupId, user.getId());
+
+                    if (relation.isEmpty()) {
+                        return Mono.error(new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Movie relationship not found"));
+                    }
+
+                    log.debug("Eliminando relación con id={}", relation.get().getId());
+                    movieUserGroupRepository.delete(relation.get());
+                    log.debug("Relación eliminada correctamente");
+
+                    return getMovieGroupStatusMovies(tmdbMovieId, user);
+                });
+    }
+
+    @Transactional
     public Mono<MovieGroupStatusDTO> getMovieGroupStatusMovies(Long tmdbMovieId, User user) {
         log.debug("Obteniendo estado para tmdbMovieId={}, userId={}", tmdbMovieId, user.getId());
-        List<Group> userGroups = user.getGroups();
-        List<Long> userGroupIds = userGroups.stream()
-                .map(Group::getId)
-                .toList();
-        log.debug("Grupos del usuario: {}", userGroupIds);
 
-        List<MovieUserGroup> movieGroups = movieUserGroupRepository.findByMovieIdAndGroupIds(tmdbMovieId, userGroupIds);
-        log.debug("Relaciones encontradas: {}",
-                movieGroups.stream()
-                        .map(mg -> String.format("(movie=%d,group=%d,user=%d)",
-                                mg.getMovie().getId(), mg.getGroup().getId(), mg.getUser().getId()))
-                        .collect(Collectors.joining(", ")));
+        return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
+                .map(movie -> {
+                    List<Group> userGroups = user.getGroups();
+                    List<Long> userGroupIds = userGroups.stream()
+                            .map(Group::getId)
+                            .toList();
+                    log.debug("Grupos del usuario: {}", userGroupIds);
 
-        Map<Long, List<MovieUserGroup>> groupMovieMap = movieGroups.stream()
-                .collect(Collectors.groupingBy(mug -> mug.getGroup().getId()));
-        log.debug("Mapa de grupos a películas: {}",
-                groupMovieMap.keySet().stream()
-                        .map(groupId -> String.format("group %d: %d películas",
-                                groupId, groupMovieMap.get(groupId).size()))
-                        .collect(Collectors.joining(", ")));
+                    List<MovieUserGroup> movieGroups = movieUserGroupRepository
+                            .findByMovieIdAndGroupIds(movie.getId(), userGroupIds);
+                    log.debug("Relaciones encontradas: {}", movieGroups.size());
 
-        List<GroupMovieStatusDTO> groupStatuses = userGroupIds.stream()
-                .map(groupId -> {
-                    List<MovieUserGroup> groupMovies = groupMovieMap.getOrDefault(groupId, List.of());
-                    MovieGroupStatus status = determineMovieStatus(groupMovies, user.getId());
-                    String groupName = userGroups.stream()
-                            .filter(g -> g.getId().equals(groupId))
-                            .map(Group::getName)
-                            .findFirst()
-                            .orElse("Unknown");
-                    log.debug("Estado calculado para grupo {}: {}", groupId, status);
-                    return new GroupMovieStatusDTO(groupId, groupName, status);
-                })
-                .collect(Collectors.toList());
+                    Map<Long, List<MovieUserGroup>> groupMovieMap = movieGroups.stream()
+                            .collect(Collectors.groupingBy(mug -> mug.getGroup().getId()));
 
-        MovieGroupStatusDTO result = new MovieGroupStatusDTO(tmdbMovieId, groupStatuses);
-        log.debug("Resultado final: {}", result);
-        return Mono.just(result);
+                    List<GroupMovieStatusDTO> groupStatuses = userGroupIds.stream()
+                            .map(groupId -> {
+                                List<MovieUserGroup> groupMovies = groupMovieMap.getOrDefault(groupId, List.of());
+                                MovieGroupStatus status = determineMovieStatus(groupMovies, user.getId());
+                                String groupName = userGroups.stream()
+                                        .filter(g -> g.getId().equals(groupId))
+                                        .map(Group::getName)
+                                        .findFirst()
+                                        .orElse("Unknown");
+                                log.debug("Estado para grupo {}: {}", groupId, status);
+                                return new GroupMovieStatusDTO(groupId, groupName, status);
+                            })
+                            .collect(Collectors.toList());
+
+                    MovieGroupStatusDTO result = new MovieGroupStatusDTO(tmdbMovieId, groupStatuses);
+                    log.debug("Estado final: {}", result);
+                    return result;
+                });
     }
 
     private MovieGroupStatus determineMovieStatus(List<MovieUserGroup> groupMovies, Long userId) {
@@ -152,43 +184,19 @@ public class MovieGroupService {
                 .filter(mug -> mug.getUser().getId().equals(userId))
                 .findFirst();
 
-        MovieGroupStatus status;
-        if (userMovie.isPresent()) {
-            status = userMovie.get().getToWatch()
-                    ? MovieGroupStatus.TO_WATCH_BY_USER
-                    : MovieGroupStatus.WATCHED_BY_USER;
-        } else {
-            status = groupMovies.get(0).getToWatch()
+        if (userMovie.isEmpty()) {
+            MovieUserGroup otherUserMovie = groupMovies.get(0);
+            MovieGroupStatus status = otherUserMovie.getToWatch()
                     ? MovieGroupStatus.TO_WATCH_BY_OTHER
                     : MovieGroupStatus.WATCHED_BY_OTHER;
+            log.debug("Película en grupo por otro usuario - {}", status);
+            return status;
         }
-        log.debug("Estado determinado: {}", status);
+
+        MovieGroupStatus status = userMovie.get().getToWatch()
+                ? MovieGroupStatus.TO_WATCH_BY_USER
+                : MovieGroupStatus.WATCHED_BY_USER;
+        log.debug("Película en grupo por usuario actual - {}", status);
         return status;
-    }
-
-    @Transactional
-    public Mono<MovieGroupStatusDTO> removeMovieFromGroup(Long tmdbMovieId, Long groupId, User user) {
-        log.debug("Removiendo película tmdbMovieId={} del grupo={} para usuario={}",
-                tmdbMovieId, groupId, user.getId());
-
-        return Mono.justOrEmpty(movieRepository.findByTmdbId(tmdbMovieId))
-                .switchIfEmpty(Mono.error(new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("Movie with TMDB ID %d not found", tmdbMovieId))))
-                .flatMap(movie ->
-                        Mono.justOrEmpty(movieUserGroupRepository
-                                .findByMovieIdAndGroupIdAndUserId(tmdbMovieId, groupId, user.getId()))
-                )
-                .switchIfEmpty(Mono.error(new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("Movie relationship not found for group %d and user %d",
-                                groupId, user.getId()))))
-                .flatMap(movieUserGroup -> {
-                    log.debug("Eliminando relación movieUserGroup.id={}", movieUserGroup.getId());
-                    movieUserGroupRepository.delete(movieUserGroup);
-
-                    // Después de eliminar, obtenemos el estado actualizado
-                    return getMovieGroupStatusMovies(tmdbMovieId, user);
-                });
     }
 }
