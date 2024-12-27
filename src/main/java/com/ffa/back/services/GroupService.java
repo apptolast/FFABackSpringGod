@@ -28,6 +28,10 @@ public class GroupService {
     @Autowired
     private GroupRepository groupRepository;
 
+
+    @Autowired
+    private MovieService movieService;
+
     @Autowired
     private FirebaseAuthService firebaseAuthService;
 
@@ -198,9 +202,8 @@ public class GroupService {
     public MovieGroupStatusDTO getMovieGroupStatus(Long tmdbMovieId, User user) {
         log.debug("Obteniendo estado para tmdbMovieId={}, userId={}", tmdbMovieId, user.getId());
 
-        Movie movie = movieRepository.findByTmdbId(tmdbMovieId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        String.format("Movie with TMDB ID %d not found", tmdbMovieId)));
+        Movie movie = movieService.getOrCreateMovieByTmdbId(tmdbMovieId);
+        log.debug("Película encontrada/creada con id={}", movie.getId());
 
         List<Group> userGroups = user.getGroups();
         List<Long> userGroupIds = userGroups.stream()

@@ -1,5 +1,6 @@
 package com.ffa.back.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ffa.back.dto.MovieReponseIDdto;
 import com.ffa.back.models.Movie;
 import com.ffa.back.repositories.MovieRepository;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,41 @@ public class MovieService {
         return movieRepository.findAll().stream()
                 .map(this::toMovieReponseIDdto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Movie getOrCreateMovieByTmdbId(Long tmdbId) {
+        return movieRepository.findByTmdbId(tmdbId)
+                .orElseGet(() -> {
+                    // Si no existe, obtener de TMDB y crear
+                    JsonNode movieData = tmdbService.getDetails("movie", tmdbId.intValue()).block();
+                    if (movieData == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                String.format("Movie with TMDB ID %d not found", tmdbId));
+                    }
+
+                    Movie newMovie = new Movie();
+                    newMovie.setTmdbId(tmdbId);
+                    newMovie.setTitle(movieData.get("title").asText());
+                    newMovie.setLanguage(movieData.get("original_language").asText());
+                    newMovie.setSynopsis(movieData.get("overview").asText());
+                    newMovie.setImage(movieData.get("poster_path").asText());
+                    newMovie.setAdult(movieData.get("adult").asBoolean());
+                    newMovie.setRelease_date(Date.valueOf(movieData.get("release_date").asText()));
+                    newMovie.setVote_average(movieData.get("vote_average").asDouble());
+                    newMovie.setVote_count(movieData.get("vote_count").asInt());
+
+                    List<Integer> genreIds = new ArrayList<>();
+                    JsonNode genresNode = movieData.get("genres");
+                    if (genresNode != null && genresNode.isArray()) {
+                        for (JsonNode genre : genresNode) {
+                            genreIds.add(genre.get("id").asInt());
+                        }
+                    }
+                    newMovie.setGenre_ids(genreIds);
+
+                    return movieRepository.save(newMovie);
+                });
     }
 
 
