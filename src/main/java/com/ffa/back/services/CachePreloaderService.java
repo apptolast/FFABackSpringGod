@@ -25,7 +25,7 @@ public class CachePreloaderService {
     @Autowired
     private ReactiveRedisTemplate<String, JsonNode> reactiveRedisTemplate;
 
-    private static final int BATCH_SIZE = 5;
+    private static final int BATCH_SIZE = 20;
 
     /**
      * Pre-carga las primeras 5 páginas de películas populares cada hora utilizando operaciones reactivas concurrentes.
