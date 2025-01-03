@@ -3,6 +3,19 @@
 ## Overview
 This project implements a robust REST API backend service for the Family Film App (FFA), a sophisticated recommendation system that helps groups decide on movies and TV shows to watch together. The service is built with Spring Boot and incorporates advanced features including authentication, recommendation algorithms, and real-time data processing.
 
+## Infrastructure & Documentation
+- **Swagger Documentation:** `http://23.88.43.3:32371/webjars/swagger-ui/index.html`
+- **PgAdmin:** `http://23.88.43.3:30850/browser/`
+- **Redis Dashboard:** `http://23.88.43.3:30880/40a6ccde-fa4f-4629-8d97-4804a2666e11/browser`
+
+### Server Specifications
+- **VPS Configuration:**
+  - 16 vCPU
+  - 32 GB RAM
+  - 320 GB Local Disk
+  - IPv4: 23.88.43.3
+  - IPv6: 2a01:4f8:c013:4fc5::/64
+
 ## Key Features
 - **Dual Authentication System**
   - JWT token-based authentication
@@ -67,14 +80,7 @@ This project implements a robust REST API backend service for the Family Film Ap
 ## API Documentation
 The API is deployed at: `https://ffa-develop-back.onrender.com/api/`
 
-### Key Endpoints
-```
-POST   /api/auth/login
-POST   /api/auth/register
-GET    /api/recommendations/group/{groupId}
-POST   /api/groups/create
-PUT    /api/preferences/update
-```
+Interactive API documentation is available at: `http://23.88.43.3:32371/webjars/swagger-ui/index.html`
 
 ## Development Setup
 
