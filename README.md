@@ -69,7 +69,7 @@ This project implements a robust REST API backend service for the Family Film Ap
 - Jenkins
 
 ## API Documentation
-The API is deployed at: `[https://ffa-develop-back.onrender.com/api/](http://23.88.43.3:32371/webjars/swagger-ui/index.html#/user-controller/getAllUsers)`
+The API is deployed at: `http://23.88.43.3:32371/webjars/swagger-ui/index.html#/user-controller/getAllUsers`
 
 ## Development Setup
 
