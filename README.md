@@ -67,15 +67,6 @@ This project implements a robust REST API backend service for the Family Film Ap
 ## API Documentation
 The API is deployed at: `https://ffa-develop-back.onrender.com/api/`
 
-### Key Endpoints
-```
-POST   /api/auth/login
-POST   /api/auth/register
-GET    /api/recommendations/group/{groupId}
-POST   /api/groups/create
-PUT    /api/preferences/update
-```
-
 ## Development Setup
 
 ### Prerequisites
