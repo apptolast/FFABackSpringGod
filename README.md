@@ -69,7 +69,7 @@ This project implements a robust REST API backend service for the Family Film Ap
 - Jenkins
 
 ## API Documentation
-The API is deployed at: `https://ffa-develop-back.onrender.com/api/`
+The API is deployed at: `[https://ffa-develop-back.onrender.com/api/](http://23.88.43.3:32371/webjars/swagger-ui/index.html#/user-controller/getAllUsers)`
 
 ## Development Setup
 
@@ -77,12 +77,12 @@ The API is deployed at: `https://ffa-develop-back.onrender.com/api/`
 - JDK 11+
 - Maven 3.6+
 - PostgreSQL 13+
-- Docker (optional)
+- Docker (Instructions bellow)
 
 ### Local Development
 1. Clone the repository:
 ```bash
-git clone https://github.com/apptolast/FFABackSpringGod.git
+git clone [https://github.com/apptolast/FFABackSpringGod.git](https://github.com/apptolast/FFABackSpringGod.git)
 cd FFABackSpringGod
 ```
 
@@ -90,16 +90,47 @@ cd FFABackSpringGod
 ```bash
 cp .env.example .env
 # Edit .env with your configurations
-```
 
-3. Build the project:
-```bash
-mvn clean install
-```
+# You have to do it the application.properties
 
-4. Run locally:
-```bash
-mvn spring-boot:run
+## The file have this parameters :
+
+spring.application.name=back
+spring.datasource.url=jdbc:postgresql://postgres-service.ffa-dev.svc.cluster.local:5432/ffa
+spring.datasource.username=YOUR_DATABASE_USERNAME
+spring.datasource.password=YOUR_DATABASE_PASSWORD
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=true
+springdoc.api-docs.path=/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+management.endpoints.web.exposure.include=health,info,metrics,httptrace
+management.endpoint.health.show-details=always
+spring.data.redis.host=redis-service
+spring.data.redis.port=6379
+spring.redis.lettuce.pool.max-active=8
+spring.redis.lettuce.pool.max-idle=8
+spring.redis.lettuce.pool.min-idle=0
+spring.redis.lettuce.pool.max-wait=5000
+spring.redis.timeout=5000
+logging.file.name=/app/logs/spring-boot.log
+logging.file.path=/app/logs
+logging.pattern.file=%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n
+logging.level.org.springframework.web=DEBUG
+logging.level.org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration=DEBUG
+firebase.url=https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken
+firebase.api-key=API_KEY_FOR_YOUR_FIREBASE_PROJECT
+firebase.api-filename=YOUR_CLIENT_JSON_OF_GOOGLE_CLOUD_CONSOLE
+firebase.pass=YOUR_PASSWORD
+tmdb.api-key=TMDB_API_KEY
+tmdb.api-url-movies=https://api.themoviedb.org/3/movie/
+tmdb.api-url-series=https://api.themoviedb.org/3/tv/
+tmdb.api-url-search=https://api.themoviedb.org/3/search
+tmdb.language=en-US
+tmdb.default-page=1
+logging.level.root=INFO
+logging.level.com.ffa.back=DEBUG
 ```
 
 ### Docker Deployment
