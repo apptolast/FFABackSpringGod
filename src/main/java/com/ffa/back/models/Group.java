@@ -13,15 +13,19 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private User owner;
-
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GroupUser> groupUsers = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "recommended_movie_id")
+    private Movie recommendedMovie;
+
+    @OneToMany(mappedBy = "group")
+    private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
     private List<WatchList> watchLists = new ArrayList<>();
@@ -29,25 +33,27 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<ViewList> viewLists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group")
-    private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "group_users",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> members = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "recommended_movie_id")
-    private Movie recommendedMovie;
 
-    public Group() {
-    }
-
-    public Group(Long id, User owner, String name, List<GroupUser> groupUsers, List<WatchList> watchLists, List<ViewList> viewLists, List<MovieUserGroup> movieUserGroups, Movie recommendedMovie) {
+    public Group(Long id, String name, User owner, Movie recommendedMovie, List<MovieUserGroup> movieUserGroups, List<WatchList> watchLists, List<ViewList> viewLists, List<User> members) {
         this.id = id;
-        this.owner = owner;
         this.name = name;
-        this.groupUsers = groupUsers;
+        this.owner = owner;
+        this.recommendedMovie = recommendedMovie;
+        this.movieUserGroups = movieUserGroups;
         this.watchLists = watchLists;
         this.viewLists = viewLists;
-        this.movieUserGroups = movieUserGroups;
-        this.recommendedMovie = recommendedMovie;
+        this.members = members;
+    }
+
+    public Group() {
     }
 
     public Long getId() {
@@ -58,14 +64,6 @@ public class Group {
         this.id = id;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
     public String getName() {
         return name;
     }
@@ -74,12 +72,28 @@ public class Group {
         this.name = name;
     }
 
-    public List<GroupUser> getGroupUsers() {
-        return groupUsers;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setGroupUsers(List<GroupUser> groupUsers) {
-        this.groupUsers = groupUsers;
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public Movie getRecommendedMovie() {
+        return recommendedMovie;
+    }
+
+    public void setRecommendedMovie(Movie recommendedMovie) {
+        this.recommendedMovie = recommendedMovie;
+    }
+
+    public List<MovieUserGroup> getMovieUserGroups() {
+        return movieUserGroups;
+    }
+
+    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
+        this.movieUserGroups = movieUserGroups;
     }
 
     public List<WatchList> getWatchLists() {
@@ -98,19 +112,11 @@ public class Group {
         this.viewLists = viewLists;
     }
 
-    public List<MovieUserGroup> getMovieUserGroups() {
-        return movieUserGroups;
+    public List<User> getMembers() {
+        return members;
     }
 
-    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
-        this.movieUserGroups = movieUserGroups;
-    }
-
-    public Movie getRecommendedMovie() {
-        return recommendedMovie;
-    }
-
-    public void setRecommendedMovie(Movie recommendedMovie) {
-        this.recommendedMovie = recommendedMovie;
+    public void setMembers(List<User> members) {
+        this.members = members;
     }
 }

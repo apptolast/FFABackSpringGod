@@ -202,7 +202,7 @@ public class GroupService {
     public MovieGroupStatusDTO getMovieGroupStatus(Long tmdbMovieId, User user) {
         log.debug("Obteniendo estado para tmdbMovieId={}, userId={}", tmdbMovieId, user.getId());
 
-        Movie movie = movieService.getOrCreateMovieByTmdbId(tmdbMovieId);
+        Movie movie = new Movie();
         log.debug("Película encontrada/creada con id={}", movie.getId());
 
         List<Group> userGroups = user.getGroups();

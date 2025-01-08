@@ -17,35 +17,37 @@ public class Language {
     @Column(nullable = false)
     private String language;
 
-    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "language")
     private List<User> users = new ArrayList<>();
 
+
+    public Language(Long id, String language, List<User> users) {
+        this.id = id;
+        this.language = language;
+        this.users = users;
+    }
+
     public Language() {
-    }
-
-    public Language(String language) {
-        this.language = language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getLanguage() {
         return language;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public List<User> getUsers() {
+        return users;
     }
 
     public void setUsers(List<User> users) {

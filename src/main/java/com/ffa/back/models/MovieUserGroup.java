@@ -10,32 +10,31 @@ public class MovieUserGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne
-    @JoinColumn(name = "movie_id")
+    @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @Column(nullable = true, name = "to_watch")
+    @Column(name = "to_watch")
     private Boolean toWatch;
 
-    public MovieUserGroup() {
+
+    public MovieUserGroup(Boolean toWatch, Group group, User user, Movie movie, Long id) {
+        this.toWatch = toWatch;
+        this.group = group;
+        this.user = user;
+        this.movie = movie;
+        this.id = id;
     }
 
-    public MovieUserGroup(Movie movie, User user, Group group, Boolean toWatch) {
-        this.movie = movie;
-        this.user = user;
-        this.group = group;
-        this.toWatch = toWatch;
+    public MovieUserGroup() {
     }
 
     public Long getId() {

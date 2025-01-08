@@ -13,94 +13,82 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Campos de autenticación Firebase
-    @Column(name = "firebase_uuid", nullable = false)
-    private String firebaseUuid;
-
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(name = "firebase_uuid")
+    private String firebaseUuid;
 
     @Column(nullable = false)
     private String provider;
 
-    @Column(nullable = true)
+    @Column
     private String role;
-
-    // Campos del token JWT
-    @Column(nullable = false)
-    private String sub;  // subject id from token
 
     @Column(name = "auth_time")
     private Long authTime;
 
-    @Column(name = "issue_time")
-    private Long iat;
-
-    @Column(name = "expiry_time")
-    private Long exp;
-
     @Column(name = "email_verified")
     private Boolean emailVerified;
 
-    @Column(name = "identity_provider")
-    private String signInProvider;
+    @Column(name = "expiry_time")
+    private Long expiryTime;
 
-    // Relación con Language
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_language", referencedColumnName = "id")
-    @JsonBackReference
+    @Column(name = "issue_time")
+    private Long issueTime;
+
+    @Column(name = "identity_provider")
+    private String identityProvider;
+
+    @Column(nullable = false)
+    private String sub;
+
+    @ManyToOne
+    @JoinColumn(name = "id_language")
     private Language language;
 
-    // NUEVOS CAMPOS
-    // Relación con grupos a través de GroupUser
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "group_users",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
-    private List<Group> groups = new ArrayList<>();
+    @OneToMany(mappedBy = "owner")
+    private List<Group> ownedGroups = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
 
-    // Películas vistas
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "user_viewed_movies",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private List<Movie> vistas = new ArrayList<>();
+    private List<Movie> viewedMovies = new ArrayList<>();
 
-
-    // Películas por ver
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "user_to_watch_movies",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
-    private List<Movie> porVer = new ArrayList<>();
+    private List<Movie> toWatchMovies = new ArrayList<>();
 
-
-    public User() {
-    }
-
-    public User(Long id, String firebaseUuid, String email, String provider, String role, String sub, Long authTime, Long iat, Long exp, Boolean emailVerified, String signInProvider, Language language, List<Group> groups, List<Movie> vistas, List<Movie> porVer) {
+    public User(Long id, String email, String firebaseUuid, String provider, String role, Long authTime, Boolean emailVerified, Long expiryTime, Long issueTime, String identityProvider, String sub, Language language, List<Group> ownedGroups, List<MovieUserGroup> movieUserGroups, List<Movie> viewedMovies, List<Movie> toWatchMovies) {
         this.id = id;
-        this.firebaseUuid = firebaseUuid;
         this.email = email;
+        this.firebaseUuid = firebaseUuid;
         this.provider = provider;
         this.role = role;
-        this.sub = sub;
         this.authTime = authTime;
-        this.iat = iat;
-        this.exp = exp;
         this.emailVerified = emailVerified;
-        this.signInProvider = signInProvider;
+        this.expiryTime = expiryTime;
+        this.issueTime = issueTime;
+        this.identityProvider = identityProvider;
+        this.sub = sub;
         this.language = language;
-        this.groups = groups;
-        this.vistas = vistas;
-        this.porVer = porVer;
+        this.ownedGroups = ownedGroups;
+        this.movieUserGroups = movieUserGroups;
+        this.viewedMovies = viewedMovies;
+        this.toWatchMovies = toWatchMovies;
+    }
+
+    public User() {
     }
 
     public Long getId() {
@@ -111,20 +99,20 @@ public class User {
         this.id = id;
     }
 
-    public String getFirebaseUuid() {
-        return firebaseUuid;
-    }
-
-    public void setFirebaseUuid(String firebaseUuid) {
-        this.firebaseUuid = firebaseUuid;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getFirebaseUuid() {
+        return firebaseUuid;
+    }
+
+    public void setFirebaseUuid(String firebaseUuid) {
+        this.firebaseUuid = firebaseUuid;
     }
 
     public String getProvider() {
@@ -143,36 +131,12 @@ public class User {
         this.role = role;
     }
 
-    public String getSub() {
-        return sub;
-    }
-
-    public void setSub(String sub) {
-        this.sub = sub;
-    }
-
     public Long getAuthTime() {
         return authTime;
     }
 
     public void setAuthTime(Long authTime) {
         this.authTime = authTime;
-    }
-
-    public Long getIat() {
-        return iat;
-    }
-
-    public void setIat(Long iat) {
-        this.iat = iat;
-    }
-
-    public Long getExp() {
-        return exp;
-    }
-
-    public void setExp(Long exp) {
-        this.exp = exp;
     }
 
     public Boolean getEmailVerified() {
@@ -183,12 +147,36 @@ public class User {
         this.emailVerified = emailVerified;
     }
 
-    public String getSignInProvider() {
-        return signInProvider;
+    public Long getExpiryTime() {
+        return expiryTime;
     }
 
-    public void setSignInProvider(String signInProvider) {
-        this.signInProvider = signInProvider;
+    public void setExpiryTime(Long expiryTime) {
+        this.expiryTime = expiryTime;
+    }
+
+    public Long getIssueTime() {
+        return issueTime;
+    }
+
+    public void setIssueTime(Long issueTime) {
+        this.issueTime = issueTime;
+    }
+
+    public String getIdentityProvider() {
+        return identityProvider;
+    }
+
+    public void setIdentityProvider(String identityProvider) {
+        this.identityProvider = identityProvider;
+    }
+
+    public String getSub() {
+        return sub;
+    }
+
+    public void setSub(String sub) {
+        this.sub = sub;
     }
 
     public Language getLanguage() {
@@ -199,27 +187,35 @@ public class User {
         this.language = language;
     }
 
-    public List<Group> getGroups() {
-        return groups;
+    public List<Group> getOwnedGroups() {
+        return ownedGroups;
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
+    public void setOwnedGroups(List<Group> ownedGroups) {
+        this.ownedGroups = ownedGroups;
     }
 
-    public List<Movie> getVistas() {
-        return vistas;
+    public List<MovieUserGroup> getMovieUserGroups() {
+        return movieUserGroups;
     }
 
-    public void setVistas(List<Movie> vistas) {
-        this.vistas = vistas;
+    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
+        this.movieUserGroups = movieUserGroups;
     }
 
-    public List<Movie> getPorVer() {
-        return porVer;
+    public List<Movie> getViewedMovies() {
+        return viewedMovies;
     }
 
-    public void setPorVer(List<Movie> porVer) {
-        this.porVer = porVer;
+    public void setViewedMovies(List<Movie> viewedMovies) {
+        this.viewedMovies = viewedMovies;
+    }
+
+    public List<Movie> getToWatchMovies() {
+        return toWatchMovies;
+    }
+
+    public void setToWatchMovies(List<Movie> toWatchMovies) {
+        this.toWatchMovies = toWatchMovies;
     }
 }
