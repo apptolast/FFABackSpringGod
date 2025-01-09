@@ -1,12 +1,20 @@
 package com.ffa.back.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
+@AllArgsConstructor
 @Entity
 @Table(name = "groups")
+@NoArgsConstructor
 public class Group {
 
     @Id
@@ -41,82 +49,7 @@ public class Group {
     )
     private List<User> members = new ArrayList<>();
 
+    @OneToMany(mappedBy = "group")
+    private List<ContentStatus> contentStatuses = new ArrayList<>();
 
-    public Group(Long id, String name, User owner, Movie recommendedMovie, List<MovieUserGroup> movieUserGroups, List<WatchList> watchLists, List<ViewList> viewLists, List<User> members) {
-        this.id = id;
-        this.name = name;
-        this.owner = owner;
-        this.recommendedMovie = recommendedMovie;
-        this.movieUserGroups = movieUserGroups;
-        this.watchLists = watchLists;
-        this.viewLists = viewLists;
-        this.members = members;
-    }
-
-    public Group() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public Movie getRecommendedMovie() {
-        return recommendedMovie;
-    }
-
-    public void setRecommendedMovie(Movie recommendedMovie) {
-        this.recommendedMovie = recommendedMovie;
-    }
-
-    public List<MovieUserGroup> getMovieUserGroups() {
-        return movieUserGroups;
-    }
-
-    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
-        this.movieUserGroups = movieUserGroups;
-    }
-
-    public List<WatchList> getWatchLists() {
-        return watchLists;
-    }
-
-    public void setWatchLists(List<WatchList> watchLists) {
-        this.watchLists = watchLists;
-    }
-
-    public List<ViewList> getViewLists() {
-        return viewLists;
-    }
-
-    public void setViewLists(List<ViewList> viewLists) {
-        this.viewLists = viewLists;
-    }
-
-    public List<User> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<User> members) {
-        this.members = members;
-    }
 }

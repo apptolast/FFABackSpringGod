@@ -1,7 +1,14 @@
 package com.ffa.back.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class GroupResponseDTO {
 
 
@@ -13,72 +20,4 @@ public class GroupResponseDTO {
     private List<MovieUsersDTO> toWatch;
     private MovieResponseDTO recommendedMovie;
 
-    public GroupResponseDTO() {
-    }
-
-    public GroupResponseDTO(Long id, Long ownerId, String name, List<UserResponseDTO> users, List<MovieUsersDTO> watched, List<MovieUsersDTO> toWatch, MovieResponseDTO recommendedMovie) {
-        this.id = id;
-        this.ownerId = ownerId;
-        this.name = name;
-        this.users = users;
-        this.watched = watched;
-        this.toWatch = toWatch;
-        this.recommendedMovie = recommendedMovie;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<UserResponseDTO> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserResponseDTO> users) {
-        this.users = users;
-    }
-
-    public List<MovieUsersDTO> getWatched() {
-        return watched;
-    }
-
-    public void setWatched(List<MovieUsersDTO> watched) {
-        this.watched = watched;
-    }
-
-    public List<MovieUsersDTO> getToWatch() {
-        return toWatch;
-    }
-
-    public void setToWatch(List<MovieUsersDTO> toWatch) {
-        this.toWatch = toWatch;
-    }
-
-    public MovieResponseDTO getRecommendedMovie() {
-        return recommendedMovie;
-    }
-
-    public void setRecommendedMovie(MovieResponseDTO recommendedMovie) {
-        this.recommendedMovie = recommendedMovie;
-    }
 }
