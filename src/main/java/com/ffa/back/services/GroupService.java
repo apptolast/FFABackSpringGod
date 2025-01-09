@@ -4,7 +4,6 @@ import com.ffa.back.dto.GroupCreateRequestDTO;
 import com.ffa.back.dto.GroupMemberRequestDTO;
 import com.ffa.back.dto.GroupResponseDTO;
 import com.ffa.back.dto.MovieGroupStatusDTO;
-import com.ffa.back.models.Group;
 import com.ffa.back.models.User;
 import com.ffa.back.repositories.GroupRepository;
 import com.ffa.back.repositories.MovieRepository;
@@ -12,9 +11,6 @@ import com.ffa.back.repositories.MovieUserGroupRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 

@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.*;
 @RequiredArgsConstructor
 public class GroupMapper {
     private final UserMapper userMapper;
-    private final MovieMapper movieMapper;
 
     public GroupResponseDTO toDto(Group group) {
         return new GroupResponseDTO(
