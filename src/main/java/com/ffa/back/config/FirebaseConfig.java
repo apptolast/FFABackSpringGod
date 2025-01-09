@@ -3,6 +3,7 @@ package com.ffa.back.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
@@ -10,10 +11,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @Configuration
+@RequiredArgsConstructor
 public class FirebaseConfig {
 
-    @Autowired
-    private FirebaseProperties firebaseProperties;
+    private final FirebaseProperties firebaseProperties;
 
     @PostConstruct
     public void initializeFirebase() {

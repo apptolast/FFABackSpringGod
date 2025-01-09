@@ -33,14 +33,10 @@ public class GroupService implements IGroupService {
     private final MovieUserGroupRepository movieUserGroupRepository;
     private final MovieRepository movieRepository;
 
+
     @Override
     public GroupResponseDTO createGroup(String name, User currentUser) {
-        log.debug("Creating group {} for user {}", name, currentUser.getEmail());
-        Group group = new Group();
-        group.setName(name);
-        group.setOwner(currentUser);
-        group = groupRepository.save(group);
-        return groupMapper.toDto(group);
+        return null;
     }
 
     @Override
