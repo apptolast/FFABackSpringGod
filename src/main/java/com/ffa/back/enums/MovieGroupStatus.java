@@ -1,5 +1,8 @@
 package com.ffa.back.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum MovieGroupStatus {
 
     NOT_IN_GROUP(false, null, false, null),        // La película no está en el grupo
@@ -20,19 +23,4 @@ public enum MovieGroupStatus {
         this.userToWatchStatus = userToWatchStatus;
     }
 
-    public boolean isHasMovie() {
-        return hasMovie;
-    }
-
-    public Boolean getToWatch() {
-        return toWatch;
-    }
-
-    public boolean isAddedByUser() {
-        return addedByUser;
-    }
-
-    public Boolean getUserToWatchStatus() {
-        return userToWatchStatus;
-    }
 }

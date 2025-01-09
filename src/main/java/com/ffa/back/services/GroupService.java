@@ -46,11 +46,6 @@ public class GroupService implements IGroupService {
     }
 
     @Override
-    public MovieGroupStatusDTO getMovieGroupStatus(Long movieId, User currentUser) {
-        return null;
-    }
-
-    @Override
     public GroupResponseDTO updateGroup(Long id, GroupCreateRequestDTO groupDetails) {
         return null;
     }
@@ -63,15 +58,5 @@ public class GroupService implements IGroupService {
     @Override
     public void deleteGroup(Long id) {
 
-    }
-
-    @Override
-    public Mono<MovieGroupStatusDTO> addMovieToGroup(Long movieId, Long groupId, boolean toWatch, User currentUser) {
-        return null;
-    }
-
-    @Override
-    public Mono<Void> removeMovieFromGroup(Long movieId, Long groupId, User currentUser) {
-        return null;
     }
 }

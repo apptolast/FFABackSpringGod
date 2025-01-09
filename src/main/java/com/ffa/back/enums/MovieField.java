@@ -1,5 +1,8 @@
 package com.ffa.back.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum MovieField {
     TO_WATCH(true),
     WATCHED(false);
@@ -11,7 +14,4 @@ public enum MovieField {
         this.to_watch = toWatch;
     }
 
-    public boolean isTo_watch() {
-        return to_watch;
-    }
 }

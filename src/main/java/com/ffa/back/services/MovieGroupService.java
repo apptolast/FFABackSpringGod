@@ -12,6 +12,8 @@ import com.ffa.back.repositories.GroupRepository;
 import com.ffa.back.repositories.MovieRepository;
 import com.ffa.back.repositories.MovieUserGroupRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,24 +32,45 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class MovieGroupService {
+@RequiredArgsConstructor
+@Slf4j
+public class MovieGroupService implements IMovieGroupService {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
-    @Autowired
-    private GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
 
-    @Autowired
-    private MovieUserGroupRepository movieUserGroupRepository;
+    private final MovieUserGroupRepository movieUserGroupRepository;
 
-    @Autowired
-    private MovieRecommendationService recommendationService;
+    private final MovieRecommendationService recommendationService;
 
-    @Autowired
-    private GroupService groupService;
+    private final GroupService groupService;
 
-    @Autowired
-    private TmdbService tmdbService;
+    private final TmdbService tmdbService;
 
+    @Override
+    public Mono<MovieGroupStatusDTO> addMovieToGroup(Long movieId, Long groupId, boolean toWatch, User currentUser) {
+        return Mono.fromCallable(() -> {
+            // Lógica de "marcar"
+            contentStatusService.markMovieStatus(movieId, groupId, currentUser,
+                    toWatch ? "TO_WATCH" : "WATCHED");
+            return contentStatusService.buildStatusDTO(movieId, groupId, currentUser);
+        });
+    }
+
+    @Override
+    public Mono<Void> removeMovieFromGroup(Long movieId, Long groupId, User currentUser) {
+        return Mono.fromRunnable(() -> {
+            contentStatusService.removeMovieStatus(movieId, groupId, currentUser);
+        });
+    }
+
+    @Override
+    public Mono<MovieGroupStatusDTO> getMovieGroupStatusMovies(Long movieId, User currentUser) {
+        // Suponiendo que no dependes de "groupId" para la obtención,
+        // o lo pasas por param. Ajusta según tu lógica.
+        return Mono.fromCallable(() ->
+                contentStatusService.buildStatusDTO(movieId, null, currentUser)
+        );
+    }
 }

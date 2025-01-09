@@ -18,16 +18,10 @@ public interface IGroupService {
 
     Optional<GroupResponseDTO> getGroupById(Long id);
 
-    MovieGroupStatusDTO getMovieGroupStatus(Long movieId, User currentUser);
-
     GroupResponseDTO updateGroup(Long id, GroupCreateRequestDTO groupDetails);
 
     GroupResponseDTO addMemberToGroup(Long id, GroupMemberRequestDTO email);
 
     void deleteGroup(Long id);
-
-    Mono<MovieGroupStatusDTO> addMovieToGroup(Long movieId, Long groupId, boolean toWatch, User currentUser);
-
-    Mono<Void> removeMovieFromGroup(Long movieId, Long groupId, User currentUser);
 
 }
