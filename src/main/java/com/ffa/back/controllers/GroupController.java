@@ -70,7 +70,7 @@ public class GroupController {
                 User currentUser = userRepository.findByFirebaseUuid(uid)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-                MovieGroupStatusDTO status = groupService.getMovieGroupStatus(movieId, currentUser);
+                MovieGroupStatusDTO status = groupService. (movieId, currentUser);
                 return ResponseEntity.ok(status);
             });
         });

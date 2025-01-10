@@ -59,6 +59,18 @@ public class ContentStatusService {
         }
     }
 
+    private Movie findOrCreateMovie(Long tmdbId, String contentType) {
+        return movieRepository.findByTmdbId(tmdbId)
+                .orElseGet(() -> {
+                    Movie m = new Movie();
+                    m.setTmdbId(tmdbId);
+                    m.setTitle("Unknown Title");
+                    m.setContentType(contentType);
+                    return movieRepository.save(m);
+                });
+    }
+
+
     /**
      * Elimina la fila en content_status (o podrías poner status="REMOVED")
      */
