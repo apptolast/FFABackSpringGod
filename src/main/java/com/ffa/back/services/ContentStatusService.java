@@ -1,6 +1,7 @@
 package com.ffa.back.services;
 
 import com.ffa.back.dto.MovieGroupStatusDTO;
+import com.ffa.back.enums.MovieGroupStatus;
 import com.ffa.back.models.ContentStatus;
 import com.ffa.back.models.Group;
 import com.ffa.back.models.Movie;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,36 +74,34 @@ public class ContentStatusService {
     /**
      * Construye un DTO con la info del estado actual
      */
-    public MovieGroupStatusDTO buildStatusDTO(Long movieId, Long groupId, User user) {
-        MovieGroupStatusDTO dto = new MovieGroupStatusDTO();
-        dto.setMovieId(movieId);
-        dto.setUserId(user.getId());
-        dto.setGroupId(groupId);
+    public MovieGroupStatus getMovieGroupStatus(Long groupId, Long movieId, Long userId) {
+        List<ContentStatus> allStatuses = contentStatusRepository
+                .findAllByMovieIdAndGroupId(movieId, groupId);
 
-        Movie movie = movieRepository.findByTmdbId(movieId)
-                .orElse(null);
-        if (movie == null) {
-            dto.setStatus("NO_RECORD");
-            return dto;
+        if (allStatuses.isEmpty()) {
+            return MovieGroupStatus.NOT_IN_GROUP;
         }
-
-        Group group = null;
-        if (groupId != null) {
-            group = groupRepository.findById(groupId).orElse(null);
+        // 1) usuario actual
+        Optional<ContentStatus> userStatusOpt = allStatuses.stream()
+                .filter(cs -> cs.getUser().getId().equals(userId))
+                .findFirst();
+        if (userStatusOpt.isPresent()) {
+            String status = userStatusOpt.get().getStatus().toUpperCase();
+            switch (status) {
+                case "TO_WATCH":
+                    return MovieGroupStatus.TO_WATCH_BY_USER;
+                case "WATCHED":
+                    return MovieGroupStatus.WATCHED_BY_USER;
+            }
         }
+        // 2) otros usuarios
+        boolean anyToWatch = allStatuses.stream()
+                .anyMatch(cs -> "TO_WATCH".equalsIgnoreCase(cs.getStatus()));
+        boolean anyWatched = allStatuses.stream()
+                .anyMatch(cs -> "WATCHED".equalsIgnoreCase(cs.getStatus()));
 
-        Optional<ContentStatus> existing = contentStatusRepository.findByMovieAndUserAndGroup(movie, user, group);
-        dto.setStatus(existing.map(ContentStatus::getStatus).orElse("NOT_SET"));
-        return dto;
-    }
-
-    private Movie findOrCreateMovie(Long tmdbId, String contentType) {
-        return movieRepository.findByTmdbId(tmdbId).orElseGet(() -> {
-            Movie m = new Movie();
-            m.setTmdbId(tmdbId);
-            m.setTitle("Unknown Title");
-            m.setContentType(contentType);
-            return movieRepository.save(m);
-        });
+        if (anyToWatch) return MovieGroupStatus.TO_WATCH_BY_OTHER;
+        if (anyWatched) return MovieGroupStatus.WATCHED_BY_OTHER;
+        return MovieGroupStatus.NOT_IN_GROUP;
     }
 }
