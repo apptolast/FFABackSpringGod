@@ -3,6 +3,7 @@ package com.ffa.back.controllers;
 import com.ffa.back.services.AuthService;
 import com.ffa.back.services.FirebaseAuthService;
 import com.google.firebase.auth.FirebaseToken;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,12 +15,12 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("familyfilmapp/api/auth")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class AuthController {
-    @Autowired
-    private AuthService authService;
 
-    @Autowired
-    private FirebaseAuthService firebaseAuthService;
+    private final AuthService authService;
+
+    private final FirebaseAuthService firebaseAuthService;
 
     @CrossOrigin
     @PostMapping("/login")
