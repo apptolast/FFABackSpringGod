@@ -3,6 +3,7 @@ package com.ffa.back.controllers;
 
 import com.ffa.back.dto.MovieReponseIDdto;
 import com.ffa.back.services.MovieService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,13 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 @RestController
-@RequestMapping("familyfilmapp/api/groups")
+@RequestMapping("familyfilmapp/api/movies")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class MovieControler {
 
 
-    @Autowired
-    private MovieService movieService;
+    private final MovieService movieService;
 
     @GetMapping
     public Mono<ResponseEntity<List<MovieReponseIDdto>>> getAllMovies() {
