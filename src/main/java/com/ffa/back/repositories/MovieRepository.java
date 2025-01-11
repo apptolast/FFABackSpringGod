@@ -22,8 +22,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     // Nuevos métodos
     boolean existsByTmdbId(Long tmdbId);
 
-    @Query("SELECT m FROM Movie m WHERE " +
-            "LOWER(m.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-            "LOWER(m.synopsis) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    @Query("SELECT m FROM Movie m " +
+            "WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Movie> searchMovies(@Param("searchTerm") String searchTerm, Pageable pageable);
+
 }
