@@ -1,11 +1,9 @@
 package com.ffa.back.controllers;
 
 
-import com.ffa.back.dto.*;
+import com.ffa.back.dto.MovieReponseIDdto;
 import com.ffa.back.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -26,10 +24,6 @@ public class MovieControler {
         return Mono.fromCallable(() -> ResponseEntity.ok(movieService.getAllMovies()));
     }
 
-    @GetMapping("/paged")
-    public Mono<ResponseEntity<Page<MovieReponseIDdto>>> getAllMoviesPaged(Pageable pageable) {
-        return Mono.fromCallable(() -> ResponseEntity.ok(movieService.getAllMoviesPaged(pageable)));
-    }
 
     @GetMapping("/{id}")
     public Mono<ResponseEntity<MovieReponseIDdto>> getMovieById(@PathVariable Long id) {
