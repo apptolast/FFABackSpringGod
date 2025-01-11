@@ -44,6 +44,8 @@ public class MovieGroupService implements IMovieGroupService {
 
     private final MovieRecommendationService recommendationService;
 
+    private final ContentStatusService contentStatusService;
+
     private final GroupService groupService;
 
     private final TmdbService tmdbService;
@@ -51,9 +53,10 @@ public class MovieGroupService implements IMovieGroupService {
     @Override
     public Mono<MovieGroupStatusDTO> addMovieToGroup(Long movieId, Long groupId, boolean toWatch, User currentUser) {
         return Mono.fromCallable(() -> {
-            // Lógica de "marcar"
-            contentStatusService.markMovieStatus(movieId, groupId, currentUser,
-                    toWatch ? "TO_WATCH" : "WATCHED");
+            contentStatusService.markMovieStatus(
+                    movieId, groupId, currentUser, toWatch ? "TO_WATCH" : "WATCHED"
+            );
+            // Retornamos un MovieGroupStatusDTO, no un MovieGroupStatus
             return contentStatusService.buildStatusDTO(movieId, groupId, currentUser);
         });
     }
@@ -67,8 +70,6 @@ public class MovieGroupService implements IMovieGroupService {
 
     @Override
     public Mono<MovieGroupStatusDTO> getMovieGroupStatusMovies(Long movieId, User currentUser) {
-        // Suponiendo que no dependes de "groupId" para la obtención,
-        // o lo pasas por param. Ajusta según tu lógica.
         return Mono.fromCallable(() ->
                 contentStatusService.buildStatusDTO(movieId, null, currentUser)
         );

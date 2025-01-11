@@ -1,5 +1,6 @@
 package com.ffa.back.services;
 
+import com.ffa.back.dto.GroupMovieStatusDTO;
 import com.ffa.back.dto.MovieGroupStatusDTO;
 import com.ffa.back.enums.MovieGroupStatus;
 import com.ffa.back.models.ContentStatus;
@@ -27,6 +28,30 @@ public class ContentStatusService {
     private final MovieRepository movieRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+
+    /**
+     * buildStatusDTO => convierte el enum + info a un MovieGroupStatusDTO
+     */
+    public MovieGroupStatusDTO buildStatusDTO(Long movieId, Long groupId, User user) {
+        // Tomamos el enum
+        MovieGroupStatus statusEnum = getMovieGroupStatus(groupId, movieId, user.getId());
+        // Construimos un MovieGroupStatusDTO a partir de ese enum
+
+        MovieGroupStatusDTO dto = new MovieGroupStatusDTO();
+        dto.setMovieId(movieId);
+        // Suponiendo que no tenemos una lista de groups,
+        // sino un single group. Ajusta a tu gusto.
+
+        // Generamos la "lista" con un solo GroupMovieStatusDTO,
+        // o lo que necesites.
+        GroupMovieStatusDTO singleGms = new GroupMovieStatusDTO();
+        singleGms.setGroupId(groupId);
+        singleGms.setGroupName("PlaceholderName?");
+        singleGms.setStatus(statusEnum);
+
+        dto.setGroups(List.of(singleGms));
+        return dto;
+    }
 
     /**
      * Marca la película (movieId) para un usuario (currentUser) en un grupo (groupId)

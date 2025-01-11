@@ -7,12 +7,12 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;  // Solo este import de Page
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,18 +59,23 @@ public class MovieService {
     }
 
     private MovieReponseIDdto toMovieReponseIDdto(Movie movie) {
+        Date releaseDateSql = movie.getReleaseDate() != null
+                ? Date.valueOf(movie.getReleaseDate())
+                : null;
+
         return new MovieReponseIDdto(
                 movie.getId(),
                 movie.getTmdbId(),
                 movie.getTitle(),
                 movie.getLanguage(),
-                movie.getSynopsis(),
-                movie.getImage(),
-                movie.getAdult(),
-                movie.getRelease_date(),
-                movie.getVote_average(),
-                movie.getVote_count(),
-                movie.getGenre_ids()
+                /* synopsis */ null,   // si no lo tienes en Movie
+                /* image */ null,      // si no lo tienes
+                /* adult */ null,      // ...
+                releaseDateSql,
+                /* voteAverage */ null,
+                /* voteCount */ null,
+                /* genreIds */ List.of()
         );
     }
+
 }

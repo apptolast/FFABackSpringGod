@@ -51,8 +51,8 @@ public class AuthService {
             // Guardamos toda la información del token
             newUser.setSub(decodedToken.getUid());  // El sub es el UID en Firebase
             newUser.setAuthTime((Long) claims.get("auth_time"));
-            newUser.setIat((Long) claims.get("iat"));
-            newUser.setExp((Long) claims.get("exp"));
+            newUser.setIssueTime((Long) claims.get("iat"));
+            newUser.setExpiryTime((Long) claims.get("exp"));
             newUser.setEmailVerified(decodedToken.isEmailVerified());
 
             // Obtener información del proveedor
@@ -60,7 +60,7 @@ public class AuthService {
             Map<String, Object> firebaseClaims = (Map<String, Object>) claims.get("firebase");
             if (firebaseClaims != null) {
                 String signInProvider = (String) firebaseClaims.get("sign_in_provider");
-                newUser.setSignInProvider(signInProvider);
+                newUser.setProvider(signInProvider);
             }
 
             // Idioma por defecto
@@ -87,8 +87,8 @@ public class AuthService {
                 // Actualizar información del token
                 Map<String, Object> claims = decodedToken.getClaims();
                 user.setAuthTime((Long) claims.get("auth_time"));
-                user.setIat((Long) claims.get("iat"));
-                user.setExp((Long) claims.get("exp"));
+                user.setIssueTime((Long) claims.get("iat"));
+                user.setExpiryTime((Long) claims.get("exp"));
                 user.setEmailVerified(decodedToken.isEmailVerified());
 
                 userRepository.save(user);

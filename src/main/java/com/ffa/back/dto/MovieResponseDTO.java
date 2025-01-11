@@ -15,5 +15,8 @@ public class MovieResponseDTO {
     private String title;
     private List<Long> groupIds;
 
-
+    public MovieResponseDTO(List<Long> groupIds, Long movieId) {
+        this.groupIds = groupIds;
+        this.movieId = movieId;
+    }
 }

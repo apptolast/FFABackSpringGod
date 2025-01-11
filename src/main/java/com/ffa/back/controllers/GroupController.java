@@ -5,6 +5,7 @@ import com.ffa.back.models.User;
 import com.ffa.back.repositories.UserRepository;
 import com.ffa.back.services.GroupService;
 import com.ffa.back.services.MovieGroupService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,15 @@ import java.util.List;
 @RestController
 @RequestMapping("familyfilmapp/api/groups")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class GroupController {
 
-    @Autowired
-    private GroupService groupService;
+    private final GroupService groupService;
 
-    @Autowired
-    private MovieGroupService movieGroupService;
+    private final MovieGroupService movieGroupService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
 
 
     @PostMapping
@@ -66,13 +66,17 @@ public class GroupController {
                                                                     @AuthenticationPrincipal Mono<Authentication> authenticationMono) {
         return authenticationMono.flatMap(auth -> {
             String uid = auth.getName();
-            return Mono.fromCallable(() -> {
-                User currentUser = userRepository.findByFirebaseUuid(uid)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-                MovieGroupStatusDTO status = groupService. (movieId, currentUser);
-                return ResponseEntity.ok(status);
-            });
+            // Paso 1: convertir a Mono<User>
+            return Mono.fromCallable(() -> userRepository.findByFirebaseUuid(uid)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
+                    )
+                    // Paso 2: usar flatMap para enlazar con movieGroupService
+                    .flatMap(currentUser -> {
+                        // AQUÍ pedimos a movieGroupService, que retorna Mono<MovieGroupStatusDTO>
+                        return movieGroupService.getMovieGroupStatusMovies(movieId, currentUser)
+                                // Paso 3: convertir MovieGroupStatusDTO -> ResponseEntity
+                                .map(statusDto -> ResponseEntity.ok(statusDto));
+                    });
         });
     }
 

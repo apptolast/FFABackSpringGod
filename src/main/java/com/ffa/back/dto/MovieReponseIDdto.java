@@ -25,4 +25,11 @@ public class MovieReponseIDdto {
     private List<Integer> genreIds;
 
 
+    public MovieReponseIDdto(Long id, Long tmdbId, String title, String language, java.sql.Date date) {
+        this.id = id;
+        this.tmdbId = tmdbId;
+        this.title = title;
+        this.language = language;
+        this.releaseDate = getReleaseDate();
+    }
 }
