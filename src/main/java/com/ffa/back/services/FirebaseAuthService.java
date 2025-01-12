@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -21,19 +23,17 @@ import java.util.Map;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
+@Slf4j
 public class FirebaseAuthService {
 
-    @Autowired
-    private FirebaseProperties firebaseProperties;
+    private final FirebaseProperties firebaseProperties;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private LanguageRepository languageRepository;
+    private final LanguageRepository languageRepository;
 
     public UserRecord createFirebaseUser(String email, String password) {
         try {

@@ -6,6 +6,7 @@ import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private LanguageRepository languageRepository;
+    private final UserRepository userRepository;
+
+    private final LanguageRepository languageRepository;
 
     public Mono<ResponseEntity<String>> register(String uid, String email, FirebaseToken decodedToken) {
         return Mono.fromCallable(() -> {

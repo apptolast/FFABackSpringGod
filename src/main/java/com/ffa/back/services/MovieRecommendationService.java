@@ -8,6 +8,8 @@ import com.ffa.back.repositories.GroupRepository;
 import com.ffa.back.repositories.LanguageRepository;
 import com.ffa.back.repositories.MovieRepository;
 import com.ffa.back.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
+@Slf4j
 public class MovieRecommendationService {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     @Cacheable(value = "movieRecommendations", key = "#group.id", unless = "#result == null")
     public Movie recommendMovie(Group group) {
