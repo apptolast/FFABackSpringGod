@@ -2,10 +2,21 @@ package com.ffa.back.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
+@AllArgsConstructor
 @Entity
 @Table(name = "language")
+@NoArgsConstructor
 public class Language {
 
     @Id
@@ -15,29 +26,11 @@ public class Language {
     @Column(nullable = false)
     private String language;
 
-    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<User> users;
+    @OneToMany(mappedBy = "language")
+    private List<User> users = new ArrayList<>();
 
-    protected Language() {}
 
-    public Language(String language) {
+    public Language(@Pattern(regexp = "^[a-z]{2}$", message = "Language must be a 2-letter code") String language) {
         this.language = language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public List<User> getUsers() {
-        return users;
     }
 }

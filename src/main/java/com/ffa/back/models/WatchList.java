@@ -1,42 +1,33 @@
 package com.ffa.back.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@AllArgsConstructor
 @Entity
 @Table(name = "watch_lists")
+@IdClass(WatchListId.class)
+@NoArgsConstructor
 public class WatchList {
 
+    // Getters y Setters
     @Id
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "movie_id")
+    @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-    protected WatchList() {}
-
-    public WatchList(Group group, Movie movie) {
-        this.group = group;
-        this.movie = movie;
-    }
+    @Column(name = "id")
+    private Long listId;
 
 
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
 }

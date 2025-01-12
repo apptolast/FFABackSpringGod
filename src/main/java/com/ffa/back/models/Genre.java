@@ -1,13 +1,21 @@
 package com.ffa.back.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
+@AllArgsConstructor
 @Table(name = "genres")
+@NoArgsConstructor
 public class Genre {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,27 +24,8 @@ public class Genre {
     private String name;
 
     @ManyToMany(mappedBy = "genres")
-    private List<Movie> movies;
+    private List<Movie> movies = new ArrayList<>();
 
-    protected Genre() {}
 
-    public Genre(String name) {
-        this.name = name;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Movie> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
-    }
 }

@@ -1,87 +1,55 @@
 package com.ffa.back.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
+@AllArgsConstructor
 @Entity
 @Table(name = "groups")
+@NoArgsConstructor
 public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private User owner;
-
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "group")
-    private List<GroupUser> groupUsers;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "recommended_movie_id")
+    private Movie recommendedMovie;
 
     @OneToMany(mappedBy = "group")
-    private List<WatchList> watchLists;
+    private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
-    private List<ViewList> viewLists;
+    private List<WatchList> watchLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "group")
-    private List<MovieUserGroup> movieUserGroups;
+    private List<ViewList> viewLists = new ArrayList<>();
 
-    protected Group() {}
+    @ManyToMany
+    @JoinTable(
+            name = "group_users",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> members = new ArrayList<>();
 
-    public Group(String name) {
-        this.name = name;
-    }
+    @OneToMany(mappedBy = "group")
+    private List<ContentStatus> contentStatuses = new ArrayList<>();
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public List<GroupUser> getGroupUsers() {
-        return groupUsers;
-    }
-
-    public void setGroupUsers(List<GroupUser> groupUsers) {
-        this.groupUsers = groupUsers;
-    }
-
-    public List<WatchList> getWatchLists() {
-        return watchLists;
-    }
-
-    public void setWatchLists(List<WatchList> watchLists) {
-        this.watchLists = watchLists;
-    }
-
-    public List<ViewList> getViewLists() {
-        return viewLists;
-    }
-
-    public void setViewLists(List<ViewList> viewLists) {
-        this.viewLists = viewLists;
-    }
-
-    public List<MovieUserGroup> getMovieUserGroups() {
-        return movieUserGroups;
-    }
-
-    public void setMovieUserGroups(List<MovieUserGroup> movieUserGroups) {
-        this.movieUserGroups = movieUserGroups;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

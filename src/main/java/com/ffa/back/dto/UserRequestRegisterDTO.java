@@ -1,5 +1,12 @@
 package com.ffa.back.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRequestRegisterDTO {
 
     private String email;
@@ -8,38 +15,4 @@ public class UserRequestRegisterDTO {
 
     private String language;
 
-    public UserRequestRegisterDTO() {}
-
-    public UserRequestRegisterDTO(String email, String password, String language) {
-        this.email = email;
-        this.password = password;
-        this.language = language;
-    }
-
-    // Getters y Setters
-
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
 }

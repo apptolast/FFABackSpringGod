@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,10 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("familyfilmapp/api/moviesandseries")
 @CrossOrigin(origins = "*") // Permite solicitudes desde cualquier origen
+@RequiredArgsConstructor
 public class TmdbController {
 
-    @Autowired
-    private TmdbService tmdbService;
+    private final TmdbService tmdbService;
 
     /**
      * Obtener películas populares.

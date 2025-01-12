@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ffa.back.config.TmdbProperties;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +26,21 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
+@Slf4j
 public class TmdbService {
 
-    private static final Logger log = LoggerFactory.getLogger(TmdbService.class);
+    private final TmdbProperties tmdbProperties;
 
-    @Autowired
-    private TmdbProperties tmdbProperties;
-
-    @Autowired
     @Qualifier("webClientMovies")
-    private WebClient webClientMovies;
+    private final WebClient webClientMovies;
 
-    @Autowired
     @Qualifier("webClientSeries")
-    private WebClient webClientSeries;
+    private final WebClient webClientSeries;
 
-    @Autowired
     @Qualifier("webClientSearch")
-    private WebClient webClientSearch;
+    private final WebClient webClientSearch;
 
 
     private static final String CACHE_PREFIX_POPULAR_MOVIES = "movies_popular:";

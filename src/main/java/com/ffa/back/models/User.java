@@ -1,157 +1,95 @@
 package com.ffa.back.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Setter
+@Getter
 @Entity
+@AllArgsConstructor
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Campos de autenticación Firebase
-    @Column(name = "firebase_uuid", nullable = false)
-    private String firebaseUuid;
-
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(name = "firebase_uuid")
+    private String firebaseUuid;
 
     @Column(nullable = false)
     private String provider;
 
-    @Column(nullable = true)
+    @Column
     private String role;
-
-    // Campos del token JWT
-    @Column(nullable = false)
-    private String sub;  // subject id from token
 
     @Column(name = "auth_time")
     private Long authTime;
 
-    @Column(name = "issue_time")
-    private Long iat;
-
-    @Column(name = "expiry_time")
-    private Long exp;
-
     @Column(name = "email_verified")
     private Boolean emailVerified;
 
-    @Column(name = "identity_provider")
-    private String signInProvider;
+    @Column(name = "expiry_time")
+    private Long expiryTime;
 
-    // Relación con Language
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_language", referencedColumnName = "id")
-    @JsonBackReference
+    @Column(name = "issue_time")
+    private Long issueTime;
+
+    @Column(name = "identity_provider")
+    private String identityProvider;
+
+    @Column(nullable = false)
+    private String sub;
+
+    @ManyToOne
+    @JoinColumn(name = "id_language")
     private Language language;
 
-    // Constructores
-    public User() {}
+    @OneToMany(mappedBy = "owner")
+    private List<Group> ownedGroups = new ArrayList<>();
 
-    public User(String email, String firebaseUuid, String provider, String role) {
-        this.email = email;
-        this.firebaseUuid = firebaseUuid;
-        this.provider = provider;
-        this.role = role;
-    }
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<MovieUserGroup> movieUserGroups = new ArrayList<>();
 
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_viewed_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> viewedMovies = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_to_watch_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    private List<Movie> toWatchMovies = new ArrayList<>();
 
-    public String getFirebaseUuid() {
-        return firebaseUuid;
-    }
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<ContentStatus> contentStatuses = new ArrayList<>();
 
-    public void setFirebaseUuid(String firebaseUuid) {
-        this.firebaseUuid = firebaseUuid;
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_watchlist_movies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
+    )
+    @JsonManagedReference
+    private List<Movie> watchlistMovies = new ArrayList<>();
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getProvider() {
-        return provider;
-    }
-
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getSub() {
-        return sub;
-    }
-
-    public void setSub(String sub) {
-        this.sub = sub;
-    }
-
-    public Long getAuthTime() {
-        return authTime;
-    }
-
-    public void setAuthTime(Long authTime) {
-        this.authTime = authTime;
-    }
-
-    public Long getIat() {
-        return iat;
-    }
-
-    public void setIat(Long iat) {
-        this.iat = iat;
-    }
-
-    public Long getExp() {
-        return exp;
-    }
-
-    public void setExp(Long exp) {
-        this.exp = exp;
-    }
-
-    public Boolean getEmailVerified() {
-        return emailVerified;
-    }
-
-    public void setEmailVerified(Boolean emailVerified) {
-        this.emailVerified = emailVerified;
-    }
-
-    public String getSignInProvider() {
-        return signInProvider;
-    }
-
-    public void setSignInProvider(String signInProvider) {
-        this.signInProvider = signInProvider;
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
 }

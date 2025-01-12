@@ -1,67 +1,42 @@
 package com.ffa.back.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@AllArgsConstructor
 @Entity
-@Table(name = "movie_user_group")
+@Table(name = "movie_user_group",
+        indexes = {
+                @Index(name = "idx_movie_user_group_movie", columnList = "movie_id"),
+                @Index(name = "idx_movie_user_group_user", columnList = "user_id"),
+                @Index(name = "idx_movie_user_group_group", columnList = "group_id")
+        })
+@IdClass(MovieUserGroupId.class)
+@NoArgsConstructor
 public class MovieUserGroup {
-
+    // Getters y setters
     @Id
     @ManyToOne
-    @JoinColumn(name = "id_movie")
+    @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "id_group")
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @Column(nullable = true, name = "to_watch")
+    @Column(name = "to_watch")
     private Boolean toWatch;
 
-    protected MovieUserGroup() {}
 
-    public MovieUserGroup(Movie movie, User user, Group group, Boolean toWatch) {
-        this.movie = movie;
-        this.user = user;
-        this.group = group;
-        this.toWatch = toWatch;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public Boolean getToWatch() {
-        return toWatch;
-    }
-
-    public void setToWatch(Boolean toWatch) {
-        this.toWatch = toWatch;
-    }
 }
