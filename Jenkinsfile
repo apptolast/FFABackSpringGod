@@ -162,7 +162,6 @@ spec:
                 kubectl apply -f fluent-bit-configmap.yaml
                 kubectl apply -f app-logs-pvc.yaml
                 kubectl apply -f log-server.yaml
-                kubectl apply -f log-server-service.yaml
                 echo "Esperando a que los pods estén listos..."
                 sleep 30
                 kubectl wait --for=condition=ready pod -n devops-tools -l app=log-server --timeout=300s
