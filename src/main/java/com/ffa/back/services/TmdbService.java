@@ -118,7 +118,7 @@ public class TmdbService {
     public Mono<JsonNode> searchMoviesAndSeries(String query, int page) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
         String url = buildUrl("multi", page) + "&query=" + encodedQuery;
-        log.info("la url de query es la siguiente : " + url);
+        log.debug("la url de query es la siguiente : {}", url);
         return fetchTmdbResponse(webClientSearch, url);
     }
 
