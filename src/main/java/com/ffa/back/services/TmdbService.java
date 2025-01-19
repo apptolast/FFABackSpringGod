@@ -27,20 +27,29 @@ import java.time.Duration;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 @Slf4j
 public class TmdbService {
 
     private final TmdbProperties tmdbProperties;
 
-    @Qualifier("webClientMovies")
     private final WebClient webClientMovies;
 
-    @Qualifier("webClientSeries")
+
     private final WebClient webClientSeries;
 
-    @Qualifier("webClientSearch")
+
     private final WebClient webClientSearch;
+
+    public TmdbService(
+            TmdbProperties tmdbProperties,
+            @Qualifier("webClientMovies") WebClient webClientMovies,
+            @Qualifier("webClientSeries") WebClient webClientSeries,
+            @Qualifier("webClientSearch") WebClient webClientSearch) {
+        this.tmdbProperties = tmdbProperties;
+        this.webClientMovies = webClientMovies;
+        this.webClientSeries = webClientSeries;
+        this.webClientSearch = webClientSearch;
+    }
 
 
     private static final String CACHE_PREFIX_POPULAR_MOVIES = "movies_popular:";
@@ -109,6 +118,7 @@ public class TmdbService {
     public Mono<JsonNode> searchMoviesAndSeries(String query, int page) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
         String url = buildUrl("multi", page) + "&query=" + encodedQuery;
+        log.debug("la url de query es la siguiente : {}", url);
         return fetchTmdbResponse(webClientSearch, url);
     }
 
