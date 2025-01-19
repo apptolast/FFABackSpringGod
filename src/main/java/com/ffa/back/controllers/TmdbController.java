@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("familyfilmapp/api/moviesandseries")
 @CrossOrigin(origins = "*") // Permite solicitudes desde cualquier origen
 @RequiredArgsConstructor
+@Slf4j
 public class TmdbController {
 
     private final TmdbService tmdbService;
@@ -108,6 +111,7 @@ public class TmdbController {
     public Mono<ResponseEntity<JsonNode>> searchMoviesAndSeries(
             @RequestParam("query") @NotBlank String query,
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page) {
+        log.debug("ESTOY ENTRANDO POR AQUI Y LA URL ");
         return tmdbService.searchMoviesAndSeries(query, page)
                 .map(ResponseEntity::ok);
     }
